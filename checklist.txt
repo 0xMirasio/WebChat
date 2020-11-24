@@ -11,14 +11,14 @@ profile struct:
 
 - username (can be change in gui, cf MAIN) => check availability in local list => SOLUTION POUR RECUPERER LOCAL LIST => 
 
-BROADCAST GENERAL SUR PORT 6000
+BROADCAST GENERAL SUR PORT X RECUPERER DANS assets/network.ini
 => tout les hotes réponde "OK" si il possede une liste (liste dans .cache/user.list)
 
 le sender choisit aléatoirement un hotes qui a repondu OK et demande sa liste
 => MISE A JOUR DE LA LISTE PUIS BROADCAST DE LA NOUVELLE LISTE + echo de la nouvelle liste terminale
 
 -email
--password (encrypted sha256 + SIGNATURE md5 of the password => stored in a private remote DB)
+-password (encrypted sha256 + SIGNATURE md5 of the password => stored in a private remote DB table signature = SIGNATURE / USER)
 
 when login, check sha256(user_password_prompt) + check(sig_password_remote_DB / sig_password_user_prompt) => si password invalide ou si password local modifié , fermeture du programme !
 
@@ -26,5 +26,5 @@ HISTORIQUE:
 ------------------------------------------------------------------------------------------------
 
 PAS de sauvegarde historique en local ! trop dangereux en terme de sécurité
-sauvegarde message en remote SQL => table = HORODATAGE / MESSAGE / USER / SESSIONID
+sauvegarde message en remote SQL => table = ID / HORODATAGE / MESSAGE / USER / SESSIONID
 MESSAGE = CHIFFRE AES 256B - CBC
