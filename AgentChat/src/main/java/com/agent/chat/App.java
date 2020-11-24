@@ -20,17 +20,16 @@ public class App
     public static void start() {
         filework = new FileOperation();
         boolean res = false;
-        boolean res2 = false;
         try {
-            res = filework.exist(); //check existing profile
-            res2 = filework.checkIsProfileOkay(); // check invalid profile
+            res = filework.checkIsProfileOkay(); // check invalid profile
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-        if (res && res2) {
+        if (res) {
             createProfile(); // create a new profile
         }
+        
         username = filework.getUsername();
         System.out.println("[INFO] Profile - OK. Welcome : " +username);
 
@@ -58,7 +57,7 @@ public class App
             System.exit(-1);
         }
         if (!res) {
-            System.out.println("[CRITICAL] Bad password : exiting\b");
+            System.out.println("[CRITICAL] Bad password : exiting\n");
             System.exit(-2);
         }
 

@@ -11,18 +11,6 @@ class FileOperation
     private String password;
     private String signature;
 
-    public boolean exist() throws Exception  {
-        try {
-            File f = new File(profile);
-            if(f.isFile()) {return true;}
-            return false;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
     public void readFile() throws Exception  {
         try {
             this.reader= new BufferedReader(new FileReader(profile));
