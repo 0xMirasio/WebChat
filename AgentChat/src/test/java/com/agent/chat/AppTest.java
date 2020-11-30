@@ -7,7 +7,7 @@ import org.junit.Test;
 public class AppTest {
    
     @Test
-    public void testLogin() {
+    public void test() {
         Assert.assertEquals(64, App.test);
     }
 

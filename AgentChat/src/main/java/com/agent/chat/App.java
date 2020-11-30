@@ -37,7 +37,7 @@ public class App
         askPassword();
         // démarage client
         System.out.println("[INFO] Connecting to network...");
-        Client client = new Client();
+        Client client = new Client(username);
         client.start();
 
         
@@ -57,7 +57,7 @@ public class App
             System.exit(-1);
         }
         if (!res) {
-            System.out.println("[CRITICAL] Bad password : exiting\n");
+            System.out.println("[CRITICAL] Bad password ! (Quitting...)\n");
             System.exit(-2);
         }
 
@@ -77,6 +77,8 @@ public class App
         }
         catch (Exception e) {
             e.printStackTrace();
+            System.out.println("[CRITICAL] Cannot create profile ! (Quitting...)\n");
+            System.exit(-2);
         }
 
     }

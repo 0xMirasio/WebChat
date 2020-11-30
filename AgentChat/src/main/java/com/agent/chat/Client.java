@@ -1,6 +1,20 @@
 package com.agent.chat;
 
+import java.util.*;
+
 public class Client {
+
+    
+    public String username;
+
+    public Client(String username) {
+        this.username = username;
+    }
+
+    List<String> user = new ArrayList<String>();
+    List<String> IPC = new ArrayList<String>();
+    Network net = new Network();
+
     public void start() {
         System.out.println("[INFO] Opening client socket");
 
@@ -21,6 +35,10 @@ public class Client {
 
         // nouvelle session => append a session.old (pas ecraser les ancienne sessions car impossibilité de retrouver les msg)
         // bonus : (IG : effacer l'historique des messages, se renommer , changer de mot de passer)
+
+        IPC = net.getUserConnected(); 
+        System.out.println(IPC.get(0));
     }
+
 }
 

@@ -1,2 +1,3 @@
 com\agent\chat\App.class
 com\agent\chat\FileOperation.class
+com\agent\chat\Network.class

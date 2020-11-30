@@ -4,27 +4,25 @@ import java.io.*;
 
 class FileOperation
 { 
+    static FileOperation filework;
     BufferedReader reader = null;
     private String profile = ".cache/profile.private";
+    private String network = ".cache/network.ini";
     private String username;
     private String email;
     private String password;
     private String signature;
 
-    public void readFile() throws Exception  {
-        try {
-            this.reader= new BufferedReader(new FileReader(profile));
+    private String mask;//Masque de (sous) réseau
+    private int port; //Numéro de port
 
-            this.username = reader.readLine();
-            this.email = reader.readLine();
-            this.password = reader.readLine();
-            this.signature = reader.readLine();
-            reader.close();
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-            System.out.println("Erreur d'ouverture du fichier " + profile);
-        }
+    public void readFile() throws Exception  {
+        this.reader= new BufferedReader(new FileReader(profile));
+        this.username = reader.readLine();
+        this.email = reader.readLine();
+        this.password = reader.readLine();
+        this.signature = reader.readLine();
+        reader.close();
     }
 
     public boolean checkIsProfileOkay() throws Exception {
@@ -72,17 +70,38 @@ class FileOperation
 
 
     public void setNewProfile(String username,String email,String password) throws Exception {
-        try {
-            PrintWriter writer = new PrintWriter(profile);
-            writer.println(username);
-            writer.println(email);
-            writer.println(password.hashCode());
-            writer.println(Integer.toString(password.hashCode()).hashCode()); // signature du hash => a envoyer au mySQL
-            writer.close();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+        PrintWriter writer = new PrintWriter(profile);
+        writer.println(username);
+        writer.println(email);
+        writer.println(password.hashCode());
+        writer.println(Integer.toString(password.hashCode()).hashCode()); // signature du hash => a envoyer au mySQL
+        writer.close();
     }
 
+    public void readFileNetwork() throws Exception  {
+        this.reader= new BufferedReader(new FileReader(network));
+        this.mask = reader.readLine();
+        this.port = Integer.parseInt(reader.readLine());
+        reader.close();
+    }
+
+    public String GetNeworkMask() throws Exception  {
+            try { 
+                readFileNetwork();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return this.mask;
+    }
+
+    public int GetPort() throws Exception {
+        try { 
+            readFileNetwork();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return this.port;
+    }
 }
