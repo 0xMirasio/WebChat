@@ -14,6 +14,8 @@ public class Client {
     List<String> user = new ArrayList<String>();
     List<String> IPC = new ArrayList<String>();
     Network net = new Network();
+    boolean isConnected = false;
+    boolean debug = false;
 
     public void start() {
         System.out.println("[INFO] Opening client socket");
@@ -36,8 +38,33 @@ public class Client {
         // nouvelle session => append a session.old (pas ecraser les ancienne sessions car impossibilité de retrouver les msg)
         // bonus : (IG : effacer l'historique des messages, se renommer , changer de mot de passer)
 
-        IPC = net.getUserConnected(); 
-        System.out.println(IPC.get(0));
+        // pour debugger
+        FileOperation filework = new FileOperation();
+        try {
+            debug = filework.GetDebugMode();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (debug) {
+            isConnected = true; 
+        }
+
+        if (!isConnected) {
+            System.out.println("[INFO] : Not Authenticated - Searching for others users\n");
+            IPC = net.getUserConnected(); 
+            if (IPC == null) {
+                // SI IPC = null => personne connecté, on s'ajoute donc tout seul a liste et on se prepare a de nouvelle connexion
+                IPC.add(username);
+                net.prepare();
+            }
+        }
+        else {
+            System.out.println("[INFO] : Authenticated - Receiving new connexions\n");
+            net.prepare();
+        }
+        
     }
 
 }

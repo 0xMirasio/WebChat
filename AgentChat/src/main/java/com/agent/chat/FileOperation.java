@@ -8,10 +8,12 @@ class FileOperation
     BufferedReader reader = null;
     private String profile = ".cache/profile.private";
     private String network = ".cache/network.ini";
-    private String username;
+    private String debug = ".cache/debug";
     private String email;
+    private String username;
     private String password;
     private String signature;
+    private boolean isDebug;
 
     private String mask;//Masque de (sous) réseau
     private int port; //Numéro de port
@@ -103,5 +105,21 @@ class FileOperation
             e.printStackTrace();
         }
         return this.port;
+    }
+
+    public void readFileDebug() throws Exception  {
+        this.reader= new BufferedReader(new FileReader(debug));
+        this.isDebug = Boolean.parseBoolean(reader.readLine());
+        reader.close();
+    }
+
+    public boolean GetDebugMode() throws Exception {
+        try { 
+            readFileDebug();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return this.isDebug;
     }
 }
