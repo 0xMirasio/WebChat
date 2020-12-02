@@ -11,11 +11,9 @@ public class Client {
         this.username = username;
     }
 
-    List<String> user = new ArrayList<String>();
-    List<String> IPC = new ArrayList<String>();
     Network net = new Network(this.username);
-    boolean isConnected = false;
     boolean debug = false;
+    boolean isConnected = false;
 
     public void start() {
         System.out.println("[INFO] Opening client socket");
@@ -48,21 +46,19 @@ public class Client {
         }
 
         if (debug) {
-            isConnected = true; 
+            isConnected = true;
         }
 
         if (!isConnected) {
             System.out.println("[INFO] : Not Authenticated - Searching for others users\n");
-            IPC = net.getUserConnected(); 
-            if (IPC == null) {
-                // SI IPC = null => personne connecté, on s'ajoute donc tout seul a liste et on se prepare a de nouvelle connexion
-                IPC.add(username);
-                net.prepare();
-            }
+            net.getUserConnected(); 
+            System.out.println(net.getIPC());
+           
         }
         else {
             System.out.println("[INFO] : Authenticated - Receiving new connexions\n");
             net.prepare();
+            System.out.println(net.getIPC());
         }
         
     }

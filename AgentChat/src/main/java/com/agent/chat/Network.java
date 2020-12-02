@@ -13,10 +13,15 @@ public class Network implements Runnable {
     public String address;
     public String broadcast;
     public String username;
+    public List<String> IPC = new ArrayList<String>();
 
 
     public Network (String username) {
         this.username = username;
+    }
+
+    public List<String> getIPC() {
+        return this.IPC;
     }
 
     public void setSendState(boolean state) {
@@ -27,45 +32,38 @@ public class Network implements Runnable {
        return this.sendState;
     }
 
-    public List<String> getUserConnected() {
+    public void getUserConnected() {
  
-        List<String> IPConnected = new ArrayList<String>();
-        IPConnected.add("0"); 
         try {
             enumerationInterface();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-
             System.out.println("[INFO] - Broadcast hello-1c");
             broadcast("hello-1c", broadcast);
+    
+            // démarrage écoute des réponses
+            sendState = false; // on passe en mode reception , on att les réponses
+            Thread main = new Thread(new Network(this.username));        
+            main.start();
+            main.join();
         }
-        catch (IOException e) {
+        catch (Exception e) {
             e.printStackTrace();
-            System.out.println("[CRITICAL] Cannot Request authentificated Users list! (Quitting...)");
-            System.exit(-4);
+            System.exit(-2);
         }
-        // démarrage écoute des réponses
-        sendState = false; // on passe en mode reception , on att les réponses
-        Thread receive = new Thread(new Network(this.username));        
-        receive.start();
-
-        return IPConnected;
         
     }
 
     public void prepare() {
         try {
             enumerationInterface();
+            sendState = false; // on passe en mode reception , on att les réponses
+            Thread main = new Thread(new Network(this.username));        
+            main.start();
+            main.join();
         }
-        catch (IOException e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
-        sendState = false; // on passe en mode reception , on att les réponses
-        Thread receive = new Thread(new Network(this.username));        
-        receive.start();
+
     }
  
 
@@ -95,6 +93,7 @@ public class Network implements Runnable {
     // reseau local, on utilise UDP pour send un message d'informations
     public void sendMessage(String message, String Destination) throws Exception {
         
+        message = message + ":" + this.username + ":" + this.address;
         socket = new DatagramSocket();
         socket.connect(InetAddress.getByName(Destination), this.port);
         byte[] buf=message.getBytes();
@@ -109,6 +108,7 @@ public class Network implements Runnable {
         System.out.println("[INFO] Waiting for response\n");
         String donnees = null;
         DatagramPacket paquet = null;
+        String senderUsername = null;
         int taille = 1024;
         byte buffer[] = new byte[taille];
         DatagramSocket socket = new DatagramSocket(this.port);
@@ -120,14 +120,24 @@ public class Network implements Runnable {
             System.out.println("\n"+paquet.getAddress());
             taille = paquet.getLength();
             donnees = new String(paquet.getData(),0, taille);
+            senderUsername = donnees; // pas valide mais on debug pour le moment
             System.out.println("Donnees reçues = "+donnees);
         }
 
         socket.close();
 
         if (donnees.equals("hello-1c")) { // un nouveau utilisateur essaye de savoir qui est authentifié
-            String message = this.username + ":" + this.address; // on lui répond avec notre nom + IP
+            String message = "hello-1cb"; // on lui répond avec notre nom + IP
+            System.out.println("[INFO] Sending info to > " + senderUsername);
+            System.out.println("[INFO] Updating userList - OK");
+            IPC.add(senderUsername+":"+paquet.getAddress().getHostAddress());
             sendMessage(message, paquet.getAddress().getHostAddress());
+        }
+
+        if (donnees.equals("hello-1bc")) { // un nouveau utilisateur essaye de savoir qui est authentifié
+            
+            System.out.println("[INFO] Updating userList - OK");
+            IPC.add(senderUsername+":"+paquet.getAddress().getHostAddress());
         }
    
     }
