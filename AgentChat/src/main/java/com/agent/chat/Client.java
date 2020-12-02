@@ -11,7 +11,8 @@ public class Client {
         this.username = username;
     }
 
-    Network net = new Network(this.username);
+    Network net; 
+    FileOperation filework;
     boolean debug = false;
     boolean isConnected = false;
 
@@ -37,7 +38,8 @@ public class Client {
         // bonus : (IG : effacer l'historique des messages, se renommer , changer de mot de passer)
 
         // pour debugger
-        FileOperation filework = new FileOperation();
+        filework = new FileOperation();
+        net= new Network(this.username);
         try {
             debug = filework.GetDebugMode();
         }
@@ -52,13 +54,13 @@ public class Client {
         if (!isConnected) {
             System.out.println("[INFO] : Not Authenticated - Searching for others users\n");
             net.getUserConnected(); 
-            System.out.println(net.getIPC());
+            System.out.println("[INFO] IPC Client (debug=0) : " + net.getIPC());
            
         }
         else {
             System.out.println("[INFO] : Authenticated - Receiving new connexions\n");
             net.prepare();
-            System.out.println(net.getIPC());
+            System.out.println("[INFO] IPC Client (debug=1) : "+net.getIPC());
         }
         
     }

@@ -18,6 +18,7 @@ public class Network implements Runnable {
 
     public Network (String username) {
         this.username = username;
+
     }
 
     public List<String> getIPC() {
@@ -94,6 +95,7 @@ public class Network implements Runnable {
     public void sendMessage(String message, String Destination) throws Exception {
         
         message = message + ":" + this.username + ":" + this.address;
+        System.out.println("[INFO] Sending >" + message);
         socket = new DatagramSocket();
         socket.connect(InetAddress.getByName(Destination), this.port);
         byte[] buf=message.getBytes();
@@ -103,7 +105,7 @@ public class Network implements Runnable {
     }
 
 
-    public void recMessage() throws Exception {
+    public void recMessage() throws Exception { // TODO : FIX recMessage null this.address
 
         System.out.println("[INFO] Waiting for response\n");
         String donnees = null;
@@ -121,6 +123,7 @@ public class Network implements Runnable {
             taille = paquet.getLength();
             donnees = new String(paquet.getData(),0, taille);
             senderUsername = donnees; // pas valide mais on debug pour le moment
+            //TODO : split : => X:username:IP => recup username
             System.out.println("Donnees reçues = "+donnees);
         }
 
@@ -131,13 +134,15 @@ public class Network implements Runnable {
             System.out.println("[INFO] Sending info to > " + senderUsername);
             System.out.println("[INFO] Updating userList - OK");
             IPC.add(senderUsername+":"+paquet.getAddress().getHostAddress());
+            System.out.println("[INFO] IPC Network (debug=1) : "+ getIPC());
             sendMessage(message, paquet.getAddress().getHostAddress());
         }
 
-        if (donnees.equals("hello-1bc")) { // un nouveau utilisateur essaye de savoir qui est authentifié
+        if (donnees.equals("hello-1bc")) { // un utilisateur authentifié a répondu au broadcast de découverte
             
             System.out.println("[INFO] Updating userList - OK");
-            IPC.add(senderUsername+":"+paquet.getAddress().getHostAddress());
+            IPC.add(senderUsername+":"+paquet.getAddress().getHostAddress()); // TODO : FIX IPC 
+            System.out.println("[INFO] IPC Network (debug=0) : "+ getIPC());
         }
    
     }
