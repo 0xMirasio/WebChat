@@ -7,7 +7,6 @@ public class Network implements Runnable {
     /* 
         used to gather all IP connected on the network and store it in ArrayList IPConnected
     */
-    public String broadcastAdress;
     public int port = 6000;
     private boolean sendState;
     private static DatagramSocket socket = null;
@@ -35,7 +34,7 @@ public class Network implements Runnable {
         try {
 
             System.out.println("[INFO] - Broadcast hello-1c");
-            broadcast("hello-1c", broadcastAdress);
+            broadcast("hello-1c", broadcast);
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -120,8 +119,9 @@ public class Network implements Runnable {
 
         socket.close();
 
-        if (donnees.equals("hello-1c")) {
-            sendMessage(address, paquet.getAddress().getHostAddress());
+        if (donnees.equals("hello-1c")) { // un nouveau utilisateur essaye de savoir qui est authentifié
+            String message = username + ":" + this.address; // on lui répond avec notre nom + IP
+            sendMessage(message, paquet.getAddress().getHostAddress());
         }
    
     }
@@ -136,7 +136,6 @@ public class Network implements Runnable {
 
     public void enumerationInterface() throws IOException{
         Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
-        String broadcast = null;
         for (NetworkInterface netint : Collections.list(nets)) {
             Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
             for (InetAddress inetAddress : Collections.list(inetAddresses)) {
@@ -145,7 +144,6 @@ public class Network implements Runnable {
                 }
                 if (inetAddress.isLinkLocalAddress()) {
                     System.out.println("[INFO] Detected network interface\n");
-                    System.out.println("[INFO] InetAddress >" + inetAddress.getHostAddress());
                     System.out.println("[INFO] Broadcast > 169.254.255.255");
                     // TODO : améliorer la fonction
                     this.broadcast = "169.254.255.255";
