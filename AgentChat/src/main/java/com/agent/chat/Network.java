@@ -20,30 +20,29 @@ public class Network implements Runnable {
         this.username = username;
 
     }
+    
+    public Network (String username, String address) { // deuxième constructeur requis, afin d'envoyer address au thread
+        this.username = username;
+        this.address = address;
+
+    }
 
     public List<String> getIPC() {
         return this.IPC;
     }
 
-    public void setSendState(boolean state) {
-        this.sendState = state;
-    }
-
-    public boolean getSendState() {
-       return this.sendState;
-    }
 
     public void getUserConnected() {
  
         try {
             enumerationInterface();
             String message = "hello-1c"+":"+this.username+":"+this.address;
-            System.out.println("[INFO] - Broadcast > "+ message);
+            System.out.println("[INFO] - Broadcasting : "+ message);
             broadcast(message, broadcast);
     
             // démarrage écoute des réponses
             sendState = false; // on passe en mode reception , on att les réponses
-            Thread main = new Thread(new Network(this.username));        
+            Thread main = new Thread(new Network(this.username, this.address));        
             main.start();
             main.join();
         }
@@ -57,8 +56,10 @@ public class Network implements Runnable {
     public void prepare() {
         try {
             enumerationInterface();
+            System.out.println("Done!");
+            System.out.println(this.address);
             sendState = false; // on passe en mode reception , on att les réponses
-            Thread main = new Thread(new Network(this.username));        
+            Thread main = new Thread(new Network(this.username, this.address));        
             main.start();
             main.join();
         }
@@ -72,17 +73,7 @@ public class Network implements Runnable {
     // thread utilisé pour le receive ou le send
     public void run() {
         // send = 0 => on est en mode reveive
-        // send = 1 => on est en mode sender
-        if (getSendState()) {
-            try {
-                sendMessage("hello", "127.0.0.1");
-            }
-            catch (Exception e)  {
-                e.printStackTrace();
-            }
-            
-        }
-        else {
+        if (!sendState) {
             try {
                 recMessage();
             }
@@ -96,7 +87,7 @@ public class Network implements Runnable {
     public void sendMessage(String message, String Destination) throws Exception {
         
         message = message + ":" + this.username + ":" + this.address;
-        System.out.println("[INFO] Sending >" + message);
+        System.out.println("[INFO] Sending : " + message);
         socket = new DatagramSocket();
         socket.connect(InetAddress.getByName(Destination), this.port);
         byte[] buf=message.getBytes();
@@ -106,7 +97,7 @@ public class Network implements Runnable {
     }
 
 
-    public void recMessage() throws Exception { // TODO : FIX recMessage null this.address
+    public void recMessage() throws Exception { 
 
         System.out.println("[INFO] Waiting for response\n");
         String donnees = null;
@@ -132,14 +123,14 @@ public class Network implements Runnable {
 
         if (donnees.contains("hello-1c")) { // un nouveau utilisateur essaye de savoir qui est authentifié
             String message = "hello-1cb"; // on lui répond avec notre nom + IP
-            System.out.println("[INFO] Sending info to > " + senderUsername);
+            System.out.println("[INFO] Sending info to : " + senderUsername);
             System.out.println("[INFO] Updating userList - OK");
             IPC.add(donnees);
             System.out.println("[INFO] IPC Network (debug=1) : "+ getIPC());
             sendMessage(message, paquet.getAddress().getHostAddress());
         }
 
-        if (donnees.contains("hello-1bc")) { // un utilisateur authentifié a répondu au broadcast de découverte
+        if (donnees.contains("hello-1cb")) { // un utilisateur authentifié a répondu au broadcast de découverte
             
             System.out.println("[INFO] Updating userList - OK");
             IPC.add(donnees); // TODO : FIX IPC 
@@ -161,7 +152,6 @@ public class Network implements Runnable {
         for (NetworkInterface netint : Collections.list(nets)) {
             Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
             for (InetAddress inetAddress : Collections.list(inetAddresses)) {
-                System.out.println(inetAddress);
                 if (inetAddress == null || inetAddress.toString().contains(":") || inetAddress.toString().contains("127")) {
                     continue;
                 }
@@ -171,7 +161,6 @@ public class Network implements Runnable {
                     // TODO : améliorer la fonction
                     this.broadcast = "169.254.255.255";
                     this.address = inetAddress.getHostAddress();
-                    System.out.println(inetAddress.getHostAddress());
                 }
                 
             
