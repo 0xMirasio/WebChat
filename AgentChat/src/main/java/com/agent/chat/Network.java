@@ -37,8 +37,9 @@ public class Network implements Runnable {
  
         try {
             enumerationInterface();
-            System.out.println("[INFO] - Broadcast hello-1c");
-            broadcast("hello-1c", broadcast);
+            String message = "hello-1c"+":"+this.username+":"+this.address;
+            System.out.println("[INFO] - Broadcast > "+ message);
+            broadcast(message, broadcast);
     
             // démarrage écoute des réponses
             sendState = false; // on passe en mode reception , on att les réponses
@@ -129,19 +130,19 @@ public class Network implements Runnable {
 
         socket.close();
 
-        if (donnees.equals("hello-1c")) { // un nouveau utilisateur essaye de savoir qui est authentifié
+        if (donnees.contains("hello-1c")) { // un nouveau utilisateur essaye de savoir qui est authentifié
             String message = "hello-1cb"; // on lui répond avec notre nom + IP
             System.out.println("[INFO] Sending info to > " + senderUsername);
             System.out.println("[INFO] Updating userList - OK");
-            IPC.add(senderUsername+":"+paquet.getAddress().getHostAddress());
+            IPC.add(donnees);
             System.out.println("[INFO] IPC Network (debug=1) : "+ getIPC());
             sendMessage(message, paquet.getAddress().getHostAddress());
         }
 
-        if (donnees.equals("hello-1bc")) { // un utilisateur authentifié a répondu au broadcast de découverte
+        if (donnees.contains("hello-1bc")) { // un utilisateur authentifié a répondu au broadcast de découverte
             
             System.out.println("[INFO] Updating userList - OK");
-            IPC.add(senderUsername+":"+paquet.getAddress().getHostAddress()); // TODO : FIX IPC 
+            IPC.add(donnees); // TODO : FIX IPC 
             System.out.println("[INFO] IPC Network (debug=0) : "+ getIPC());
         }
    
@@ -160,6 +161,7 @@ public class Network implements Runnable {
         for (NetworkInterface netint : Collections.list(nets)) {
             Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
             for (InetAddress inetAddress : Collections.list(inetAddresses)) {
+                System.out.println(inetAddress);
                 if (inetAddress == null || inetAddress.toString().contains(":") || inetAddress.toString().contains("127")) {
                     continue;
                 }
@@ -169,6 +171,7 @@ public class Network implements Runnable {
                     // TODO : améliorer la fonction
                     this.broadcast = "169.254.255.255";
                     this.address = inetAddress.getHostAddress();
+                    System.out.println(inetAddress.getHostAddress());
                 }
                 
             
