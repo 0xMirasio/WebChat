@@ -12,6 +12,12 @@ public class Network implements Runnable {
     private static DatagramSocket socket = null;
     public String address;
     public String broadcast;
+    public String username;
+
+
+    public Network (String username) {
+        this.username = username;
+    }
 
     public void setSendState(boolean state) {
         this.sendState = state;
@@ -43,7 +49,7 @@ public class Network implements Runnable {
         }
         // démarrage écoute des réponses
         sendState = false; // on passe en mode reception , on att les réponses
-        Thread receive = new Thread(new Network());        
+        Thread receive = new Thread(new Network(this.username));        
         receive.start();
 
         return IPConnected;
@@ -58,7 +64,7 @@ public class Network implements Runnable {
             e.printStackTrace();
         }
         sendState = false; // on passe en mode reception , on att les réponses
-        Thread receive = new Thread(new Network());        
+        Thread receive = new Thread(new Network(this.username));        
         receive.start();
     }
  
@@ -120,7 +126,7 @@ public class Network implements Runnable {
         socket.close();
 
         if (donnees.equals("hello-1c")) { // un nouveau utilisateur essaye de savoir qui est authentifié
-            String message = username + ":" + this.address; // on lui répond avec notre nom + IP
+            String message = this.username + ":" + this.address; // on lui répond avec notre nom + IP
             sendMessage(message, paquet.getAddress().getHostAddress());
         }
    

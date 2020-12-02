@@ -13,7 +13,7 @@ public class Client {
 
     List<String> user = new ArrayList<String>();
     List<String> IPC = new ArrayList<String>();
-    Network net = new Network();
+    Network net = new Network(this.username);
     boolean isConnected = false;
     boolean debug = false;
 
