@@ -11,6 +11,8 @@ public class Network implements Runnable {
     public int port = 6000;
     private boolean sendState;
     private static DatagramSocket socket = null;
+    public String address;
+    public String broadcast;
 
     public void setSendState(boolean state) {
         this.sendState = state;
@@ -25,12 +27,14 @@ public class Network implements Runnable {
         List<String> IPConnected = new ArrayList<String>();
         IPConnected.add("0"); 
         try {
-            broadcastAdress =  enumerationInterface();
+            enumerationInterface();
         }
         catch (IOException e) {
             e.printStackTrace();
         }
         try {
+
+            System.out.println("[INFO] - Broadcast hello-1c");
             broadcast("hello-1c", broadcastAdress);
         }
         catch (IOException e) {
@@ -42,11 +46,18 @@ public class Network implements Runnable {
         sendState = false; // on passe en mode reception , on att les réponses
         Thread receive = new Thread(new Network());        
         receive.start();
+
         return IPConnected;
         
     }
 
     public void prepare() {
+        try {
+            enumerationInterface();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
         sendState = false; // on passe en mode reception , on att les réponses
         Thread receive = new Thread(new Network());        
         receive.start();
@@ -91,24 +102,27 @@ public class Network implements Runnable {
     public void recMessage() throws Exception {
 
         System.out.println("[INFO] Waiting for response\n");
+        String donnees = null;
+        DatagramPacket paquet = null;
         int taille = 1024;
         byte buffer[] = new byte[taille];
         DatagramSocket socket = new DatagramSocket(this.port);
         boolean notConnected = false;
         while(!notConnected){
-            DatagramPacket paquet = new DatagramPacket(buffer, buffer.length);
+            paquet = new DatagramPacket(buffer, buffer.length);
             socket.receive(paquet);
             notConnected = true;
             System.out.println("\n"+paquet.getAddress());
             taille = paquet.getLength();
-            String donnees = new String(paquet.getData(),0, taille);
+            donnees = new String(paquet.getData(),0, taille);
             System.out.println("Donnees reçues = "+donnees);
         }
 
-        // on a recu un message de X, on veux recevoir les autres message donc on relance le thread
-        sendState = false; // on passe en mode reception , on att les réponses
-        Thread receive = new Thread(new Network());        
-        receive.start();
+        socket.close();
+
+        if (donnees.equals("hello-1c")) {
+            sendMessage(address, paquet.getAddress().getHostAddress());
+        }
    
     }
 
@@ -120,7 +134,7 @@ public class Network implements Runnable {
         socket.send(packet);
     }
 
-    public String enumerationInterface() throws IOException{
+    public void enumerationInterface() throws IOException{
         Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
         String broadcast = null;
         for (NetworkInterface netint : Collections.list(nets)) {
@@ -134,14 +148,17 @@ public class Network implements Runnable {
                     System.out.println("[INFO] InetAddress >" + inetAddress.getHostAddress());
                     System.out.println("[INFO] Broadcast > 169.254.255.255");
                     // TODO : améliorer la fonction
-                    broadcast = "169.254.255.255";
+                    this.broadcast = "169.254.255.255";
+                    this.address = inetAddress.getHostAddress();
                 }
                 
             
             }
         }
-        return broadcast;
+
     }
+
+    
    
 
 }
