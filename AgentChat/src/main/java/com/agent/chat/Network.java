@@ -42,9 +42,12 @@ public class Network implements Runnable {
     
             // démarrage écoute des réponses
             sendState = false; // on passe en mode reception , on att les réponses
-            Thread main = new Thread(new Network(this.username, this.address));        
-            main.start();
-            main.join();
+            for (int i=0 ; i <20 ; i++) {
+                Thread main = new Thread(new Network(this.username, this.address));        
+                main.start();
+                main.join();
+            }
+
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -56,12 +59,9 @@ public class Network implements Runnable {
     public void prepare() {
         try {
             enumerationInterface();
-            System.out.println("Done!");
-            System.out.println(this.address);
             sendState = false; // on passe en mode reception , on att les réponses
             Thread main = new Thread(new Network(this.username, this.address));        
             main.start();
-            main.join();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -124,15 +124,18 @@ public class Network implements Runnable {
         socket.close();
 
         if (donnees.contains("hello-1c")) { // un nouveau utilisateur essaye de savoir qui est authentifié
-            String message = "hello-1cb"; // on lui répond avec notre nom + IP
+            String message = "hello-1b"; // on lui répond avec notre nom + IP
             System.out.println("[INFO] Sending info to : " + senderUsername);
             System.out.println("[INFO] Updating userList - OK");
             IPC.add(donnees_s[1]+ ":"+ donnees_s[2]);
             System.out.println("[INFO] IPC Network (debug=1) : "+ getIPC());
             sendMessage(message, paquet.getAddress().getHostAddress());
+            Thread main = new Thread(new Network(this.username, this.address));        
+            main.start();
+
         }
 
-        if (donnees.contains("hello-1cb")) { // un utilisateur authentifié a répondu au broadcast de découverte
+        if (donnees.contains("hello-1b")) { // un utilisateur authentifié a répondu au broadcast de découverte
             
             System.out.println("[INFO] Updating userList - OK");
             IPC.add(donnees_s[1]+ ":"+ donnees_s[2]); // TODO : FIX IPC 
