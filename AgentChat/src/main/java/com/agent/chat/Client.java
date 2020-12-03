@@ -54,7 +54,7 @@ public class Client {
         if (!isConnected) {
             System.out.println("[INFO] : Not Authenticated - Searching for others users\n");
             net.getUserConnected(); 
-            System.out.println("[INFO] IPC Client (debug=0) : " + net.getIPC());
+            System.out.println("[INFO] IPC Client (debug=0) : " + net.IPC);
            
         }
         else {

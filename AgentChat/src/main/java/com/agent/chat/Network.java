@@ -41,11 +41,12 @@ public class Network implements Runnable {
             broadcast(message, broadcast);
     
             // démarrage écoute des réponses
-            sendState = false; // on passe en mode reception , on att les réponses
+            sendState = false; // on passe en mode reception , on att les réponses de 20 client max
+            // TODO : max 5s
             for (int i=0 ; i <20 ; i++) {
                 Thread main = new Thread(new Network(this.username, this.address));        
                 main.start();
-                main.join();
+                
             }
 
         }
