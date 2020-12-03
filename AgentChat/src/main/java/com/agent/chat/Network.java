@@ -104,6 +104,7 @@ public class Network implements Runnable {
         DatagramPacket paquet = null;
         String senderUsername = null;
         int taille = 1024;
+        String[] donnees_s = null;
         byte buffer[] = new byte[taille];
         DatagramSocket socket = new DatagramSocket(this.port);
         boolean notConnected = false;
@@ -114,7 +115,8 @@ public class Network implements Runnable {
             System.out.println("\n"+paquet.getAddress());
             taille = paquet.getLength();
             donnees = new String(paquet.getData(),0, taille);
-            senderUsername = donnees; // pas valide mais on debug pour le moment
+            donnees_s = donnees.split(":", 3);
+            senderUsername = donnees_s[1]; 
             //TODO : split : => X:username:IP => recup username
             System.out.println("Donnees reçues = "+donnees);
         }
@@ -125,7 +127,7 @@ public class Network implements Runnable {
             String message = "hello-1cb"; // on lui répond avec notre nom + IP
             System.out.println("[INFO] Sending info to : " + senderUsername);
             System.out.println("[INFO] Updating userList - OK");
-            IPC.add(donnees);
+            IPC.add(donnees_s[1]+ ":"+ donnees_s[2]);
             System.out.println("[INFO] IPC Network (debug=1) : "+ getIPC());
             sendMessage(message, paquet.getAddress().getHostAddress());
         }
@@ -133,7 +135,7 @@ public class Network implements Runnable {
         if (donnees.contains("hello-1cb")) { // un utilisateur authentifié a répondu au broadcast de découverte
             
             System.out.println("[INFO] Updating userList - OK");
-            IPC.add(donnees); // TODO : FIX IPC 
+            IPC.add(donnees_s[1]+ ":"+ donnees_s[2]); // TODO : FIX IPC 
             System.out.println("[INFO] IPC Network (debug=0) : "+ getIPC());
         }
    
