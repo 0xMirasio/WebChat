@@ -2,6 +2,7 @@ package com.agent.chat;
 import java.util.*;
 import java.io.*;
 import java.net.*;
+import java.time.Duration;
 
 public class Network implements Runnable {
     /* 
@@ -43,10 +44,23 @@ public class Network implements Runnable {
             // démarrage écoute des réponses
             sendState = false; // on passe en mode reception , on att les réponses de 20 client max
             // TODO : max 5s
+            long start = System.currentTimeMillis();
+            Thread main[] = new Thread[20];
             for (int i=0 ; i <20 ; i++) {
-                Thread main = new Thread(new Network(this.username, this.address));        
-                main.start();
-                
+                main[i]= new Thread(new Network(this.username, this.address));        
+                main[i].start();                
+            }
+
+            while(true){
+
+                long end = System.currentTimeMillis();
+                long duration = end - start;
+                if(duration >(long) 5*1000){
+                    for (int i=0 ; i <20 ; i++) {
+                        main[i].interrupt();                
+                    }
+                }
+                break;
             }
 
         }
