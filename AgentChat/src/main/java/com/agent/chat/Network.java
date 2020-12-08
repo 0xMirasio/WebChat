@@ -58,7 +58,7 @@ public class Network extends Thread {
         }
 
         if (this.IPC.size() == 0) {
-            this.IPC.add(this.username+":"+this.address);
+            this.IPC.add(this.username+"-"+this.address);
         }
         System.out.println("[INFO] IPC Network (debug=0) : "+ IPC);
 
@@ -163,8 +163,7 @@ public class Network extends Thread {
         System.out.println("[DEBUG] Donnée en traitement = " + donnees);
         if (donnees.contains("hello-1c")) { // un nouveau utilisateur essaye de savoir qui est authentifié
             String message = "hello-1b"; // on lui répond avec notre nom + IP
-            //IPC.add(donnees_s[1]+ ":"+ donnees_s[2]);
-            this.IPC.add(senderUsername+":"+senderAddress);
+            this.IPC.add(senderUsername+"-"+senderAddress);
             System.out.println("[DEBUG] - senderUsername, IPC => " + senderUsername + ":" + this.IPC );
             boolean rep = util.checkUsername(senderUsername, IPC);
             if (rep) {
