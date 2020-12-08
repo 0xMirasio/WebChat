@@ -149,6 +149,7 @@ public class Network extends Thread {
         byte[] buf=message.getBytes();
         DatagramPacket packet= new DatagramPacket(buf, buf.length);
         socket.send(packet);
+        socket.close();
 
     }
 
@@ -232,7 +233,6 @@ public class Network extends Thread {
 
         String donnees = null;
         DatagramPacket paquet = null;
-        String senderUsername = null;
         int taille = 1024;
         String[] donnees_s = null;
         byte buffer[] = new byte[taille];
@@ -251,8 +251,6 @@ public class Network extends Thread {
             System.out.println("\n"+paquet.getAddress());
             taille = paquet.getLength();
             donnees = new String(paquet.getData(),0, taille);
-            donnees_s = donnees.split(":", 3);
-            senderUsername = donnees_s[1]; 
             System.out.println("Donnees reçues = "+donnees);
         }
         socket.close();
@@ -272,6 +270,7 @@ public class Network extends Thread {
         byte[] buf= broadcastMessage.getBytes();
         DatagramPacket packet= new DatagramPacket(buf, buf.length);
         socket.send(packet);
+        socket.close();
     }
 
     /*
@@ -289,11 +288,12 @@ public class Network extends Thread {
                     this.broadcast = "169.254.255.255";
                     this.address = inetAddress.getHostAddress();
                 }
-
+                /*
                 if (inetAddress.toString().contains("172")) { // rezo type docker
                      this.broadcast = "172.17.255.255";
                      this.address = inetAddress.getHostAddress();
                 }
+                */
             }
         }
         System.out.println("[INFO] Logged on internal Network with IP : "+ this.address);
