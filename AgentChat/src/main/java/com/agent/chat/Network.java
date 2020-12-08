@@ -147,17 +147,11 @@ public class Network extends Thread {
 
         System.out.println(donnees);
         String[] donnees_s = null;
-        System.out.println("just where is the crash1");
         donnees_s = donnees.split(":", 5);
-        System.out.println("just where is the crash2");
         String senderUsername = donnees_s[1];
-        System.out.println("just where is the crash3");
         String senderAddress = donnees_s[2];
-        System.out.println("just where is the crash4");
         String SenderIPC = donnees_s[3];
-        System.out.println("just where is the crash5");
         int nbUser = Integer.parseInt(donnees_s[4]);
-        System.out.println("just where is the crash6");
         Util util = new Util();
         // debut traitement des données paquet
         System.out.println("[DEBUG] Donnée en traitement = " + donnees);
@@ -190,8 +184,14 @@ public class Network extends Thread {
             main.start();
         }
         if (donnees.contains("hello-1b/userOK")) { // un utilisateur authentifié a répondu au broadcast de découverte
-            System.out.println("i'm here");
-            this.IPC = util.transform2IPC(SenderIPC, nbUser); // le nouveau IPC est celui fourni par les utilisateurs authentifié.
+            try {
+                System.out.println("[DEBUG] senderIPC, nbUSer => " + senderIPC +":"+ nbUser);
+                this.IPC = util.transform2IPC(SenderIPC, nbUser); // le nouveau IPC est celui fourni par les utilisateurs authentifié.
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("aled");
+            }
             System.out.println("[INFO] Updating userList - NewIPC = " + this.IPC);
 
         }
