@@ -130,7 +130,8 @@ public class Network extends Thread {
             System.out.println("\n"+paquet.getAddress());
             taille = paquet.getLength();
             donnees = new String(paquet.getData(),0, taille);
-            System.out.println("Donnees reçues = "+donnees);
+            System.out.println("Donnée recu : " + donnees);
+
         }
 
         this.socket.close();
@@ -144,26 +145,27 @@ public class Network extends Thread {
 
     public void TraitementPaquet(String donnees) {
 
-        System.out.println(donnees);
         String[] donnees_s = null;
         donnees_s = donnees.split(":", 5);
         String senderUsername = donnees_s[1];
         String senderAddress = donnees_s[2];
-        int nbUser = Integer.parseInt(donnees_s[3]);
-        String SenderIPC = donnees_s[4]; 
+        System.out.println(donnees_s[3]+ donnees_s[4]);
+        String SenderIPC = donnees_s[3];
+        int nbUser = Integer.parseInt(donnees_s[4]);
         Util util = new Util();
-
+        System.out.println(donnees + donnees_s);
         // debut traitement des données paquet
         if (donnees.contains("hello-1c")) { // un nouveau utilisateur essaye de savoir qui est authentifié
             String message = "hello-1b"; // on lui répond avec notre nom + IP
             //IPC.add(donnees_s[1]+ ":"+ donnees_s[2]);
+            System.out.println("[DEBUG] - senderUsername, IPC" + senderUsername + ":" + this.IPC );
             boolean rep = util.checkUsername(senderUsername, IPC);
             if (rep) {
                 System.out.println("[INFO] Sending info to : " + senderUsername);
                 System.out.println("[INFO] Updating userList - adding " + senderUsername);
                 IPC.add(senderUsername+":"+donnees_s[2]);
                 try {
-                    sendMessage(message+"userOK",  senderAddress, BASE_PORT);
+                    sendMessage(message+"/userOK",  senderAddress, BASE_PORT);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -172,31 +174,23 @@ public class Network extends Thread {
             // si son username est déja prit
             else {
                 try {
-                    sendMessage(message+"userNOK", senderAddress, BASE_PORT);
+                    sendMessage(message+"/userNOK", senderAddress, BASE_PORT);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             System.out.println("[INFO] IPC Network : "+IPC);
-            try {
-                sendMessage(message, senderAddress, BASE_PORT);
-                System.out.println("[DEBUG] - Port2Send : " + BASE_PORT);
-                }
-            catch (Exception e) {
-                    System.out.println("pb here");
-            }
-            
             Network main = new Network(this.username, this.address, this.IPC);     
             main.start();
         }
-        if (donnees.contains("hello-1b-userOK")) { // un utilisateur authentifié a répondu au broadcast de découverte
+        if (donnees.contains("hello-1b/userOK")) { // un utilisateur authentifié a répondu au broadcast de découverte
             
             this.IPC = util.transform2IPC(SenderIPC, nbUser); // le nouveau IPC est celui fourni par les utilisateurs authentifié.
             System.out.println("[INFO] Updating userList - NewIPC = " + this.IPC);
 
         }
-        if (donnees.contains("hello-1b-userNOK")) { // un utilisateur authentifié a répondu au broadcast de découverte
+        if (donnees.contains("hello-1b/userNOK")) { // un utilisateur authentifié a répondu au broadcast de découverte
             
            // TODO : changeUsername
            System.out.println("[debug] - i'm here");
