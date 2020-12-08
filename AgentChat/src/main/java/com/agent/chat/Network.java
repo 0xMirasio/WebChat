@@ -184,14 +184,7 @@ public class Network extends Thread {
             main.start();
         }
         if (donnees.contains("hello-1b/userOK")) { // un utilisateur authentifié a répondu au broadcast de découverte
-            try {
-                System.out.println("[DEBUG] senderIPC, nbUSer => " + SenderIPC +":"+ nbUser);
-                this.IPC = util.transform2IPC(SenderIPC, nbUser); // le nouveau IPC est celui fourni par les utilisateurs authentifié.
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("aled");
-            }
+            this.IPC = util.transform2IPC(SenderIPC, nbUser); // le nouveau IPC est celui fourni par les utilisateurs authentifié.
             System.out.println("[INFO] Updating userList - NewIPC = " + this.IPC);
 
         }
