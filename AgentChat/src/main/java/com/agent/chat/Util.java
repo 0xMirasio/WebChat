@@ -4,9 +4,13 @@ import java.util.*;
 public class Util {
     
     public boolean checkUsername(String username, List<String> IPC) {
-        if (IPC.contains(username)) {
-            System.out.println("[INFO] double user detected, sending rename request");
-            return true;
+        for (int i=0; i<IPC.size(); i++) {
+            String[] IPC_s = null;
+            IPC_s = IPC.get(0).split(":", 2);
+            System.out.println("[DEBUG] :" + IPC_s[0]);
+            System.out.println(IPC_s[0] == username);
+            return (IPC_s[0] == username);
+            
         }
         return false;
     }
