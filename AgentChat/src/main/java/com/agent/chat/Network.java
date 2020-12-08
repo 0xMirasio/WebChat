@@ -127,10 +127,10 @@ public class Network extends Thread {
             paquet = new DatagramPacket(buffer, buffer.length);
             socket.receive(paquet);
             notConnected = true;
-            System.out.println("\n"+paquet.getAddress());
+            System.out.println("[DEBUG]"+paquet.getAddress());
             taille = paquet.getLength();
             donnees = new String(paquet.getData(),0, taille);
-            System.out.println("Donnée recu : " + donnees);
+            System.out.println("[DEBUG] Donnée recu : " + donnees);
 
         }
 
@@ -149,16 +149,16 @@ public class Network extends Thread {
         donnees_s = donnees.split(":", 5);
         String senderUsername = donnees_s[1];
         String senderAddress = donnees_s[2];
-        System.out.println(donnees_s[3]+ donnees_s[4]);
         String SenderIPC = donnees_s[3];
         int nbUser = Integer.parseInt(donnees_s[4]);
         Util util = new Util();
-        System.out.println(donnees + donnees_s);
         // debut traitement des données paquet
+        System.out.println("[DEBUG] Donnée en traitement = " + donnees);
         if (donnees.contains("hello-1c")) { // un nouveau utilisateur essaye de savoir qui est authentifié
             String message = "hello-1b"; // on lui répond avec notre nom + IP
             //IPC.add(donnees_s[1]+ ":"+ donnees_s[2]);
-            System.out.println("[DEBUG] - senderUsername, IPC" + senderUsername + ":" + this.IPC );
+            this.IPC.add(senderUsername+":"+senderAddress);
+            System.out.println("[DEBUG] - senderUsername, IPC => " + senderUsername + ":" + this.IPC );
             boolean rep = util.checkUsername(senderUsername, IPC);
             if (rep) {
                 System.out.println("[INFO] Sending info to : " + senderUsername);
