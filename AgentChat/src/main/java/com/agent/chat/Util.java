@@ -8,8 +8,8 @@ public class Util {
             String[] IPC_s = null;
             IPC_s = IPC.get(0).split(":", 2);
             System.out.println("[DEBUG] :" + IPC_s[0]);
-            System.out.println(IPC_s[0] == username);
-            return (IPC_s[0] == username);
+            System.out.println(IPC_s[0].equals(username));
+            return (IPC_s[0].equals(username));
             
         }
         return false;
