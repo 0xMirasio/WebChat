@@ -45,6 +45,7 @@ public class Network extends Thread {
                 long end = System.currentTimeMillis();
                 long duration = end - start;
                 if(duration >(long) 5*1000){
+                    this.IPC = main.IPC;
                     main.socket.close();
                     main.interrupt();
                     break;
