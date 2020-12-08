@@ -44,7 +44,7 @@ public class Network extends Thread {
 
                 long end = System.currentTimeMillis();
                 long duration = end - start;
-                if(duration >(long) 10*1000){
+                if(duration >(long) 5*1000){
                     main.socket.close();
                     main.interrupt();
                     break;
@@ -88,6 +88,7 @@ public class Network extends Thread {
         String donnees;
         try {
                 donnees = receiveClient();
+                System.out.println("putain j'en ai marre de debug");
                 TraitementPaquet(donnees);
             }
         catch (Exception e) {
@@ -163,7 +164,6 @@ public class Network extends Thread {
             if (rep) {
                 System.out.println("[INFO] Sending info to : " + senderUsername);
                 System.out.println("[INFO] Updating userList - adding " + senderUsername);
-                IPC.add(senderUsername+":"+donnees_s[2]);
                 try {
                     sendMessage(message+"/userOK",  senderAddress, BASE_PORT);
                 }
@@ -185,7 +185,7 @@ public class Network extends Thread {
             main.start();
         }
         if (donnees.contains("hello-1b/userOK")) { // un utilisateur authentifié a répondu au broadcast de découverte
-            
+            System.out.println("i'm here");
             this.IPC = util.transform2IPC(SenderIPC, nbUser); // le nouveau IPC est celui fourni par les utilisateurs authentifié.
             System.out.println("[INFO] Updating userList - NewIPC = " + this.IPC);
 

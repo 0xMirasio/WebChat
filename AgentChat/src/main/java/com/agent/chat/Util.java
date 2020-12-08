@@ -6,10 +6,8 @@ public class Util {
     public boolean checkUsername(String username, List<String> IPC) {
         for (int i=0; i<IPC.size(); i++) {
             String[] IPC_s = null;
-            IPC_s = IPC.get(0).split(":", 2);
-            System.out.println("[DEBUG] :" + IPC_s[0]);
-            System.out.println(IPC_s[0].equals(username));
-            if (IPC_s[i].equals(username)) {
+            IPC_s = IPC.get(i).split(":", 2);
+            if (IPC_s[0].equals(username)) {
                 return true;
             }
         }
