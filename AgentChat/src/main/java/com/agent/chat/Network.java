@@ -88,7 +88,6 @@ public class Network extends Thread {
         String donnees;
         try {
                 donnees = receiveClient();
-                System.out.println("putain j'en ai marre de debug");
                 TraitementPaquet(donnees);
             }
         catch (Exception e) {
@@ -146,12 +145,19 @@ public class Network extends Thread {
 
     public void TraitementPaquet(String donnees) {
 
+        System.out.println(donnees);
         String[] donnees_s = null;
+        System.out.println("just where is the crash1");
         donnees_s = donnees.split(":", 5);
+        System.out.println("just where is the crash2");
         String senderUsername = donnees_s[1];
+        System.out.println("just where is the crash3");
         String senderAddress = donnees_s[2];
+        System.out.println("just where is the crash4");
         String SenderIPC = donnees_s[3];
+        System.out.println("just where is the crash5");
         int nbUser = Integer.parseInt(donnees_s[4]);
+        System.out.println("just where is the crash6");
         Util util = new Util();
         // debut traitement des données paquet
         System.out.println("[DEBUG] Donnée en traitement = " + donnees);
