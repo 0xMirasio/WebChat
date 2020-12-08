@@ -5,46 +5,25 @@ import java.net.*;
 import java.time.Duration;
 
 public class Network extends Thread {
-   
-    private boolean p1broadcast = false;
-    private boolean p2broadcast = false;
+
     public String address;
     public String broadcast;
     public String username;
     public List<String> IPC = new ArrayList<String>();
-    public int MAX_CONNEXION = 20;
-    public int BASE_PORT = 6000;
-    public int taille = 1024;
-    public int INDEX = 0;
+    private int BASE_PORT = 6000;
+    private int taille = 1024;
     DatagramSocket socket = null;
     DatagramPacket paquet = null;
-
-    public void closeSocket() {
-        this.socket.close();
-    }
 
     public Network (String username) {
         this.username = username;
     }
-    
-    public Network (String username, String address) { 
+
+    public Network (String username, String address, List<String> IPC) { 
         this.username = username;
         this.address = address;
-    }
 
-    public Network (String username, String address, boolean p1broadcast, int INDEX) {
-        this.username = username;
-        this.address = address;
-        this.p1broadcast = p1broadcast;
-        this.INDEX = INDEX;
-
-    }
-
-    public Network (String username, String address, boolean p1broadcast, boolean p2broadcast) { 
-        this.username = username;
-        this.address = address;
-        this.p1broadcast = p1broadcast;
-        this.p2broadcast = p2broadcast;
+        this.IPC = IPC;
 
     }
 
@@ -54,30 +33,20 @@ public class Network extends Thread {
  
         try {
             enumerationInterface();
-            IPC.add(this.username + ":" + this.address);
-            String message = "hello-1c"+":"+this.username+":"+this.address;
+            String message = "hello-1c"+":"+this.username+":"+this.address+":[]:0"; // initialisation, IPC = [] et nbUser = 0
             System.out.println("[INFO] - Broadcasting (10S MAX DELAY): "+ message);
             broadcast(message, broadcast);
-    
             // démarrage écoute des réponses
             long start = System.currentTimeMillis();
-            Network main[] = new Network[MAX_CONNEXION];
-            this.p1broadcast = true;
-            for (int i=0 ; i <MAX_CONNEXION ; i++) {
-                this.INDEX = i;
-                main[i]= new Network(this.username, this.address, this.p1broadcast, this.INDEX);        
-                main[i].start();              
-            }
-
+            Network main= new Network(this.username, this.address, this.IPC);        
+            main.start();              
             while(true){
 
                 long end = System.currentTimeMillis();
                 long duration = end - start;
                 if(duration >(long) 10*1000){
-                    for (int i=0 ; i <MAX_CONNEXION ; i++) {
-                        main[i].closeSocket(); // on a redefini la méthode stop pour fermer le socket du thread.
-                        main[i].interrupt();                
-                    }
+                    main.socket.close();
+                    main.interrupt();
                     break;
                 }
             }
@@ -88,18 +57,20 @@ public class Network extends Thread {
             System.exit(-2);
         }
 
+        if (this.IPC.size() == 0) {
+            this.IPC.add(this.username+":"+this.address);
+        }
         System.out.println("[INFO] IPC Network (debug=0) : "+ IPC);
 
         
     }
 
     /* this Method is called when a client is authenticated and want to respond to new client on the network */
-    public void prepare() {
+    public void prepare(List <String> IPC) {
         try {
+            System.out.println("[DEBUG] IPC (prepare) = " + IPC);
             enumerationInterface();
-            this.p2broadcast = true;
-            this.p1broadcast = false;   
-            Network main = new Network(this.username, this.address, this.p1broadcast, this.p2broadcast);     
+            Network main = new Network(this.username, this.address, this.IPC);     
             main.start();
         }
         catch (Exception e) {
@@ -115,23 +86,12 @@ public class Network extends Thread {
      */
     public void run() {
         String donnees;
-        if (p1broadcast) { // phase1, on prepare MAX_CONNEXIon socket
-            try {
-                donnees = receiveMultiClient();
+        try {
+                donnees = receiveClient();
                 TraitementPaquet(donnees);
             }
-            catch (Exception e) {
+        catch (Exception e) {
                 //e.printStackTrace();
-            }
-        }
-        if (p2broadcast) { // phase2, les clients authentifiés vont répondre aux sockets
-            try {
-                donnees = receive1Client(); 
-                TraitementPaquet(donnees);
-            }
-            catch (Exception e)  {
-                e.printStackTrace();
-            }
         }
             
     }
@@ -142,7 +102,7 @@ public class Network extends Thread {
     public void sendMessage(String message, String Destination, int Port) throws Exception {
         
 
-        message = message + ":" + this.username + ":" + this.address;
+        message = message + ":" + this.username + ":" + this.address + ":" + this.IPC + ":" + this.IPC.size();
         System.out.println("[INFO] Sending : " + message + " on port :" + Port);
         DatagramSocket socket = new DatagramSocket();
         socket.connect(InetAddress.getByName(Destination), Port);
@@ -156,12 +116,12 @@ public class Network extends Thread {
     /* 
     Set up a listener on port BASEPORT (6000) and wait for data
     */
-    public String receive1Client() throws Exception { 
+    public String receiveClient() throws Exception { 
 
         System.out.println("[INFO] - Waiting for new client to connect on network");
         String donnees = null;
         byte buffer[] = new byte[taille];
-        DatagramSocket socket = new DatagramSocket(this.BASE_PORT); 
+        this.socket = new DatagramSocket(this.BASE_PORT); 
         boolean notConnected = false;
         while(!notConnected){
             paquet = new DatagramPacket(buffer, buffer.length);
@@ -173,7 +133,7 @@ public class Network extends Thread {
             System.out.println("Donnees reçues = "+donnees);
         }
 
-        socket.close();
+        this.socket.close();
         return donnees;
     }
 
@@ -185,79 +145,63 @@ public class Network extends Thread {
     public void TraitementPaquet(String donnees) {
 
         System.out.println(donnees);
-        String senderUsername = null;
         String[] donnees_s = null;
-        donnees_s = donnees.split(":", 3);
-        senderUsername = donnees_s[1]; 
+        donnees_s = donnees.split(":", 5);
+        String senderUsername = donnees_s[1];
+        String senderAddress = donnees_s[2];
+        int nbUser = Integer.parseInt(donnees_s[3]);
+        String SenderIPC = donnees_s[4]; 
+        Util util = new Util();
+
+        // debut traitement des données paquet
         if (donnees.contains("hello-1c")) { // un nouveau utilisateur essaye de savoir qui est authentifié
             String message = "hello-1b"; // on lui répond avec notre nom + IP
-            System.out.println("[INFO] Sending info to : " + senderUsername);
-            System.out.println("[INFO] Updating userList - OK");
-            IPC.add(donnees_s[1]+ ":"+ donnees_s[2]);
-            System.out.println("[INFO] IPC Network (debug=1) : "+IPC);
-
-            for (int i=0; i< MAX_CONNEXION ; i++) {
-                    try {
-                        sendMessage(message, paquet.getAddress().getHostAddress(), (BASE_PORT + i));
-                        System.out.println("[DEBUG] - Port2Send : " + (BASE_PORT + i));
-                    }
-                    catch (Exception e) {
-                        System.out.println("pb here");
-                        continue;
-
-                    }
-                    finally {
-                        break;
-                    }
+            //IPC.add(donnees_s[1]+ ":"+ donnees_s[2]);
+            boolean rep = util.checkUsername(senderUsername, IPC);
+            if (rep) {
+                System.out.println("[INFO] Sending info to : " + senderUsername);
+                System.out.println("[INFO] Updating userList - adding " + senderUsername);
+                IPC.add(senderUsername+":"+donnees_s[2]);
+                try {
+                    sendMessage(message+"userOK",  senderAddress, BASE_PORT);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            // si son username est déja prit
+            else {
+                try {
+                    sendMessage(message+"userNOK", senderAddress, BASE_PORT);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println("[INFO] IPC Network : "+IPC);
+            try {
+                sendMessage(message, senderAddress, BASE_PORT);
+                System.out.println("[DEBUG] - Port2Send : " + BASE_PORT);
+                }
+            catch (Exception e) {
+                    System.out.println("pb here");
             }
             
-            this.p2broadcast = true;
-            this.p1broadcast = false;
-            Network main = new Network(this.username, this.address, this.p1broadcast, this.p2broadcast);     
+            Network main = new Network(this.username, this.address, this.IPC);     
             main.start();
         }
-
-        if (donnees.contains("hello-1b")) { // un utilisateur authentifié a répondu au broadcast de découverte
+        if (donnees.contains("hello-1b-userOK")) { // un utilisateur authentifié a répondu au broadcast de découverte
             
-            System.out.println("[INFO] Updating userList - Adding "+ donnees_s[1]+" - OK");
-            IPC.add(donnees_s[1]+ ":"+ donnees_s[2]); // TODO : FIX IPC 
+            this.IPC = util.transform2IPC(SenderIPC, nbUser); // le nouveau IPC est celui fourni par les utilisateurs authentifié.
+            System.out.println("[INFO] Updating userList - NewIPC = " + this.IPC);
+
+        }
+        if (donnees.contains("hello-1b-userNOK")) { // un utilisateur authentifié a répondu au broadcast de découverte
+            
+           // TODO : changeUsername
+           System.out.println("[debug] - i'm here");
         }
     
-    }
-    /*
-    This method is listening on a port BASE_PORT + INDEX, INDEX is given when startin the thread in network constructor
-    It return data which is the result of the data captured.
-    */
-
-    public String receiveMultiClient() throws Exception { 
-
-        String donnees = null;
-        DatagramPacket paquet = null;
-        int taille = 1024;
-        String[] donnees_s = null;
-        byte buffer[] = new byte[taille];
-        try {
-                socket = new DatagramSocket(this.BASE_PORT + INDEX); 
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        boolean notConnected = false;
-        while(!notConnected){
-            paquet = new DatagramPacket(buffer, buffer.length);
-            System.out.println(this.BASE_PORT + INDEX);
-            socket.receive(paquet);
-            notConnected = true;
-            System.out.println("\n"+paquet.getAddress());
-            taille = paquet.getLength();
-            donnees = new String(paquet.getData(),0, taille);
-            System.out.println("Donnees reçues = "+donnees);
-        }
-        socket.close();
-        System.out.println(donnees);
-        return donnees;
-        
-   
     }
 
     /*
