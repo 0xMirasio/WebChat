@@ -12,17 +12,27 @@ public class Network extends Thread {
     public List<String> IPC = new ArrayList<String>();
     private int BASE_PORT = 6000;
     private int taille = 1024;
+    private int MAX_C = 20;
+    private long MAX_TIME_BROADCAST =  10000;
     DatagramSocket socket = null;
     DatagramPacket paquet = null;
+    private int INDEX = 0;
 
     public Network (String username) {
         this.username = username;
     }
 
+    public Network (String username, String address, List<String> IPC, int INDEX) { 
+        this.username = username;
+        this.address = address;
+        this.INDEX = INDEX;
+        this.IPC = IPC;
+
+    }
+
     public Network (String username, String address, List<String> IPC) { 
         this.username = username;
         this.address = address;
-
         this.IPC = IPC;
 
     }
@@ -38,16 +48,30 @@ public class Network extends Thread {
             broadcast(message, broadcast);
             // démarrage écoute des réponses
             long start = System.currentTimeMillis();
-            Network main= new Network(this.username, this.address, this.IPC);        
-            main.start();              
+            Network main[] = new Network[MAX_C];
+            for (int i = 0 ; i< MAX_C ; i++) {
+                main[i]= new Network(this.username, this.address, this.IPC, (this.INDEX+ i));        
+                main[i].start();    
+            }
+                      
             while(true){
 
                 long end = System.currentTimeMillis();
                 long duration = end - start;
-                if(duration >(long) 5*1000){
-                    this.IPC = main.IPC;
-                    main.socket.close();
-                    main.interrupt();
+                if(duration > MAX_TIME_BROADCAST){
+                    this.IPC = main[0].IPC; 
+                    /* il recupere l'ipc de chaque thread, or si on ne prend pas le plus gros (car certain thread 
+                     n'ont rien recu et donc IPC.size() = 0
+                     Donc pour eviter de recuperer un ipc vide alors que l'ipc peut etre rempli, on prend le premier IPC
+                      puis on teste la taille, et on recupère le plus gros
+                    */ 
+                    for (int i = 0 ; i< MAX_C ; i++) {
+                        if (main[i].IPC.size() > this.IPC.size()) {
+                            this.IPC = main[i].IPC;
+                        }
+                        main[i].socket.close();
+                        main[i].interrupt();
+                    }
                     break;
                 }
             }
@@ -119,14 +143,15 @@ public class Network extends Thread {
     */
     public String receiveClient() throws Exception { 
 
-        System.out.println("[INFO] - Waiting for new client to connect on network");
         String donnees = null;
         byte buffer[] = new byte[taille];
-        this.socket = new DatagramSocket(this.BASE_PORT); 
+        this.socket = new DatagramSocket((this.BASE_PORT+ INDEX)); 
+        System.out.println("[DEBUG] - Opening socket on " + (this.BASE_PORT + INDEX) + ": =>" + this.socket);
         boolean notConnected = false;
         while(!notConnected){
             paquet = new DatagramPacket(buffer, buffer.length);
             socket.receive(paquet);
+            System.out.println("was here");
             notConnected = true;
             System.out.println("[DEBUG]"+paquet.getAddress());
             taille = paquet.getLength();
@@ -157,15 +182,18 @@ public class Network extends Thread {
         // debut traitement des données paquet
         System.out.println("[DEBUG] Donnée en traitement = " + donnees);
         if (donnees.contains("hello-1c")) { // un nouveau utilisateur essaye de savoir qui est authentifié
+            // TODO :  attendre un certain temps X en fonction de l'adresse IP pour ne pas surcharger l'autheur du broadcast
             String message = "hello-1b"; // on lui répond avec notre nom + IP
-            this.IPC.add(senderUsername+"-"+senderAddress);
-            System.out.println("[DEBUG] - senderUsername, IPC => " + senderUsername + ":" + this.IPC );
-            boolean rep = util.checkUsername(senderUsername, IPC);
-            if (rep) {
-                System.out.println("[INFO] Sending info to : " + senderUsername);
-                System.out.println("[INFO] Updating userList - adding " + senderUsername);
+            boolean rep = this.username.equals(senderUsername);
+            if (!rep) {
+                this.IPC.add(senderUsername+"-"+senderAddress);
+                System.out.println("[INFO] Updating userList - NewIPC = " + this.IPC);
                 try {
-                    sendMessage(message+"/userOK",  senderAddress, BASE_PORT);
+                    this.INDEX = util.getPort(this.address); 
+                    // en gros si addresse = 172.17.0.2 => INDEX = 0
+                    // 172.17.0.2 => INDEX=1
+                    // cela permet de distribuer les replies sur les différents sockets de l'emmeteur du broadcast en fct de l'adresse
+                    sendMessage(message+"/userOK",  senderAddress, BASE_PORT + INDEX);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -174,25 +202,27 @@ public class Network extends Thread {
             // si son username est déja prit
             else {
                 try {
-                    sendMessage(message+"/userNOK", senderAddress, BASE_PORT);
+                    sendMessage(message+"/userNOK", senderAddress, BASE_PORT + INDEX);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             System.out.println("[INFO] IPC Network : "+IPC);
-            Network main = new Network(this.username, this.address, this.IPC);     
-            main.start();
+            if (INDEX == 0) {
+                Network main = new Network(this.username, this.address, this.IPC);     
+                main.start();
+            }
         }
-        if (donnees.contains("hello-1b/userOK")) { // un utilisateur authentifié a répondu au broadcast de découverte
+        if (donnees.contains("hello-1b/userOK")) { // un utilisateur authentifié a répondu au broadcast de découverte et signale que le pseudo est OK
             this.IPC = util.transform2IPC(SenderIPC, nbUser); // le nouveau IPC est celui fourni par les utilisateurs authentifié.
             System.out.println("[INFO] Updating userList - NewIPC = " + this.IPC);
 
         }
-        if (donnees.contains("hello-1b/userNOK")) { // un utilisateur authentifié a répondu au broadcast de découverte
+        if (donnees.contains("hello-1b/userNOK")) { // un utilisateur authentifié a répondu au broadcast de découverte et signale que le pseudo déja utilisé
             
-           // TODO : changeUsername
-           System.out.println("[debug] - i'm here");
+            System.out.println("[CRITICAL] - Username Aleady Taken, Pls Change your username in GUI Login or in .cache/profile.private");
+            System.exit(-2);
         }
     
     }
@@ -225,12 +255,12 @@ public class Network extends Thread {
                     this.broadcast = "169.254.255.255";
                     this.address = inetAddress.getHostAddress();
                 }
-                /*
+                
                 if (inetAddress.toString().contains("172")) { // rezo type docker
                      this.broadcast = "172.17.255.255";
                      this.address = inetAddress.getHostAddress();
                 }
-                */
+                
             }
         }
         System.out.println("[INFO] Logged on internal Network with IP : "+ this.address);
