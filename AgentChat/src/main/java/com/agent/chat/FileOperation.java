@@ -7,23 +7,18 @@ class FileOperation
     static FileOperation filework;
     BufferedReader reader = null;
     private String profile = ".cache/profile.private";
-    private String network = ".cache/network.ini";
-    private String debug = ".cache/debug";
     private String email;
     private String username;
     private String password;
-    private String signature;
-    private boolean isDebug;
+    private String profileimagepath;
 
-    private String mask;//Masque de (sous) réseau
-    private int port; //Numéro de port
 
     public void readFile() throws Exception  {
         this.reader= new BufferedReader(new FileReader(profile));
         this.username = reader.readLine();
         this.email = reader.readLine();
         this.password = reader.readLine();
-        this.signature = reader.readLine();
+        this.profileimagepath = reader.readLine();
         reader.close();
     }
 
@@ -35,7 +30,7 @@ class FileOperation
             e.printStackTrace();
         }
 
-        return (this.username == null || this.password == null || this.email == null || this.signature == null);
+        return (this.username == null || this.password == null || this.email == null);
 
     }
 
@@ -48,6 +43,16 @@ class FileOperation
         }
         return this.username;
     }
+    
+    public String getPath() {
+        try { 
+            readFile(); 
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return this.profileimagepath;
+    }
 
     public String getPassword() {
         try { 
@@ -59,67 +64,18 @@ class FileOperation
         return this.password;
     }
 
-    public String getSignature() {
-        try { 
-            readFile(); 
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return this.signature;
-    }
 
-
-
-    public void setNewProfile(String username,String email,String password) throws Exception {
+    public void createNewProfile(String username,String password,String email, String profileimagepath) throws Exception {
         PrintWriter writer = new PrintWriter(profile);
         writer.println(username);
         writer.println(email);
         writer.println(password.hashCode());
-        writer.println(Integer.toString(password.hashCode()).hashCode()); // signature du hash => a envoyer au mySQL
+        writer.println(profileimagepath);
         writer.close();
     }
 
-    public void readFileNetwork() throws Exception  {
-        this.reader= new BufferedReader(new FileReader(network));
-        this.mask = reader.readLine();
-        this.port = Integer.parseInt(reader.readLine());
-        reader.close();
-    }
 
-    public String GetNeworkMask() throws Exception  {
-            try { 
-                readFileNetwork();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            return this.mask;
-    }
 
-    public int GetPort() throws Exception {
-        try { 
-            readFileNetwork();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return this.port;
-    }
-
-    public void readFileDebug() throws Exception  {
-        this.reader= new BufferedReader(new FileReader(debug));
-        this.isDebug = Boolean.parseBoolean(reader.readLine());
-        reader.close();
-    }
-
-    public boolean GetDebugMode() throws Exception {
-        try { 
-            readFileDebug();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return this.isDebug;
-    }
+    
+    
 }
