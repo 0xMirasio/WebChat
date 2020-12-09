@@ -2,19 +2,7 @@ package com.agent.chat;
 import java.util.*;
 
 public class Util {
-    
-    public boolean checkUsername(String username, List<String> IPC) {
-        for (int i=0; i<IPC.size(); i++) {
-            String[] IPC_s = null;
-            IPC_s = IPC.get(i).split("-", 2);
-            if (IPC_s[0].equals(username)) {
-                return true;
-            }
-        }
-        return false;
-        
-    }
-
+   
     public List<String> transform2IPC(String listIPC, int nbUser) {
         List<String> IPC = new ArrayList<String>();
         String[] IPC_s = null;
@@ -27,5 +15,15 @@ public class Util {
             IPC.add(value);
         }
         return IPC;
+    }
+
+    public int getPort(String address) {
+        int INDEX=0;
+        // address = X.Y.Z.VAL
+        // pour l'instant on ne travaille que avec des adresse docker
+        String[] temp = address.split("\\.", 4);
+        INDEX = -2 + Integer.parseInt(temp[3]); // 172.17.0.2 = 1ere adresse docker => BASE_PORT = 1ere adresse = 5998
+        System.out.println(INDEX);
+        return INDEX;
     }
 }

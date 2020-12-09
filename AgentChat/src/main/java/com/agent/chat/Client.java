@@ -27,6 +27,12 @@ public class Client {
         else {
             System.out.println("[INFO] : Authenticated - Welcome on the network (Number of user: "+net.IPC.size() + ") !\n");
             net.prepare(net.IPC);
+            while(true) {
+                // TODO : en fonction de l'utilisateur que le GUI va renvoyer (choix user)
+                // on va lancer une méthode chat.startSession(username1, addr1, username2, addr2)
+                // + bdd history / session.old
+                
+            }
 
         }
         }
