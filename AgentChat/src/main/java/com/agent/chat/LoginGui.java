@@ -196,7 +196,9 @@ public class LoginGui extends javax.swing.JFrame {
         Security sec = new Security();
         boolean ret = sec.verifyPassword(password);
         if(ret){
-            // TODO : start CLIENT
+            Client client = new Client(this.username);
+            this.setVisible(false);
+            client.start();
         }
         
         else{
