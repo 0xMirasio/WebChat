@@ -12,6 +12,11 @@ class FileOperation
     private String password;
     private String profileimagepath;
 
+    // debug variables
+
+    private String addressDest;
+    private boolean sender;
+
 
     public void readFile() throws Exception  {
         this.reader= new BufferedReader(new FileReader(profile));
@@ -73,6 +78,46 @@ class FileOperation
         writer.println(profileimagepath);
         writer.close();
     }
+
+
+    // AFTER THIS LINE DEBUG ONLY, DELETE AFTER CONNNEXION GUI-BACKEND
+
+    public void readDebugFile() throws Exception  {
+        this.reader= new BufferedReader(new FileReader(".cache/debug"));
+        this.addressDest = reader.readLine();
+        this.sender = Boolean.parseBoolean(reader.readLine());
+        this.reader.close();
+    }
+
+    public String getDestAdress() {
+        try { 
+            readDebugFile(); 
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return this.addressDest;
+    }
+
+    public boolean isSender() {
+        try { 
+            readDebugFile(); 
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return this.sender;
+    }
+
+    public void SetSenderState(boolean state) throws Exception { 
+        String destAddress = getDestAdress();
+        PrintWriter writer = new PrintWriter(".cache/debug");
+        writer.write(destAddress+"\n");
+        writer.write(Boolean.toString(state));
+        writer.close();
+    }
+
+
 
 
 

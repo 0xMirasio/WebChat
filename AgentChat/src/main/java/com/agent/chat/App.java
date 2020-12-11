@@ -4,7 +4,6 @@ public class App
 {
     static FileOperation filework;
     private String username;
-    public static int test = 64; // debug JUNIT test
     
     public static void main( String[] args )
     {

@@ -2,7 +2,7 @@ package com.agent.chat;
 import java.util.*;
 import java.io.*;
 import java.net.*;
-import java.time.Duration;
+import javax.swing.JOptionPane;
 
 public class Network extends Thread {
 
@@ -42,9 +42,12 @@ public class Network extends Thread {
     public void getUserConnected() {
  
         try {
-            enumerationInterface();
+            Util util = new Util();
+            this.broadcast = util.getBroadcastAddress();
+            this.address  = util.getSourceAddress();
             String message = "hello-1c"+":"+this.username+":"+this.address+":[]:0"; // initialisation, IPC = [] et nbUser = 0
-            System.out.println("[INFO] - Broadcasting (10S MAX DELAY): "+ message);
+            System.out.println("[DEBUG] - Broadcasting (10S MAX DELAY): "+ message);
+            JOptionPane.showMessageDialog(null, "Broadcasting With a Maximum Delay of " + MAX_C +  "s on the network with IP addresss :  " + this.address + " and with broadcast " + this.broadcast,"Information", 1);
             broadcast(message, broadcast);
             // démarrage écoute des réponses
             long start = System.currentTimeMillis();
@@ -94,7 +97,8 @@ public class Network extends Thread {
     public void prepare(List <String> IPC) {
         try {
             System.out.println("[DEBUG] IPC (prepare) = " + IPC);
-            enumerationInterface();
+            Util util = new Util();
+            this.address  = util.getSourceAddress();
             Network main = new Network(this.username, this.address, this.IPC);     
             main.start();
         }
@@ -146,22 +150,23 @@ public class Network extends Thread {
         String donnees = null;
         byte buffer[] = new byte[taille];
         this.socket = new DatagramSocket((this.BASE_PORT+ INDEX)); 
-        System.out.println("[DEBUG] - Opening socket on " + (this.BASE_PORT + INDEX) + ": =>" + this.socket);
         boolean notConnected = false;
         while(!notConnected){
             paquet = new DatagramPacket(buffer, buffer.length);
             socket.receive(paquet);
-            System.out.println("was here");
             notConnected = true;
-            System.out.println("[DEBUG]"+paquet.getAddress());
+            System.out.println("[INFO] Incoming Data from > "+paquet.getAddress());
             taille = paquet.getLength();
             donnees = new String(paquet.getData(),0, taille);
-            System.out.println("[DEBUG] Donnée recu : " + donnees);
 
         }
 
         this.socket.close();
         return donnees;
+    }
+
+    public int getRandomArbitrary(int min, int max) {
+        return (int) (Math.random() * (max - min) + min);
     }
 
     /* 
@@ -171,7 +176,6 @@ public class Network extends Thread {
 
     public void TraitementPaquet(String donnees) {
 
-        System.out.println(donnees);
         String[] donnees_s = null;
         donnees_s = donnees.split(":", 5);
         String senderUsername = donnees_s[1];
@@ -189,6 +193,7 @@ public class Network extends Thread {
                 this.IPC.add(senderUsername+"-"+senderAddress);
                 System.out.println("[INFO] Updating userList - NewIPC = " + this.IPC);
                 try {
+                    Thread.sleep(getRandomArbitrary(500, 900));
                     this.INDEX = util.getPort(this.address); 
                     // en gros si addresse = 172.17.0.2 => INDEX = 0
                     // 172.17.0.2 => INDEX=1
@@ -209,10 +214,9 @@ public class Network extends Thread {
                 }
             }
             System.out.println("[INFO] IPC Network : "+IPC);
-            if (INDEX == 0) {
-                Network main = new Network(this.username, this.address, this.IPC);     
-                main.start();
-            }
+            Network main = new Network(this.username, this.address, this.IPC);     
+            main.start();
+            this.interrupt();
         }
         if (donnees.contains("hello-1b/userOK")) { // un utilisateur authentifié a répondu au broadcast de découverte et signale que le pseudo est OK
             this.IPC = util.transform2IPC(SenderIPC, nbUser); // le nouveau IPC est celui fourni par les utilisateurs authentifié.
@@ -240,34 +244,7 @@ public class Network extends Thread {
         socket.close();
     }
 
-    /*
-    this method is gathering all network interface and set up the global variable this.broadcast & this.address 
-    */
-    public void enumerationInterface() throws IOException{
-        Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
-        for (NetworkInterface netint : Collections.list(nets)) {
-            Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
-            for (InetAddress inetAddress : Collections.list(inetAddresses)) {
-                if (inetAddress == null || inetAddress.toString().contains(":") || inetAddress.toString().contains("127")) {
-                    continue;
-                }
-                if (inetAddress.isLinkLocalAddress()) { // rseau local windows
-                    this.broadcast = "169.254.255.255";
-                    this.address = inetAddress.getHostAddress();
-                }
-                
-                if (inetAddress.toString().contains("172")) { // rezo type docker
-                     this.broadcast = "172.17.255.255";
-                     this.address = inetAddress.getHostAddress();
-                }
-                
-            }
-        }
-        System.out.println("[INFO] Logged on internal Network with IP : "+ this.address);
-        System.out.println("[INFO] using Broadcast : "+ this.broadcast); 
-        // TODO : améliorez, en attendant on est sur du docker 
 
-    }
 
     
    
