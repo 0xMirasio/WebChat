@@ -12,7 +12,7 @@ public class Network extends Thread {
     public List<String> IPC = new ArrayList<String>();
     private int BASE_PORT = 6000;
     private int taille = 1024;
-    private int MAX_C = 20;
+    private int MAX_C = 10;
     private long MAX_TIME_BROADCAST =  10000;
     DatagramSocket socket = null;
     DatagramPacket paquet = null;
