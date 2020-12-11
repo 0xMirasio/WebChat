@@ -1,4 +1,11 @@
-C:\Users\titip\Desktop\WebChat\AgentChat\src\main\java\com\agent\chat\App.java
-C:\Users\titip\Desktop\WebChat\AgentChat\src\main\java\com\agent\chat\Client.java
-C:\Users\titip\Desktop\WebChat\AgentChat\src\main\java\com\agent\chat\FileOperation.java
-C:\Users\titip\Desktop\WebChat\AgentChat\src\main\java\com\agent\chat\Security.java
+/home/src/main/java/com/agent/chat/Security.java
+/home/src/main/java/com/agent/chat/LoginGui.java
+/home/src/main/java/com/agent/chat/SessionClient.java
+/home/src/main/java/com/agent/chat/MainGui.java
+/home/src/main/java/com/agent/chat/Client.java
+/home/src/main/java/com/agent/chat/App.java
+/home/src/main/java/com/agent/chat/RegisterGui.java
+/home/src/main/java/com/agent/chat/Util.java
+/home/src/main/java/com/agent/chat/Network.java
+/home/src/main/java/com/agent/chat/SessionServ.java
+/home/src/main/java/com/agent/chat/FileOperation.java
