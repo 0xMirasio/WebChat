@@ -15,9 +15,25 @@ public class App
 
     public void start() {
         filework = new FileOperation();
-        this.username = filework.getUsername();
-        Client client = new Client(username);
-        client.startClient();
+        boolean res = false;
+        try {
+            res = filework.checkIsProfileOkay(); // check invalid profile
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (res) {
+            RegisterGui rgui = new RegisterGui(); // create a new profile
+            String[] args = null;
+            rgui.main(args);
+        }
+        
+        else {
+            this.username = filework.getUsername();
+            LoginGui lgui = new LoginGui();
+            String[] args = null;
+            lgui.main(args);
+        }
     }
 
 }

@@ -2,11 +2,13 @@
 package com.agent.chat;
 
 import java.awt.Color;
+import java.awt.event.KeyEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.border.Border;
 import javax.swing.ImageIcon;
+import javax.swing.KeyStroke;
 
 
 
@@ -16,6 +18,9 @@ public class LoginGui extends javax.swing.JFrame {
      * Creates new form gui
      */
     private String username;
+    
+    int xMouse;
+    int yMouse;
     
     public LoginGui() {
         initComponents();
@@ -29,8 +34,10 @@ public class LoginGui extends javax.swing.JFrame {
         }
      
         //Affichage de l'username
-        jLabel2.setText("Hello : " + this.username );
+        jLabel2.setText("Hello, " + this.username );
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -44,13 +51,23 @@ public class LoginGui extends javax.swing.JFrame {
         jPasswordField = new javax.swing.JPasswordField();
         jButton_Login = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
         jLabel_minimize = new javax.swing.JLabel();
         jLabel_close = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                formMouseDragged(evt);
+            }
+        });
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                formMousePressed(evt);
+            }
+        });
 
         jPasswordField.setText("password");
         jPasswordField.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -64,6 +81,11 @@ public class LoginGui extends javax.swing.JFrame {
         jPasswordField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jPasswordFieldActionPerformed(evt);
+            }
+        });
+        jPasswordField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jPasswordFieldKeyPressed(evt);
             }
         });
 
@@ -86,10 +108,7 @@ public class LoginGui extends javax.swing.JFrame {
         });
 
         jLabel2.setFont(new java.awt.Font("Quicksand Light", 0, 24)); // NOI18N
-        jLabel2.setText("jLabel2");
-
-        jLabel1.setFont(new java.awt.Font("Trebuchet MS", 3, 36)); // NOI18N
-        jLabel1.setText("AgentChat");
+        jLabel2.setText("         jLabel2");
 
         jLabel_minimize.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel_minimize.setText(" -");
@@ -119,33 +138,35 @@ public class LoginGui extends javax.swing.JFrame {
             }
         });
 
+        jLabel4.setIcon(new javax.swing.ImageIcon("C:\\Users\\youssf\\Desktop\\ChatSystem\\WebChat\\AgentChat\\src\\main\\java\\Images\\logo.png")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(86, Short.MAX_VALUE)
+                .addContainerGap(142, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel_minimize, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel_close, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(1, 1, 1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(25, 25, 25))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(289, 289, 289))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(66, 66, 66)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPasswordField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButton_Login, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(36, 36, 36)))
-                        .addGap(79, 79, 79))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(264, 264, 264)
+                                .addComponent(jLabel_minimize, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel_close, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(1, 1, 1))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(68, 68, 68))))
+                        .addComponent(jButton_Login, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(149, 149, 149))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -153,17 +174,20 @@ public class LoginGui extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel_minimize)
                     .addComponent(jLabel_close))
-                .addGap(13, 13, 13)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(23, 23, 23)
-                .addComponent(jPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jButton_Login, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addGap(43, 43, 43))
         );
 
         pack();
@@ -199,6 +223,14 @@ public class LoginGui extends javax.swing.JFrame {
             Client client = new Client(this.username);
             this.setVisible(false);
             client.start();
+            
+            MainGui main = new MainGui();
+            main.setVisible(true);
+            main.pack();
+            main.setLocationRelativeTo(null);
+            
+            //Fermer la fenêtre après l'appui sur le bouton Log in
+            this.dispose();
         }
         
         else{
@@ -265,6 +297,51 @@ public class LoginGui extends javax.swing.JFrame {
         this.setState(JFrame.ICONIFIED);
     }//GEN-LAST:event_jLabel_minimizeMouseClicked
 
+    private void formMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseDragged
+        
+        int x = evt.getXOnScreen();
+        int y = evt.getYOnScreen();
+        
+        this.setLocation(x - xMouse , y - yMouse);
+    }//GEN-LAST:event_formMouseDragged
+
+    private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
+        
+        xMouse = evt.getX();
+        yMouse = evt.getY();
+    }//GEN-LAST:event_formMousePressed
+
+    private void jPasswordFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordFieldKeyPressed
+        
+        if(evt.getKeyCode()== KeyEvent.VK_ENTER){
+            
+            String password = String.valueOf(jPasswordField.getPassword());
+            //On vérifie si le nom d'utilisateur et le mot de passe existent !
+            Security sec = new Security();
+            boolean ret = sec.verifyPassword(password);
+            if(ret){
+                Client client = new Client(this.username);
+                this.setVisible(false);
+                client.start();
+
+                MainGui main = new MainGui();
+                main.setVisible(true);
+                main.pack();
+                main.setLocationRelativeTo(null);
+
+                //Fermer la fenêtre après l'appui sur le bouton Log in
+                this.dispose();
+            }
+
+            else{
+                //Message d'erreur affiché
+                JOptionPane.showMessageDialog(null,"Invalid Password","Login Error",2);
+            }
+            
+            
+        }
+    }//GEN-LAST:event_jPasswordFieldKeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -306,9 +383,9 @@ public class LoginGui extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton_Login;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel_close;
     private javax.swing.JLabel jLabel_minimize;
     private javax.swing.JPasswordField jPasswordField;
