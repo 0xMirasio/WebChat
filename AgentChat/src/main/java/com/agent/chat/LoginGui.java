@@ -21,17 +21,10 @@ public class LoginGui extends javax.swing.JFrame {
     
     private int xMouse;
     private int yMouse;
-    private String pathLogo;
+    private String pathLogo = "assets/logo.png";
     
     public LoginGui() {
-        String os = System.getProperty("os.name");
-        System.out.println(os);
-        if (os.contains("Windows")) {
-            pathLogo = "/Images/logo.png";
-        }
-        else { // pour l'instant on a que du linux-windows, a tester d'autre os
-            pathLogo = "../../../Images/logo.png";
-        }
+        
         initComponents();
         FileOperation filework = new FileOperation();
         this.username = filework.getUsername();
@@ -40,6 +33,11 @@ public class LoginGui extends javax.swing.JFrame {
         if (picImage != null)
         {
             jLabel3.setIcon(new ImageIcon(picImage.getImage().getScaledInstance(100, 100, 1)));
+        }
+        picImage = new ImageIcon(pathLogo);
+        if (picImage != null)
+        {
+            jLabel4.setIcon(new ImageIcon(picImage.getImage().getScaledInstance(180, 180, 1)));
         }
         jLabel2.setText(this.username);
 
@@ -147,8 +145,6 @@ public class LoginGui extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource(pathLogo)));
-
         jLabel5.setFont(new java.awt.Font("Quicksand Light", 0, 24)); // NOI18N
         jLabel5.setText("Hello : ");
 
@@ -159,15 +155,15 @@ public class LoginGui extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(81, 81, 81)
                 .addComponent(jPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 74, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(21, Short.MAX_VALUE)
+                .addGap(33, 33, 33)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(84, 84, 84))
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

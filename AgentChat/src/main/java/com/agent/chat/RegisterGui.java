@@ -9,6 +9,7 @@ import java.awt.Color;
 import javax.swing.JOptionPane;
 import java.io.File;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.border.Border;
 
@@ -23,11 +24,19 @@ public class RegisterGui extends javax.swing.JFrame {
      */
     
     String profileimagepath;
-    int xMouse;
-    int yMouse;
+    private int xMouse;
+    private int yMouse;
+    private String pathLogo = "assets/logo.png";
+
     
     public RegisterGui() {
+        
         initComponents();
+        ImageIcon picImage = new ImageIcon(pathLogo);
+        if (picImage != null)
+        {
+            jLabel4.setIcon(new ImageIcon(picImage.getImage().getScaledInstance(180, 180, 1)));
+        }
     }
 
     /**
@@ -137,7 +146,6 @@ public class RegisterGui extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/logo.png"))); // NOI18N
         jLabel4.setText("jLabel4");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

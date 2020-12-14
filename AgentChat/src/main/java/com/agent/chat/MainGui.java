@@ -28,6 +28,7 @@ public class MainGui extends javax.swing.JFrame {
     private String file_path = null;
     private int xMouse;
     private int yMouse;
+    private String pathLogo = "assets/logo.png";
     private String username;
 
     public MainGui() {
@@ -39,6 +40,12 @@ public class MainGui extends javax.swing.JFrame {
         if (picImage != null)
         {
             jLabel_image.setIcon(new ImageIcon(picImage.getImage().getScaledInstance(150, 150, 1)));
+        }
+        jLabel2.setText(this.username);
+        picImage = new ImageIcon(pathLogo);
+        if (picImage != null)
+        {
+            jLabel3.setIcon(new ImageIcon(picImage.getImage().getScaledInstance(200, 200, 1)));
         }
         jLabel2.setText(this.username);
         
@@ -152,7 +159,6 @@ public class MainGui extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("SansSerif", 1, 48)); // NOI18N
         jLabel2.setText("jLabel2");
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/logo.png"))); // NOI18N
         jLabel3.setText("jLabel3");
 
         jButton1.setFont(new java.awt.Font("Linux Libertine G", 0, 18)); // NOI18N
@@ -230,10 +236,11 @@ public class MainGui extends javax.swing.JFrame {
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                                         .addComponent(jLabel_image, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)))
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jButton_Modify)
-                                    .addComponent(jButton1)
-                                    .addComponent(jButton_Disconnect))))))
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton_Disconnect)
+                                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jButton_Modify)
+                                        .addComponent(jButton1)))))))
                 .addContainerGap())
         );
 
