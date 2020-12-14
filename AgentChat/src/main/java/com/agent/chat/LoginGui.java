@@ -19,10 +19,19 @@ public class LoginGui extends javax.swing.JFrame {
      */
     private String username;
     
-    int xMouse;
-    int yMouse;
+    private int xMouse;
+    private int yMouse;
+    private String pathLogo;
     
     public LoginGui() {
+        String os = System.getProperty("os.name");
+        System.out.println(os);
+        if (os.contains("Windows")) {
+            pathLogo = "/Images/logo.png";
+        }
+        else { // pour l'instant on a que du linux-windows, a tester d'autre os
+            pathLogo = "../../../Images/logo.png";
+        }
         initComponents();
         FileOperation filework = new FileOperation();
         this.username = filework.getUsername();
@@ -32,7 +41,7 @@ public class LoginGui extends javax.swing.JFrame {
         {
             jLabel3.setIcon(new ImageIcon(picImage.getImage().getScaledInstance(100, 100, 1)));
         }
-        jLabel2.setText("Hello : " + this.username);
+        jLabel2.setText(this.username);
 
     }
     
@@ -54,6 +63,7 @@ public class LoginGui extends javax.swing.JFrame {
         jLabel_close = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -137,7 +147,10 @@ public class LoginGui extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/logo.png"))); // NOI18N
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource(pathLogo)));
+
+        jLabel5.setFont(new java.awt.Font("Quicksand Light", 0, 24)); // NOI18N
+        jLabel5.setText("Hello : ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -150,9 +163,11 @@ public class LoginGui extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(21, Short.MAX_VALUE)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(54, 54, 54))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(84, 84, 84))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -183,8 +198,10 @@ public class LoginGui extends javax.swing.JFrame {
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel2)
-                        .addGap(51, 51, 51)))
+                        .addGap(31, 31, 31)))
                 .addComponent(jPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton_Login, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -403,6 +420,7 @@ public class LoginGui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel_close;
     private javax.swing.JLabel jLabel_minimize;
     private javax.swing.JPasswordField jPasswordField;
