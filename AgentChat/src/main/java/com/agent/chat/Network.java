@@ -12,8 +12,8 @@ public class Network extends Thread {
     public List<String> IPC = new ArrayList<String>();
     private int BASE_PORT = 6000;
     private int taille = 1024;
-    private int MAX_C = 10;
-    private long MAX_TIME_BROADCAST =  10000;
+    private int MAX_C = 20;
+    private long MAX_TIME_BROADCAST =  3000;
     DatagramSocket socket = null;
     DatagramPacket paquet = null;
     private int INDEX = 0;
@@ -47,7 +47,7 @@ public class Network extends Thread {
             this.address  = util.getSourceAddress();
             String message = "hello-1c"+":"+this.username+":"+this.address+":[]:0"; // initialisation, IPC = [] et nbUser = 0
             System.out.println("[DEBUG] - Broadcasting (10S MAX DELAY): "+ message);
-            JOptionPane.showMessageDialog(null, "Broadcasting With a Maximum Delay of " + MAX_C +  "s on the network with IP addresss :  " + this.address + " and with broadcast " + this.broadcast,"Information", 1);
+            JOptionPane.showMessageDialog(null, "Broadcasting With a Maximum Delay of " + MAX_TIME_BROADCAST +  "s on the network with IP addresss :  " + this.address + " and with broadcast " + this.broadcast,"Information", 1);
             broadcast(message, broadcast);
             // démarrage écoute des réponses
             long start = System.currentTimeMillis();
@@ -149,6 +149,7 @@ public class Network extends Thread {
 
         String donnees = null;
         byte buffer[] = new byte[taille];
+        System.out.println("[DEBUG] Binding on " + (this.BASE_PORT + INDEX));
         this.socket = new DatagramSocket((this.BASE_PORT+ INDEX)); 
         boolean notConnected = false;
         while(!notConnected){

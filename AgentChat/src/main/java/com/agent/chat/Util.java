@@ -25,11 +25,19 @@ public class Util {
     public int getPort(String address) {
         int INDEX=0;
         // address = X.Y.Z.VAL
-        // pour l'instant on ne travaille que avec des adresse docker
-        String[] temp = address.split("\\.", 4);
-        INDEX = -2 + Integer.parseInt(temp[3]); // 172.17.0.2 = 1ere adresse docker 
-        System.out.println(INDEX);
-        return INDEX;
+        if (address.contains("172.17.0.")) { // adresse docker
+            String[] temp = address.split("\\.", 4);
+            INDEX = -2 + Integer.parseInt(temp[3]); // 172.17.0.2 = 1ere adresse docker 
+            System.out.println(INDEX);
+            return INDEX;
+        }
+        if (address.contains("169.254.206.")) { // adresse reseau local windows
+            String[] temp = address.split("\\.", 4);
+            INDEX = -98 + Integer.parseInt(temp[3]); // 169.254.206.98 = 1ere adresse 
+            System.out.println(INDEX);
+            return INDEX;
+        }
+        return 0;
     }
 
     public String getSourceAddress() {
