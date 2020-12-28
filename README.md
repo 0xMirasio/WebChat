@@ -1,11 +1,10 @@
 # WebChat
-a webchat in java.
 
-build : (todo : implement a setup.sh) 
+to start project : </br>
 
-manual : 
-
-cd AgentChat</br>
-mvn package && cd target/</br>
-java -jar AgentChat-1.0-dev.jar</br>
+cd AgentChat/ </br>
+chmod +x *.sh </br>
+./build.sh </br>
+then </br>
+./start.sh </br>
 
