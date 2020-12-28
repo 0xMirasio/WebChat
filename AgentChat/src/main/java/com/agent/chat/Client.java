@@ -1,18 +1,23 @@
 package com.agent.chat;
 
+import java.net.ServerSocket;
+import java.net.Socket;
+
 public class Client extends Thread {
 
     
     private final String username;
     private boolean MODE;
-    private final int COM_BASE_PORT = 5000;
+    private final int BASE_COM_PORT = 5000;
     private final Util util = new Util();
     private final FileOperation filework = new FileOperation();
     private final String sourceAddress = util.getSourceAddress();
     private String destAdress = null;
+    private ServerSocket sockS = null;
 
 
-    public Client(String username, boolean MODE) {
+    public Client(String username, ServerSocket sockS,  boolean MODE) {
+        this.sockS = sockS;
         this.username = username;
         this.MODE = MODE;
     }
@@ -27,13 +32,25 @@ public class Client extends Thread {
         System.out.println("[DEBUG] - Thread lance");
         if (MODE) {
             System.out.println("[DEBUG] - Source address : " + this.sourceAddress);
-            System.out.println("[INFO] Starting SessionServ session on port : " + (COM_BASE_PORT + util.getPort(this.sourceAddress)));
+            System.out.println("[INFO] Starting SessionServ session on port : " + (BASE_COM_PORT + util.getPort(this.sourceAddress)));
             SessionServ session = new SessionServ();
-            session.prepare();
+            System.out.println("Binding on : >" + (BASE_COM_PORT + util.getPort(util.getSourceAddress())));
+            try {
+                Socket clientSocket = this.sockS.accept();
+                System.out.println("New connexion accepted\n");
+                Client client = new Client(this.username,this.sockS, true); 
+                client.start();
+                session.prepare(clientSocket);
+                
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            
         }
         else {
             System.out.println("[DEBUG] - Source address : " + this.sourceAddress);
-            System.out.println("[INFO] Starting SessionClient session on port : " + (COM_BASE_PORT + util.getPort(this.destAdress)) +  " and Destination adress > " + destAdress);
+            System.out.println("[INFO] Starting SessionClient session on port : " + (BASE_COM_PORT + util.getPort(this.destAdress)) +  " and Destination adress > " + destAdress);
             SessionClient sessionClient = new SessionClient();
             sessionClient.startChatSession(destAdress);
         }

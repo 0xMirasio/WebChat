@@ -1,6 +1,2 @@
 #!/bin/bash
-rm .cache/
-touch .cache/userlist
-touch .cache/profile.private
-touch .cache/networkConfig
 mvn package

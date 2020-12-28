@@ -109,10 +109,16 @@ public class SessionGui extends javax.swing.JFrame {
                this.destName = temp[1];
            }
            else {
+               String temp[] = message.split(":");
+               String msg = temp[0];
+               String sourceMsg = temp[1];
                Date date = new Date();
-               String toSend = s.format(date) + " : " + this.destName + " > " + message;
-               jText_AreaMessage.setText(jText_AreaMessage.getText() + "\n" + toSend);
-               jTextField_Message.setText("");
+               if (sourceMsg.equals(this.sender)) {
+                    String toSend = s.format(date) + " : " + this.destName + " > " + msg;
+                    jText_AreaMessage.setText(jText_AreaMessage.getText() + "\n" + toSend);
+                    jTextField_Message.setText("");
+               }
+               
            }
            
 
@@ -369,7 +375,7 @@ public class SessionGui extends javax.swing.JFrame {
         input_Sender = jTextField_Message.getText();
         if (!input_Sender.equals("") || !(input_Sender == null)) {
             
-            SessionGui.setSendMessage(input_Sender);
+            SessionGui.setSendMessage(input_Sender+":"+this.sender);
             String message = s.format(date) + " : " + this.sender + " > " + input_Sender;
             jText_AreaMessage.setText(jText_AreaMessage.getText() + "\n" + message);
             jTextField_Message.setText("");
@@ -385,7 +391,7 @@ public class SessionGui extends javax.swing.JFrame {
             input_Sender = jTextField_Message.getText();
             if (!input_Sender.equals("") || !(input_Sender == null)) {
                 
-                SessionGui.setSendMessage(input_Sender);
+                SessionGui.setSendMessage(input_Sender+":"+this.sender);
                 String message = s.format(date) + " : " + this.sender + " > " + input_Sender;
                 jText_AreaMessage.setText(jText_AreaMessage.getText() + "\n" + message);
                 jTextField_Message.setText("");

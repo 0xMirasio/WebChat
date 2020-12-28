@@ -19,12 +19,12 @@ public class SessionClient {
         try {
             System.out.println("Connecting on > " + (BASE_COM_PORT + util.getPort(this.destination)) + " and Dest > " + this.destination);
             Socket clientSocket = new Socket(this.destination, (BASE_COM_PORT + util.getPort(this.destination)));
+            
             out = new PrintWriter(clientSocket.getOutputStream());
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            
+                  
             out.println("hello-tcp:" + filework.getUsername());
             out.flush();
-            
             SessionGui.setSendMessage(null);
             SessionGui.setReceiveMessage(null);
             
@@ -65,7 +65,7 @@ public class SessionClient {
                         SessionGui.setReceiveMessage(msg);
                         msg = in.readLine();
                     }
-                    System.out.println("Serveur déconecté");
+                    SessionGui.setReceiveMessage(" ****DISCONNECTED****");
                     // TODO : Afficher message chez client ou serveur que l'autre est parti
                     out.close();
                     clientSocket.close();

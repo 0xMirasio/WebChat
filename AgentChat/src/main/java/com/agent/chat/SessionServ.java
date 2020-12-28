@@ -11,21 +11,16 @@ public class SessionServ extends Thread {
     avant de démarrer les sockets, 
     */
 
-    private final int BASE_COM_PORT = 5000;
     private BufferedReader in;
     private PrintWriter out;
     private final FileOperation filework = new FileOperation();
     private final Util util = new Util();
     private String username = null;
     
-    public void prepare() {
+    public void prepare(Socket clientSocket) {
         
         try {
            
-            System.out.println("Binding on : >" + (BASE_COM_PORT + util.getPort(util.getSourceAddress())));
-            ServerSocket serveurSocket = new ServerSocket((BASE_COM_PORT + util.getPort(util.getSourceAddress())));
-            Socket clientSocket = serveurSocket.accept();
-            System.out.println("New connexion accepted\n");
             SessionGui.setSendMessage(null);
             SessionGui.setReceiveMessage(null);
             
@@ -75,10 +70,9 @@ public class SessionServ extends Thread {
                             SessionGui.setReceiveMessage(msg);
                             msg = in.readLine();
                         }
-                        System.out.println("Client déconecté");
+                        SessionGui.setReceiveMessage(" ****DISCONNECTED****");
                         out.close();
                         clientSocket.close();
-                        serveurSocket.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
