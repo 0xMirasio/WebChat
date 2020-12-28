@@ -14,8 +14,10 @@ public class App
 
     public void start() {
         filework = new FileOperation();
+        
         boolean res = false;
         try {
+            filework.saveUser(null);
             res = filework.checkIsProfileOkay(); // check invalid profile
         }
         catch (Exception e) {

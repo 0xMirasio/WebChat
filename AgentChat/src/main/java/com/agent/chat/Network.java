@@ -102,7 +102,14 @@ public class Network extends Thread {
                 e.printStackTrace();
             }
         }
-        System.out.println("[INFO] IPC Network (debug=0) : "+ IPC);
+        else {
+             try {
+                filework.saveUser(this.IPC);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         
     }
