@@ -10,9 +10,7 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# private profile 
-
-.cache/
+.cache/profile.private
 target/
 # Package Files #
 *.war

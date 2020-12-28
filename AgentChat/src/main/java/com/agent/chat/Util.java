@@ -8,14 +8,14 @@ public class Util {
     private String address;
     private String broadcast;
 
-    public List<String> transform2IPC(String listIPC, int nbUser) {
+    public List<String> transform2IPC(String listIPC) {
         List<String> IPC = new ArrayList<String>();
         String[] IPC_s = null;
         // listIPC = "['user-IP','user2-ip',...]"
-        IPC_s = listIPC.split("\\[", 2); // " 'user:ip', 'user2:ip']"
+        IPC_s = listIPC.split("\\[", 2); // " 'user-ip', 'user2-ip']"
         String IPC_temp = IPC_s[1];
-        IPC_temp = IPC_temp.split("]",2)[0]; // " 'user:ip', 'user2:ip'"
-        IPC_s = IPC_temp.split(",", nbUser); // [user:ip, user2:ip]
+        IPC_temp = IPC_temp.split("]",2)[0]; // " 'user-ip', 'user2-ip'"
+        IPC_s = IPC_temp.split(",", 999); // [user-ip, user2-ip]
         for (String value : IPC_s) {
             IPC.add(value);
         }
@@ -37,6 +37,14 @@ public class Util {
             System.out.println(INDEX);
             return INDEX;
         }
+        
+        if (address.contains("168.192.56.")) { // adresse reseau local virtualboxPrivate
+            String[] temp = address.split("\\.", 4);
+            INDEX = -102 + Integer.parseInt(temp[3]); // 168.192.56.102 = 1ere adresse vbox distribué DHCP
+            System.out.println(INDEX);
+            return INDEX;
+        }
+        
         return 0;
     }
 
@@ -78,6 +86,11 @@ public class Util {
                 
                 if (inetAddress.toString().contains("172.17.0.")) { // rezo type docker
                      this.broadcast = "172.17.255.255";
+                     this.address = inetAddress.getHostAddress();
+                }
+                
+                if (inetAddress.toString().contains("192.168.56.")) { // rezo local Vbox
+                     this.broadcast = "192.168.56.255";
                      this.address = inetAddress.getHostAddress();
                 }
                 

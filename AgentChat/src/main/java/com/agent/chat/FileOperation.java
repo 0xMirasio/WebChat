@@ -1,16 +1,22 @@
 package com.agent.chat;
 
 import java.io.*;
+import java.util.List;
 
 class FileOperation
 { 
     static FileOperation filework;
     BufferedReader reader = null;
-    private String profile = ".cache/profile.private";
+    private final String profile = ".cache/profile.private";
+    private final String userlist = ".cache/userlist";
     private String email;
     private String username;
+    private String receivemessage;
+    private String sendmessage;
+    private List<String> IPC;
     private String password;
     private String profileimagepath;
+    private Util util = new Util();
 
     public void readFile() throws Exception  {
         this.reader= new BufferedReader(new FileReader(profile));
@@ -20,16 +26,29 @@ class FileOperation
         this.profileimagepath = reader.readLine();
         reader.close();
     }
+    
+     public void readUserFile() throws Exception  {
+        this.reader= new BufferedReader(new FileReader(userlist));
+        String temp = reader.readLine();
+        if (temp != null) {
+            this.IPC = util.transform2IPC(temp);
+        }
+        else {
+            this.IPC = null;
+        }
+        reader.close();
+    }
+     
 
     public boolean checkIsProfileOkay() throws Exception {
         try { 
             readFile(); 
         }
         catch (Exception e) {
-            e.printStackTrace();
+            return false;
         }
 
-        return (this.username == null || this.password == null || this.email == null);
+        return (!(this.username == null || this.password == null || this.email == null));
 
     }
 
@@ -72,5 +91,22 @@ class FileOperation
         writer.println(profileimagepath);
         writer.close();
     }
+    
+    public void saveUser(List<String> IPC) throws Exception {
+        PrintWriter writer = new PrintWriter(userlist);
+        writer.println(IPC);
+        writer.close();
+    }
+    
+    public List<String> getuser() throws Exception {
+        try { 
+            readUserFile(); 
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return this.IPC;
+    }
+        
    
 }

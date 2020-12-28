@@ -6,13 +6,12 @@ import java.net.*;
 public class SessionClient {
 
     private String destination;
-    private int BASE_COM_PORT = 5000;
-    Util util = new Util();
-   //private Socket clientSocket;
+    private final int BASE_COM_PORT = 5000;
+    private final Util util = new Util();
     private BufferedReader in;
     private PrintWriter out;
-    private Scanner sc = new Scanner(System.in);
-
+    private final FileOperation filework = new FileOperation();
+    
     public void startChatSession(String dest) { 
 
         this.destination = dest;
@@ -20,20 +19,36 @@ public class SessionClient {
         try {
             System.out.println("Connecting on > " + (BASE_COM_PORT + util.getPort(this.destination)) + " and Dest > " + this.destination);
             Socket clientSocket = new Socket(this.destination, (BASE_COM_PORT + util.getPort(this.destination)));
-    
-            //flux pour envoyer
             out = new PrintWriter(clientSocket.getOutputStream());
-            //flux pour recevoir
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-    
+            
+            out.println("hello-tcp:" + filework.getUsername());
+            out.flush();
+            
+            SessionGui.setSendMessage(null);
+            SessionGui.setReceiveMessage(null);
+            
             Thread envoyer = new Thread(new Runnable() {
-                String msg;
+                String msg = null;
                 @Override
                 public void run() {
+                    
                     while(true){
-                    msg = sc.nextLine();
-                    out.println(msg);
-                    out.flush();
+                        
+                        msg = SessionGui.Sendmessage;
+                        try {
+                            Thread.sleep(50);
+                        }
+                        catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (!(msg == null)) {
+                            System.out.println("[DEBUG] Sending > " + msg);
+                            out.println(msg);
+                            out.flush();
+                            SessionGui.setSendMessage(null);
+                        }
+                        
                     }
                 }
             });
@@ -46,10 +61,12 @@ public class SessionClient {
                 try {
                     msg = in.readLine();
                     while(msg!=null){
-                        System.out.println("Serveur : "+msg);
+                        System.out.println("[DEBUG] Receved > " + msg);
+                        SessionGui.setReceiveMessage(msg);
                         msg = in.readLine();
                     }
                     System.out.println("Serveur déconecté");
+                    // TODO : Afficher message chez client ou serveur que l'autre est parti
                     out.close();
                     clientSocket.close();
                 } catch (IOException e) {

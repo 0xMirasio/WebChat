@@ -6,6 +6,12 @@ import javax.swing.JOptionPane;
 
 public class Network extends Thread {
 
+    //TODO :  FAIRE REGULIEREMENT UN BROADCAST POUR SAVOIR SI IL YA PAS DE DECONNEXION (broadcast)
+    // set UP UN HOST RESEAU (Premiere machine sur le réseau = HOST)
+    // ELLE SERVIRA DE RELAI ENTRE LE SERVEUR DECENTRALISE
+    // ELLE SERVIRA DE SERVEUR DINFORMATIONS (Qui est encore connecté ? X est déconnecté, retirer le de votre liste, etc...)
+    // variable isHost => 1 si HOST / 0 si user du réseau
+    
     public String address;
     public String broadcast;
     public String username;
@@ -13,10 +19,12 @@ public class Network extends Thread {
     private int BASE_PORT = 6000;
     private int taille = 1024;
     private int MAX_C = 20;
-    private long MAX_TIME_BROADCAST =  3000;
+    private long MAX_TIME_BROADCAST =  1000;
     DatagramSocket socket = null;
     DatagramPacket paquet = null;
     private int INDEX = 0;
+    private boolean isHost = false;
+    FileOperation filework = new FileOperation();
 
     public Network (String username) {
         this.username = username;
@@ -45,7 +53,7 @@ public class Network extends Thread {
             Util util = new Util();
             this.broadcast = util.getBroadcastAddress();
             this.address  = util.getSourceAddress();
-            String message = "hello-1c"+":"+this.username+":"+this.address+":[]:0"; // initialisation, IPC = [] et nbUser = 0
+            String message = "hello-1c"+":"+this.username+":"+this.address+":[]"; // initialisation, IPC = []
             System.out.println("[DEBUG] - Broadcasting (10S MAX DELAY): "+ message);
             JOptionPane.showMessageDialog(null, "Broadcasting With a Maximum Delay of " + MAX_TIME_BROADCAST +  "s on the network with IP addresss :  " + this.address + " and with broadcast " + this.broadcast,"Information", 1);
             broadcast(message, broadcast);
@@ -87,6 +95,12 @@ public class Network extends Thread {
 
         if (this.IPC.size() == 0) {
             this.IPC.add(this.username+"-"+this.address);
+            try {
+                filework.saveUser(this.IPC);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         System.out.println("[INFO] IPC Network (debug=0) : "+ IPC);
 
@@ -96,7 +110,6 @@ public class Network extends Thread {
     /* this Method is called when a client is authenticated and want to respond to new client on the network */
     public void prepare(List <String> IPC) {
         try {
-            System.out.println("[DEBUG] IPC (prepare) = " + IPC);
             Util util = new Util();
             this.address  = util.getSourceAddress();
             Network main = new Network(this.username, this.address, this.IPC);     
@@ -130,8 +143,8 @@ public class Network extends Thread {
      */
     public void sendMessage(String message, String Destination, int Port) throws Exception {
         
-
-        message = message + ":" + this.username + ":" + this.address + ":" + this.IPC + ":" + this.IPC.size();
+        //TODO : chiffrer les données sur le réseau
+        message = message + ":" + this.username + ":" + this.address + ":" + this.IPC;
         System.out.println("[INFO] Sending : " + message + " on port :" + Port);
         DatagramSocket socket = new DatagramSocket();
         socket.connect(InetAddress.getByName(Destination), Port);
@@ -143,13 +156,12 @@ public class Network extends Thread {
     }
 
     /* 
-    Set up a listener on port BASEPORT (6000) and wait for data
+    Set up a listener on port BASEPORT (6000 + INDEX) and wait for data
     */
     public String receiveClient() throws Exception { 
 
         String donnees = null;
         byte buffer[] = new byte[taille];
-        System.out.println("[DEBUG] Binding on " + (this.BASE_PORT + INDEX));
         this.socket = new DatagramSocket((this.BASE_PORT+ INDEX)); 
         boolean notConnected = false;
         while(!notConnected){
@@ -178,25 +190,28 @@ public class Network extends Thread {
     public void TraitementPaquet(String donnees) {
 
         String[] donnees_s = null;
-        donnees_s = donnees.split(":", 5);
+        donnees_s = donnees.split(":", 4);
         String senderUsername = donnees_s[1];
         String senderAddress = donnees_s[2];
         String SenderIPC = donnees_s[3];
-        int nbUser = Integer.parseInt(donnees_s[4]);
         Util util = new Util();
         // debut traitement des données paquet
-        System.out.println("[DEBUG] Donnée en traitement = " + donnees);
         if (donnees.contains("hello-1c")) { // un nouveau utilisateur essaye de savoir qui est authentifié
-            // TODO :  attendre un certain temps X en fonction de l'adresse IP pour ne pas surcharger l'autheur du broadcast
             String message = "hello-1b"; // on lui répond avec notre nom + IP
             boolean rep = this.username.equals(senderUsername);
             if (!rep) {
                 this.IPC.add(senderUsername+"-"+senderAddress);
+                try {
+                    filework.saveUser(this.IPC);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
                 System.out.println("[INFO] Updating userList - NewIPC = " + this.IPC);
                 try {
-                    Thread.sleep(getRandomArbitrary(500, 900));
+                    Thread.sleep(getRandomArbitrary(500, 900)); // Cela permet de temporiser un peu, problème de perte de paquet UDP si tout est envoyé d'un coup
                     this.INDEX = util.getPort(this.address); 
-                    // en gros si addresse = 172.17.0.2 => INDEX = 0
+                    // en gros si addresse = 172.17.0.2 => INDEX = 0 
                     // 172.17.0.2 => INDEX=1
                     // cela permet de distribuer les replies sur les différents sockets de l'emmeteur du broadcast en fct de l'adresse
                     sendMessage(message+"/userOK",  senderAddress, BASE_PORT + INDEX);
@@ -208,6 +223,8 @@ public class Network extends Thread {
             // si son username est déja prit
             else {
                 try {
+                    Thread.sleep(getRandomArbitrary(500, 900));
+                    this.INDEX = util.getPort(this.address); 
                     sendMessage(message+"/userNOK", senderAddress, BASE_PORT + INDEX);
                 }
                 catch (Exception e) {
@@ -220,7 +237,7 @@ public class Network extends Thread {
             this.interrupt();
         }
         if (donnees.contains("hello-1b/userOK")) { // un utilisateur authentifié a répondu au broadcast de découverte et signale que le pseudo est OK
-            this.IPC = util.transform2IPC(SenderIPC, nbUser); // le nouveau IPC est celui fourni par les utilisateurs authentifié.
+            this.IPC = util.transform2IPC(SenderIPC); // le nouveau IPC est celui fourni par les utilisateurs authentifié.
             System.out.println("[INFO] Updating userList - NewIPC = " + this.IPC);
 
         }

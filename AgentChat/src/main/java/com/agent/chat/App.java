@@ -7,7 +7,7 @@ public class App
     
     public static void main( String[] args )
     {
-        System.out.println("Starting AgentChat-Dev v0.1");
+        System.out.println("[INFO] Starting AgentChat... - Developed by Poncetta Thibault & Youssef Amari");
         App app = new App();
         app.start();
     }
@@ -21,7 +21,7 @@ public class App
         catch (Exception e) {
             e.printStackTrace();
         }
-        if (res) {
+        if (!res) {
             RegisterGui rgui = new RegisterGui(); // create a new profile
             String[] args = null;
             rgui.main(args);

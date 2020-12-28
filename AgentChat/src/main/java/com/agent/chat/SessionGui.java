@@ -12,6 +12,10 @@ import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.border.Border;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Vector;
+import javax.swing.Timer;
 
 /**
  *
@@ -25,11 +29,95 @@ public class SessionGui extends javax.swing.JFrame {
     private int xMouse;
     private int yMouse;
 
-    private String out;
+    private String input_Sender;
+    private Timer timer;
 
+    private String sender;
+    private String destName;
+    private String destIP;
+    public static String Sendmessage;
+    public static String Receivemessage;
+    private final FileOperation filework = new FileOperation();
+    private final SimpleDateFormat s = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+    
     public SessionGui() {
         initComponents();
     }
+    
+    // ce constructor est appellé quand une machine B contact A.
+    public SessionGui(String sender) {
+        this.sender = sender;
+        initComponents();        
+        // Toute les 0.01 secondes, on récupère les messages réçu qui sont stockées dans les fichiers buffers.
+        timer = new Timer(10, new java.awt.event.ActionListener() 
+        {
+        @Override
+        public void actionPerformed(java.awt.event.ActionEvent evt ) {
+            String message = SessionGui.Receivemessage;
+            if (!(message == null)) {
+                 System.out.println("Printing " + message);
+                 actualiseView(message);
+                 SessionGui.setReceiveMessage(null); // vide le buffer
+            }
+            
+        }});
+                
+        timer.start(); 
+    }
+    
+    // quand A décide de contacter B, ce constructeur est appelé.
+    public SessionGui(String sender, String destName, String destIP) {
+        this.sender = sender;
+        this.destName = destName;
+        this.destIP = destIP;
+        initComponents();
+        jLabel2.setText("SessionChat : " + this.destName);
+        
+        // Toute les 0.01 secondes, on récupère les messages réçu qui sont stockées dans les fichiers buffers.
+        timer = new Timer(10, new java.awt.event.ActionListener() 
+        {
+        @Override
+        public void actionPerformed(java.awt.event.ActionEvent evt ) {
+            String message = SessionGui.Receivemessage;
+            if (!(message == null)) {
+                 actualiseView(message);
+                 SessionGui.setReceiveMessage(null); // vide le buffer
+            }
+                            
+        }});    
+        timer.start(); 
+        // démarrage session TCP
+
+        Client client = new Client(this.sender , this.destIP, false);
+        client.start();
+    }
+    
+    public static void setSendMessage(String sendMsg) {
+        SessionGui.Sendmessage = sendMsg;
+    }
+     
+    
+    public static void setReceiveMessage(String RMsg) {
+        SessionGui.Receivemessage = RMsg;
+    }
+    
+    private void actualiseView(String message) {
+            
+           if (message.contains("hello-tcp")) {
+               String temp[] = message.split(":");
+               this.destName = temp[1];
+           }
+           else {
+               Date date = new Date();
+               String toSend = s.format(date) + " : " + this.destName + " > " + message;
+               jText_AreaMessage.setText(jText_AreaMessage.getText() + "\n" + toSend);
+               jTextField_Message.setText("");
+           }
+           
+
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -49,6 +137,7 @@ public class SessionGui extends javax.swing.JFrame {
         jLabel_minimize = new javax.swing.JLabel();
         jLabel_close = new javax.swing.JLabel();
         jTextField_Message = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -137,6 +226,8 @@ public class SessionGui extends javax.swing.JFrame {
             }
         });
 
+        jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -145,7 +236,8 @@ public class SessionGui extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel_minimize, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel_close, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -173,7 +265,8 @@ public class SessionGui extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel_minimize)
-                            .addComponent(jLabel_close))
+                            .addComponent(jLabel_close)
+                            .addComponent(jLabel2))
                         .addGap(13, 13, 13)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(35, 35, 35)
@@ -271,33 +364,32 @@ public class SessionGui extends javax.swing.JFrame {
     }//GEN-LAST:event_formMouseDragged
 
     private void jButton_SendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_SendActionPerformed
-
-        out = jTextField_Message.getText();
-
-        jText_AreaMessage.setText(jText_AreaMessage.getText() +"\n" + out);
-        jTextField_Message.setText("");
-
-        /*jText_AreaMessage.setText(jText_AreaMessage.getText() + "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t" + words[i]);
-
-            S = S + words[i];
-
-            while (i != (words.length - 1) &) {
-
-            }*/
-
- /*jText_AreaMessage.setText(jText_AreaMessage.getText() + "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t" + out);*/
-        jTextField_Message.setText("");
+        Date date = new Date();
+        
+        input_Sender = jTextField_Message.getText();
+        if (!input_Sender.equals("") || !(input_Sender == null)) {
+            
+            SessionGui.setSendMessage(input_Sender);
+            String message = s.format(date) + " : " + this.sender + " > " + input_Sender;
+            jText_AreaMessage.setText(jText_AreaMessage.getText() + "\n" + message);
+            jTextField_Message.setText("");
+        }
 
 
     }//GEN-LAST:event_jButton_SendActionPerformed
 
     private void jTextField_MessageKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField_MessageKeyPressed
-
+        Date date = new Date();
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            out = jTextField_Message.getText();
-
-            jText_AreaMessage.setText(jText_AreaMessage.getText()+"\n" + out);
-            jTextField_Message.setText("");
+            
+            input_Sender = jTextField_Message.getText();
+            if (!input_Sender.equals("") || !(input_Sender == null)) {
+                
+                SessionGui.setSendMessage(input_Sender);
+                String message = s.format(date) + " : " + this.sender + " > " + input_Sender;
+                jText_AreaMessage.setText(jText_AreaMessage.getText() + "\n" + message);
+                jTextField_Message.setText("");
+        }
         }
     }//GEN-LAST:event_jTextField_MessageKeyPressed
 
@@ -350,6 +442,7 @@ public class SessionGui extends javax.swing.JFrame {
     private javax.swing.JButton jButton_Send;
     private javax.swing.JButton jButton_Upload;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel_close;
     private javax.swing.JLabel jLabel_minimize;
     private javax.swing.JScrollPane jScrollPane1;

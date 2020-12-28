@@ -5,15 +5,18 @@
  */
 package com.agent.chat;
 
-import java.awt.Color;
-import java.io.File;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+import javax.swing.*;
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.border.Border;
+import javax.swing.ImageIcon;
+import javax.swing.KeyStroke;
+
 
 /**
  *
@@ -28,13 +31,23 @@ public class MainGui extends javax.swing.JFrame {
     private String file_path = null;
     private int xMouse;
     private int yMouse;
-    private String pathLogo = "assets/logo.png";
+    private final String pathLogo = "assets/logo.png";
     private String username;
+    private Timer timer;
+    public List<String> IPC = new ArrayList<String>();
+    private Vector old = null;
+    private Vector items = null;
+
 
     public MainGui() {
         initComponents();
         FileOperation filework = new FileOperation();
         this.username = filework.getUsername();
+        
+        // on lance un client en mode SERVEUR (il écoute sur le port 5000)
+        Client client = new Client(this.username, true); 
+        client.start();
+        
         String path = filework.getPath();
         ImageIcon picImage = new ImageIcon(path);
         if (picImage != null)
@@ -49,9 +62,37 @@ public class MainGui extends javax.swing.JFrame {
         }
         jLabel2.setText(this.username);
         
-        
+        // Toute les 1 secondes, on regarde si il y'a de nouveau utilisateurs pour les ajouter à la liste
+        timer = new Timer(1000, new java.awt.event.ActionListener() 
+        {
+        @Override
+         public void actionPerformed(java.awt.event.ActionEvent evt ) {
+            FileOperation filework = new FileOperation();
+            try {
+                IPC  = filework.getuser();
+                if (!IPC.isEmpty()) {
+                    items = new Vector(IPC);
+                    if (items != null && old == null) {
+                        old = new Vector(IPC);
+                        jList1.setListData(items);
+                    }
+                    if (!(old.equals(items))) {
+                       old = new Vector(IPC);
+                       jList1.setListData(items);
+                    }
+                }
+            }
+            catch (Exception e) {
+            }
+            
+        }});
+                
+        timer.start();       
         
     }
+    
+  
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -145,7 +186,7 @@ public class MainGui extends javax.swing.JFrame {
         });
 
         jButton_Modify.setFont(new java.awt.Font("Linux Libertine G", 0, 18)); // NOI18N
-        jButton_Modify.setText("modify profile");
+        jButton_Modify.setText("Modify profile");
         jButton_Modify.setActionCommand("Modify Profile");
         jButton_Modify.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jButton_Modify.addActionListener(new java.awt.event.ActionListener() {
@@ -195,7 +236,7 @@ public class MainGui extends javax.swing.JFrame {
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addContainerGap(17, Short.MAX_VALUE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel_image, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
@@ -270,38 +311,37 @@ public class MainGui extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(30, 30, 30)
-                                .addComponent(jButton_SelectUser, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(29, 29, 29)
-                                .addComponent(jButton_StartSession, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton_SelectUser, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(29, 29, 29)
+                                .addComponent(jButton_StartSession, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(8, 8, 8)
-                                .addComponent(jLabel1))
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 168, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton_StartSession, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton_SelectUser, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(21, 21, 21))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(21, 21, 21))))
         );
 
         pack();
@@ -364,7 +404,14 @@ public class MainGui extends javax.swing.JFrame {
         if (jLabel4.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Please choose user", "Error Session", 2);
         } else {
-            SessionGui session = new SessionGui();
+            
+            String destName;
+            String destIP;
+            
+            String[] temp = jLabel4.getText().split("-");
+            destName = temp[0];
+            destIP = temp[1];
+            SessionGui session = new SessionGui(this.username, destName, destIP);
             session.setVisible(true);
             session.pack();
             session.setLocationRelativeTo(null);

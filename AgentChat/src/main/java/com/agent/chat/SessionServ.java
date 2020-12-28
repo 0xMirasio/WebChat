@@ -11,31 +11,53 @@ public class SessionServ extends Thread {
     avant de démarrer les sockets, 
     */
 
-    private int BASE_COM_PORT = 5000;
+    private final int BASE_COM_PORT = 5000;
     private BufferedReader in;
     private PrintWriter out;
-    private Scanner sc=new Scanner(System.in);
+    private final FileOperation filework = new FileOperation();
+    private final Util util = new Util();
+    private String username = null;
     
     public void prepare() {
         
         try {
-            Util util = new Util();
+           
             System.out.println("Binding on : >" + (BASE_COM_PORT + util.getPort(util.getSourceAddress())));
             ServerSocket serveurSocket = new ServerSocket((BASE_COM_PORT + util.getPort(util.getSourceAddress())));
             Socket clientSocket = serveurSocket.accept();
             System.out.println("New connexion accepted\n");
-
+            SessionGui.setSendMessage(null);
+            SessionGui.setReceiveMessage(null);
+            
             out = new PrintWriter(clientSocket.getOutputStream());
             in = new BufferedReader (new InputStreamReader (clientSocket.getInputStream()));
-           
+            
+            this.username = filework.getUsername();
+            
+            SessionGui session = new SessionGui(this.username);
+            session.setVisible(true);
+            session.pack();
+            session.setLocationRelativeTo(null);
+                     
             Thread envoi= new Thread(new Runnable() {
-                String msg;
+                String msg = null;
                 @Override
                 public void run() {
                     while(true){
-                        msg = sc.nextLine();
-                        out.println(msg);
-                        out.flush();
+                        
+                        msg = SessionGui.Sendmessage;
+                        try {
+                            Thread.sleep(50);
+                        }
+                        catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (!(msg == null)) {
+                            System.out.println("[DEBUG] Sending > " + msg);
+                            out.println(msg);
+                            out.flush();
+                            SessionGui.setSendMessage(null);
+                        }
                     }
                 }
             });
@@ -47,14 +69,13 @@ public class SessionServ extends Thread {
                 public void run() {
                     try {
                         msg = in.readLine();
-                        //tant que le client est connecté
+                        
                         while(msg!=null){
-                        System.out.println("Client : "+msg);
-                        msg = in.readLine();
+                            System.out.println("[DEBUG] Receved > " + msg);
+                            SessionGui.setReceiveMessage(msg);
+                            msg = in.readLine();
                         }
-                        //sortir de la boucle si le client a déconecté
                         System.out.println("Client déconecté");
-                        //fermer le flux et la session socket
                         out.close();
                         clientSocket.close();
                         serveurSocket.close();
