@@ -16,6 +16,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
 import javax.swing.Timer;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -38,6 +40,7 @@ public class SessionGui extends javax.swing.JFrame {
     public static String Sendmessage;
     public static String Receivemessage;
     private final FileOperation filework = new FileOperation();
+    private List<String> sessions = new ArrayList<String>();
     private final SimpleDateFormat s = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     
@@ -108,6 +111,18 @@ public class SessionGui extends javax.swing.JFrame {
                String temp[] = message.split(":");
                this.destName = temp[1];
                jLabel2.setText("Session chat : " + this.destName);
+               int sessionId = (int) (Math.random() * 30000); // on genere une sessionId aléatoire
+               try {
+                   filework.saveChatSession(this.sender, destName, sessionId);
+
+               }
+               catch (Exception e) {
+                    e.printStackTrace();
+               }
+               
+               this.sessions = filework.getSessions();
+               jText_AreaMessage.setText(this.sessions.toString());
+               
            }
            else {
                System.out.println("Received : " + message);
@@ -118,6 +133,7 @@ public class SessionGui extends javax.swing.JFrame {
                System.out.println("Sender :" + this.destName);
                System.out.println("Local : " + this.sender);
                System.out.println("theorical : " + sourceMsg);
+               // TODO : fix this bug. Isn't working
                //if (sourceMsg.equals(this.sender)) {
                     String toSend = s.format(date) + " : " + this.destName + " > " + msg;
                     jText_AreaMessage.setText(jText_AreaMessage.getText() + "\n" + toSend);

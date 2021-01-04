@@ -9,6 +9,9 @@ class FileOperation
     BufferedReader reader = null;
     private final String profile = ".cache/profile.private";
     private final String userlist = ".cache/userlist";
+    private final String sessionfile = ".cache/sessions";
+    private final String networkfile = ".cache/networkConfig";
+    
     private String email;
     private String username;
     private String receivemessage;
@@ -16,6 +19,7 @@ class FileOperation
     private List<String> IPC;
     private String password;
     private String profileimagepath;
+    private List<String> session;
     private Util util = new Util();
 
     public void readFile() throws Exception  {
@@ -36,6 +40,13 @@ class FileOperation
         else {
             this.IPC = null;
         }
+        reader.close();
+    }
+     
+     public void readSessionFile() throws Exception  {
+        this.reader= new BufferedReader(new FileReader(sessionfile));
+        String temp = reader.readLine();
+        this.session = util.transform2Session(temp);
         reader.close();
     }
      
@@ -81,6 +92,16 @@ class FileOperation
         }
         return this.password;
     }
+    
+    public List<String> getSessions() {
+        try { 
+            readSessionFile(); 
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return this.session;
+    }
 
 
     public void createNewProfile(String username,String password,String email, String profileimagepath) throws Exception {
@@ -95,6 +116,21 @@ class FileOperation
     public void saveUser(List<String> IPC) throws Exception {
         PrintWriter writer = new PrintWriter(userlist);
         writer.println(IPC);
+        writer.close();
+    }
+    
+    public void saveChatSession(String source, String sender, int sessionId) throws Exception {
+        this.reader= new BufferedReader(new FileReader(sessionfile));
+        String temp = reader.readLine();
+        if (!(temp == null)) {
+            this.session = util.transform2Session(temp);
+        }
+        
+        reader.close();
+        
+        this.session.add("["+ source + "," + sender + "," + sessionId + "]");
+        PrintWriter writer = new PrintWriter(sessionfile);
+        writer.println(this.session);
         writer.close();
     }
     

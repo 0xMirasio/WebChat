@@ -21,6 +21,20 @@ public class Util {
         }
         return IPC;
     }
+    
+    public List<String> transform2Session(String listSession) {
+        List<String> sessions = new ArrayList<String>();
+        String[] sec_s = null;
+               
+        sec_s = listSession.split("\\[", 2); 
+        String temp = sec_s[1];
+        temp = temp.split("]",2)[0]; 
+        sec_s = temp.split(",", 999);
+        for (String value : sec_s) {
+            sessions.add(value);
+        }
+        return sessions;
+    }
 
     public int getPort(String address) {
         int INDEX=0;

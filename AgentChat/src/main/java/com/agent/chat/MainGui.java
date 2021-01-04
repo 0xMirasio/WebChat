@@ -36,6 +36,7 @@ public class MainGui extends javax.swing.JFrame {
     private String username;
     private Timer timer;
     public List<String> IPC = new ArrayList<String>();
+    private final FileOperation filework = new FileOperation();
     private Vector old = null;
     private Vector items = null;
     private final int BASE_COM_PORT = 5000;
@@ -423,6 +424,15 @@ public class MainGui extends javax.swing.JFrame {
             String[] temp = jLabel4.getText().split("-");
             destName = temp[0];
             destIP = temp[1];
+            
+            int sessionId = (int) (Math.random() * 30000); // on genere une sessionId aléatoire
+            try {
+                filework.saveChatSession(this.username, destName, sessionId);
+
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
             SessionGui session = new SessionGui(this.username, destName, destIP);
             session.setVisible(true);
             session.pack();
