@@ -107,17 +107,22 @@ public class SessionGui extends javax.swing.JFrame {
            if (message.contains("hello-tcp")) {
                String temp[] = message.split(":");
                this.destName = temp[1];
+               jLabel2.setText("Session chat : " + this.destName);
            }
            else {
-               String temp[] = message.split(":");
+               System.out.println("Received : " + message);
+               String temp[] = message.split(":", 2);
                String msg = temp[0];
                String sourceMsg = temp[1];
                Date date = new Date();
-               if (sourceMsg.equals(this.sender)) {
+               System.out.println("Sender :" + this.destName);
+               System.out.println("Local : " + this.sender);
+               System.out.println("theorical : " + sourceMsg);
+               //if (sourceMsg.equals(this.sender)) {
                     String toSend = s.format(date) + " : " + this.destName + " > " + msg;
                     jText_AreaMessage.setText(jText_AreaMessage.getText() + "\n" + toSend);
                     jTextField_Message.setText("");
-               }
+               //}
                
            }
            

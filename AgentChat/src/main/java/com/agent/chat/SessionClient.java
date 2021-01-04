@@ -66,7 +66,6 @@ public class SessionClient {
                         msg = in.readLine();
                     }
                     SessionGui.setReceiveMessage(" ****DISCONNECTED****");
-                    // TODO : Afficher message chez client ou serveur que l'autre est parti
                     out.close();
                     clientSocket.close();
                 } catch (IOException e) {
