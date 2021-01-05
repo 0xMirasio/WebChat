@@ -10,8 +10,8 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-.cache/profile.private
-target/
+AgentChat/.cache/
+AgentChat/target/
 # Package Files #
 *.war
 *.nar

@@ -13,6 +13,7 @@ public class Client extends Thread {
     private final FileOperation filework = new FileOperation();
     private final String sourceAddress = util.getSourceAddress();
     private String destAdress = null;
+    private int sessionId;
     private ServerSocket sockS = null;
 
 
@@ -22,9 +23,10 @@ public class Client extends Thread {
         this.MODE = MODE;
     }
     
-     public Client(String username, String destAdress , boolean MODE) {
+     public Client(String username, String destAdress ,int sessionId,  boolean MODE) {
         this.username = username;
         this.MODE = MODE;
+        this.sessionId = sessionId;
         this.destAdress = destAdress;
     }
     
@@ -52,7 +54,7 @@ public class Client extends Thread {
             System.out.println("[DEBUG] - Source address : " + this.sourceAddress);
             System.out.println("[INFO] Starting SessionClient session on port : " + (BASE_COM_PORT + util.getPort(this.destAdress)) +  " and Destination adress > " + destAdress);
             SessionClient sessionClient = new SessionClient();
-            sessionClient.startChatSession(destAdress);
+            sessionClient.startChatSession(destAdress, sessionId);
         }
     }
 

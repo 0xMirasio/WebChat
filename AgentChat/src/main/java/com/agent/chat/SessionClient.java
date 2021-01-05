@@ -12,7 +12,7 @@ public class SessionClient {
     private PrintWriter out;
     private final FileOperation filework = new FileOperation();
     
-    public void startChatSession(String dest) { 
+    public void startChatSession(String dest, int sessionId) { 
 
         this.destination = dest;
     
@@ -22,8 +22,9 @@ public class SessionClient {
             
             out = new PrintWriter(clientSocket.getOutputStream());
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                  
-            out.println("hello-tcp:" + filework.getUsername());
+            
+            
+            out.println("hello-tcp:" + filework.getUsername() + ":" + sessionId);
             out.flush();
             SessionGui.setSendMessage(null);
             SessionGui.setReceiveMessage(null);

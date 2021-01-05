@@ -2,12 +2,37 @@ package com.agent.chat;
 import java.util.*;
 import java.io.*;
 import java.net.*;
+import java.sql.*;
 
 public class Util {
    
     private String address;
     private String broadcast;
+    private final String myDriver = "org.gjt.mm.mysql.Driver";
+    private final String myUrl = "jdbc:mysql://82.165.59.142/webchat";
+    private Connection conn = null;
 
+          
+    public void saveUserMessage(int idSession, String message) throws Exception {
+        
+      Class.forName(myDriver);
+      try {
+            this.conn = DriverManager.getConnection(myUrl, "root", "15d7e2v142857143!");
+      }
+      catch (Exception e) {
+            e.printStackTrace();
+      }
+      
+      String query = " insert into message_history (sessionid, message)" + " values (?, ?)";
+
+      PreparedStatement preparedStmt = conn.prepareStatement(query);
+      System.out.println("[INFO] Saving into DB : (" + idSession  + "," + message + ")");
+      preparedStmt.setInt (1, idSession);
+      preparedStmt.setString (2, message);
+  
+      preparedStmt.execute();
+
+    }
     public List<String> transform2IPC(String listIPC) {
         List<String> IPC = new ArrayList<String>();
         String[] IPC_s = null;

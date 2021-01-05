@@ -18,6 +18,7 @@ import java.util.Vector;
 import javax.swing.Timer;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.*;
 
 /**
  *
@@ -40,8 +41,11 @@ public class SessionGui extends javax.swing.JFrame {
     public static String Sendmessage;
     public static String Receivemessage;
     private final FileOperation filework = new FileOperation();
+    private final Util util = new Util();
     private List<String> sessions = new ArrayList<String>();
     private final SimpleDateFormat s = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    private int sessionId;
+    
 
     
     public SessionGui() {
@@ -51,7 +55,8 @@ public class SessionGui extends javax.swing.JFrame {
     // ce constructor est appellé quand une machine B contact A.
     public SessionGui(String sender) {
         this.sender = sender;
-        initComponents();        
+        initComponents(); 
+        
         // Toute les 0.01 secondes, on récupère les messages réçu qui sont stockées dans les fichiers buffers.
         timer = new Timer(10, new java.awt.event.ActionListener() 
         {
@@ -70,11 +75,13 @@ public class SessionGui extends javax.swing.JFrame {
     }
     
     // quand A décide de contacter B, ce constructeur est appelé.
-    public SessionGui(String sender, String destName, String destIP) {
+    public SessionGui(String sender, String destName, String destIP, int sessionId) {
         this.sender = sender;
         this.destName = destName;
         this.destIP = destIP;
+        this.sessionId = sessionId;
         initComponents();
+              
         jLabel2.setText("SessionChat : " + this.destName);
         
         // Toute les 0.01 secondes, on récupère les messages réçu qui sont stockées dans les fichiers buffers.
@@ -92,7 +99,7 @@ public class SessionGui extends javax.swing.JFrame {
         timer.start(); 
         // démarrage session TCP
 
-        Client client = new Client(this.sender , this.destIP, false);
+        Client client = new Client(this.sender , this.destIP, this.sessionId,  false);
         client.start();
     }
     
@@ -108,12 +115,12 @@ public class SessionGui extends javax.swing.JFrame {
     private void actualiseView(String message) {
             
            if (message.contains("hello-tcp")) {
-               String temp[] = message.split(":");
+               String temp[] = message.split(":",3);
                this.destName = temp[1];
+               this.sessionId = Integer.parseInt(temp[2]);
                jLabel2.setText("Session chat : " + this.destName);
-               int sessionId = (int) (Math.random() * 30000); // on genere une sessionId aléatoire
                try {
-                   filework.saveChatSession(this.sender, destName, sessionId);
+                   filework.saveChatSession(this.sender, destName, this.sessionId);
 
                }
                catch (Exception e) {
@@ -398,6 +405,12 @@ public class SessionGui extends javax.swing.JFrame {
             
             SessionGui.setSendMessage(input_Sender+":"+this.sender);
             String message = s.format(date) + " : " + this.sender + " > " + input_Sender;
+            try {
+                this.util.saveUserMessage(this.sessionId, message);
+                }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
             jText_AreaMessage.setText(jText_AreaMessage.getText() + "\n" + message);
             jTextField_Message.setText("");
         }
@@ -410,10 +423,17 @@ public class SessionGui extends javax.swing.JFrame {
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             
             input_Sender = jTextField_Message.getText();
+
             if (!input_Sender.equals("") || !(input_Sender == null)) {
                 
                 SessionGui.setSendMessage(input_Sender+":"+this.sender);
                 String message = s.format(date) + " : " + this.sender + " > " + input_Sender;
+                try {
+                    this.util.saveUserMessage(this.sessionId, message);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
                 jText_AreaMessage.setText(jText_AreaMessage.getText() + "\n" + message);
                 jTextField_Message.setText("");
         }

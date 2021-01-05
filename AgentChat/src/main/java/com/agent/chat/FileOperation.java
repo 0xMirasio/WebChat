@@ -2,6 +2,7 @@ package com.agent.chat;
 
 import java.io.*;
 import java.util.List;
+import java.util.ArrayList;
 
 class FileOperation
 { 
@@ -19,7 +20,7 @@ class FileOperation
     private List<String> IPC;
     private String password;
     private String profileimagepath;
-    private List<String> session;
+    private List<String> session = new ArrayList<String>();
     private Util util = new Util();
 
     public void readFile() throws Exception  {
@@ -119,7 +120,7 @@ class FileOperation
         writer.close();
     }
     
-    public void saveChatSession(String source, String sender, int sessionId) throws Exception {
+    public void saveChatSession(String xsource, String xsender, int sessionId) throws Exception {
         this.reader= new BufferedReader(new FileReader(sessionfile));
         String temp = reader.readLine();
         if (!(temp == null)) {
@@ -127,8 +128,9 @@ class FileOperation
         }
         
         reader.close();
-        
-        this.session.add("["+ source + "," + sender + "," + sessionId + "]");
+        String toAdd = "["+ xsource + ":" + xsender + ":" + sessionId + "]";
+        System.out.println(toAdd);
+        this.session.add(toAdd);
         PrintWriter writer = new PrintWriter(sessionfile);
         writer.println(this.session);
         writer.close();

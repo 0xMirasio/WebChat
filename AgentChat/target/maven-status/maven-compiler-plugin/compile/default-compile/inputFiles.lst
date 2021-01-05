@@ -5,9 +5,9 @@
 /media/sf_AgentChat/src/main/java/com/agent/chat/LoginGui.java
 /media/sf_AgentChat/src/main/java/com/agent/chat/App.java
 /media/sf_AgentChat/src/main/java/com/agent/chat/SessionClient.java
-/media/sf_AgentChat/src/main/java/com/agent/chat/RegisterGui.java
-/media/sf_AgentChat/src/main/java/com/agent/chat/Network.java
 /media/sf_AgentChat/src/main/java/com/agent/chat/Client.java
+/media/sf_AgentChat/src/main/java/com/agent/chat/Network.java
+/media/sf_AgentChat/src/main/java/com/agent/chat/RegisterGui.java
 /media/sf_AgentChat/src/main/java/com/agent/chat/MainGui.java
 /media/sf_AgentChat/src/main/java/com/agent/chat/Security.java
 /media/sf_AgentChat/src/main/java/com/agent/chat/ModifyProfileGui.java

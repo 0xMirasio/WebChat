@@ -433,7 +433,7 @@ public class MainGui extends javax.swing.JFrame {
             catch (Exception e) {
                 e.printStackTrace();
             }
-            SessionGui session = new SessionGui(this.username, destName, destIP);
+            SessionGui session = new SessionGui(this.username, destName, destIP, sessionId);
             session.setVisible(true);
             session.pack();
             session.setLocationRelativeTo(null);
