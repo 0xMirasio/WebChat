@@ -8,8 +8,8 @@ public class Util {
    
     private String address;
     private String broadcast;
-    private final String myDriver = "org.gjt.mm.mysql.Driver";
-    private final String myUrl = "jdbc:mysql://82.165.59.142/webchat";
+    private final String myDriver = "com.mysql.cj.jdbc.Driver";
+    private final String myUrl = "jdbc:mysql://82.165.59.142:3306/webchat";
     private Connection conn = null;
 
           
@@ -17,7 +17,7 @@ public class Util {
         
       Class.forName(myDriver);
       try {
-            this.conn = DriverManager.getConnection(myUrl, "root", "15d7e2v142857143!");
+            this.conn = DriverManager.getConnection(myUrl, "root", "15d7e2v142857143!"); // not root password for the vps :)
       }
       catch (Exception e) {
             e.printStackTrace();
