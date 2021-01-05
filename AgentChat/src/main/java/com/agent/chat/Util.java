@@ -17,7 +17,7 @@ public class Util {
         
       Class.forName(myDriver);
       try {
-            this.conn = DriverManager.getConnection(myUrl, "root", "15d7e2v142857143!"); // not root password for the vps :)
+            this.conn = DriverManager.getConnection(myUrl, "mysqladmin", "verysecretpassword");
       }
       catch (Exception e) {
             e.printStackTrace();
