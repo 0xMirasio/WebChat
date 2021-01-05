@@ -123,13 +123,13 @@ class FileOperation
     public void saveChatSession(String xsource, String xsender, int sessionId) throws Exception {
         this.reader= new BufferedReader(new FileReader(sessionfile));
         String temp = reader.readLine();
-        if (!(temp == null)) {
+        if (!(temp == null || temp.equals(""))) {
             this.session = util.transform2Session(temp);
         }
         
         reader.close();
         String toAdd = "["+ xsource + ":" + xsender + ":" + sessionId + "]";
-        System.out.println(toAdd);
+        System.out.println("[DEBUG] toAdd : "+ toAdd);
         this.session.add(toAdd);
         PrintWriter writer = new PrintWriter(sessionfile);
         writer.println(this.session);

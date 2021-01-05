@@ -1,4 +1,4 @@
 #!/bin/bash
-rm .cache/userlist
-touch .cache/userlist
+echo "" > .cache/userlist
+echo "" > .cache/sessions
 java -jar target/AgentChat-1.0-dev.jar
