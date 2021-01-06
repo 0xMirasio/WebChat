@@ -35,6 +35,7 @@ public class Util {
       this.conn = DriverManager.getConnection(myUrl, "mysqladmin", "verysecretpassword");
       
       String query = "select message from message_history where sessionid=" + sessionID;
+      System.out.println("[INFO] Executing Query into DB : " + query);
       Statement stmt = conn.createStatement();
       ResultSet rs = stmt.executeQuery(query);
       while (rs.next()) {

@@ -94,15 +94,19 @@ public class SessionGui extends javax.swing.JFrame {
                    System.out.println("[DEBUG] Couple = " + couple);
                    if (session.contains(couple)) {
                        try {
-                           System.out.println("find a couple");
-                           old_message = util.getOldMessage(sessionID);
+                            old_message = util.getOldMessage(sessionID);
+                            System.out.println("[DEBUG] OLD_MSG =  "+ old_message);
+                            if (!(old_message == null || old_message.equals(""))) {
+                                    old_message = jText_AreaMessage.getText() + "\n" + old_message;
+                                    jText_AreaMessage.setText(old_message + "\n");
+                            }    
                        }
                        catch (Exception e) {
                            e.printStackTrace();
                        }
                    }
         }
-               
+        System.out.println(old_message);
         jText_AreaMessage.setText(old_message + "\n");
         
         
@@ -150,8 +154,12 @@ public class SessionGui extends javax.swing.JFrame {
                    System.out.println("[DEBUG] Couple = " + couple);
                    if (session.contains(couple)) {
                        try {
-                           System.out.println("find a couple");
-                           old_message = util.getOldMessage(sessionID);
+                            old_message = util.getOldMessage(sessionID);
+                            System.out.println("[DEBUG] OLD_MSG =  "+ old_message);
+                            if (!(old_message == null || old_message.equals(""))) {
+                                    old_message = jText_AreaMessage.getText() + "\n" + old_message;
+                                    jText_AreaMessage.setText(old_message + "\n");
+                            }    
                        }
                        catch (Exception e) {
                            e.printStackTrace();
@@ -159,11 +167,11 @@ public class SessionGui extends javax.swing.JFrame {
                    }
                }
                
-               jText_AreaMessage.setText(old_message + "\n");
-              
+               
                this.sessionId = Integer.parseInt(temp[2]);
                System.out.println("[debug] SessionId : " + this.sessionId);
                jLabel2.setText("Session chat : " + this.destName);
+               System.out.println("[DEBUG] : DestNAme : " + this.destName);
                try {
                    filework.saveChatSession(this.sender, destName, this.sessionId);
 
@@ -171,9 +179,7 @@ public class SessionGui extends javax.swing.JFrame {
                catch (Exception e) {
                     e.printStackTrace();
                }
-               
-               
-               
+                                       
            }
            else {
                System.out.println("Received : " + message);
