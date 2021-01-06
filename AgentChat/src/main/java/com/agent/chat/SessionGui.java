@@ -85,6 +85,28 @@ public class SessionGui extends javax.swing.JFrame {
               
         jLabel2.setText("SessionChat : " + this.destName);
         
+        this.sessions = filework.getSessions();
+        for (String session : this.sessions) {
+                   String temp2[] = session.split(":",3);
+                   int sessionID = Integer.parseInt(temp2[2]);
+                   
+                   String couple = this.sender + ":" + this.destName;
+                   System.out.println("[DEBUG] Couple = " + couple);
+                   if (session.contains(couple)) {
+                       try {
+                           System.out.println("find a couple");
+                           old_message = util.getOldMessage(sessionID);
+                       }
+                       catch (Exception e) {
+                           e.printStackTrace();
+                       }
+                   }
+        }
+               
+        jText_AreaMessage.setText(old_message + "\n");
+        
+        
+        
         // Toute les 0.01 secondes, on récupère les messages réçu qui sont stockées dans les fichiers buffers.
         timer = new Timer(10, new java.awt.event.ActionListener() 
         {
@@ -120,18 +142,16 @@ public class SessionGui extends javax.swing.JFrame {
                this.destName = temp[1];
                
                this.sessions = filework.getSessions();
-               jText_AreaMessage.setText(this.sessions.toString());
                for (String session : this.sessions) {
                    String temp2[] = session.split(":",3);
                    int sessionID = Integer.parseInt(temp2[2]);
                    
                    String couple = this.sender + ":" + this.destName;
                    System.out.println("[DEBUG] Couple = " + couple);
-                   System.out.println(session);
                    if (session.contains(couple)) {
                        try {
+                           System.out.println("find a couple");
                            old_message = util.getOldMessage(sessionID);
-                           System.out.println(old_message);
                        }
                        catch (Exception e) {
                            e.printStackTrace();
@@ -139,9 +159,10 @@ public class SessionGui extends javax.swing.JFrame {
                    }
                }
                
-               
-               
+               jText_AreaMessage.setText(old_message + "\n");
+              
                this.sessionId = Integer.parseInt(temp[2]);
+               System.out.println("[debug] SessionId : " + this.sessionId);
                jLabel2.setText("Session chat : " + this.destName);
                try {
                    filework.saveChatSession(this.sender, destName, this.sessionId);
@@ -452,7 +473,7 @@ public class SessionGui extends javax.swing.JFrame {
                 SessionGui.setSendMessage(input_Sender+":"+this.sender);
                 String message = s.format(date) + " : " + this.sender + " > " + input_Sender;
                 try {
-                    //this.util.saveUserMessage(this.sessionId, message);
+                    this.util.saveUserMessage(this.sessionId, message);
                 }
                 catch (Exception e) {
                     e.printStackTrace();

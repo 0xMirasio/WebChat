@@ -16,15 +16,9 @@ public class Util {
     public void saveUserMessage(int idSession, String message) throws Exception {
         
       Class.forName(myDriver);
-      try {
-            this.conn = DriverManager.getConnection(myUrl, "mysqladmin", "verysecretpassword");
-      }
-      catch (Exception e) {
-            e.printStackTrace();
-      }
-      
+      this.conn = DriverManager.getConnection(myUrl, "mysqladmin", "verysecretpassword");
+          
       String query = " insert into message_history (sessionid, message)" + " values (?, ?)";
-
       PreparedStatement preparedStmt = conn.prepareStatement(query);
       System.out.println("[INFO] Saving into DB : (" + idSession  + "," + message + ")");
       preparedStmt.setInt (1, idSession);
@@ -34,12 +28,21 @@ public class Util {
 
     }
     
-    public String getOldMessage(int sessionID) {
-        String msg= null;
-        
-        
-        
-        return msg;
+    public String getOldMessage(int sessionID) throws Exception {
+       
+      String msg="";
+      Class.forName(myDriver);
+      this.conn = DriverManager.getConnection(myUrl, "mysqladmin", "verysecretpassword");
+      
+      String query = "select message from message_history where sessionid=" + sessionID;
+      Statement stmt = conn.createStatement();
+      ResultSet rs = stmt.executeQuery(query);
+      while (rs.next()) {
+        String message = rs.getString("message");
+        System.out.println("[DEBUG] Retreived message from DB :"+message+ "\n");
+        msg += message + "\n";
+      }
+      return msg;
     }
             
     public List<String> transform2IPC(String listIPC) {
