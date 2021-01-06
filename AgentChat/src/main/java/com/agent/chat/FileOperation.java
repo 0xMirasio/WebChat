@@ -128,7 +128,7 @@ class FileOperation
         }
         
         reader.close();
-        String toAdd = "["+ xsource + ":" + xsender + ":" + sessionId + "]";
+        String toAdd = xsource + ":" + xsender + ":" + sessionId;
         System.out.println("[DEBUG] toAdd : "+ toAdd);
         this.session.add(toAdd);
         PrintWriter writer = new PrintWriter(sessionfile);

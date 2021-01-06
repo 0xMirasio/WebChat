@@ -33,6 +33,15 @@ public class Util {
       preparedStmt.execute();
 
     }
+    
+    public String getOldMessage(int sessionID) {
+        String msg= null;
+        
+        
+        
+        return msg;
+    }
+            
     public List<String> transform2IPC(String listIPC) {
         List<String> IPC = new ArrayList<String>();
         String[] IPC_s = null;
@@ -46,6 +55,8 @@ public class Util {
         }
         return IPC;
     }
+    
+    
     
     public List<String> transform2Session(String listSession) {
         List<String> sessions = new ArrayList<String>();

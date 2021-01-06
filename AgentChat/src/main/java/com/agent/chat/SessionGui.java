@@ -45,6 +45,7 @@ public class SessionGui extends javax.swing.JFrame {
     private List<String> sessions = new ArrayList<String>();
     private final SimpleDateFormat s = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     private int sessionId;
+    private String old_message = null;
     
 
     
@@ -117,6 +118,29 @@ public class SessionGui extends javax.swing.JFrame {
            if (message.contains("hello-tcp")) {
                String temp[] = message.split(":",3);
                this.destName = temp[1];
+               
+               this.sessions = filework.getSessions();
+               jText_AreaMessage.setText(this.sessions.toString());
+               for (String session : this.sessions) {
+                   String temp2[] = session.split(":",3);
+                   int sessionID = Integer.parseInt(temp2[2]);
+                   
+                   String couple = this.sender + ":" + this.destName;
+                   System.out.println("[DEBUG] Couple = " + couple);
+                   System.out.println(session);
+                   if (session.contains(couple)) {
+                       try {
+                           old_message = util.getOldMessage(sessionID);
+                           System.out.println(old_message);
+                       }
+                       catch (Exception e) {
+                           e.printStackTrace();
+                       }
+                   }
+               }
+               
+               
+               
                this.sessionId = Integer.parseInt(temp[2]);
                jLabel2.setText("Session chat : " + this.destName);
                try {
@@ -127,8 +151,7 @@ public class SessionGui extends javax.swing.JFrame {
                     e.printStackTrace();
                }
                
-               this.sessions = filework.getSessions();
-               jText_AreaMessage.setText(this.sessions.toString());
+               
                
            }
            else {
@@ -429,7 +452,7 @@ public class SessionGui extends javax.swing.JFrame {
                 SessionGui.setSendMessage(input_Sender+":"+this.sender);
                 String message = s.format(date) + " : " + this.sender + " > " + input_Sender;
                 try {
-                    this.util.saveUserMessage(this.sessionId, message);
+                    //this.util.saveUserMessage(this.sessionId, message);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
