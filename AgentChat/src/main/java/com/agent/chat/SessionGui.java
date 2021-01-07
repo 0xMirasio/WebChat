@@ -89,16 +89,17 @@ public class SessionGui extends javax.swing.JFrame {
         for (String session : this.sessions) {
                    String temp2[] = session.split(":",3);
                    int sessionID = Integer.parseInt(temp2[2]);
-                   
+                   this.destName = this.destName.split(" ")[0];
                    String couple = this.sender + ":" + this.destName;
                    System.out.println("[DEBUG] Couple = " + couple);
                    if (session.contains(couple)) {
                        try {
-                            old_message = util.getOldMessage(sessionID);
-                            System.out.println("[DEBUG] OLD_MSG =  "+ old_message);
-                            if (!(old_message == null || old_message.equals(""))) {
-                                    old_message = jText_AreaMessage.getText() + "\n" + old_message;
-                                    jText_AreaMessage.setText(old_message + "\n");
+                            System.out.println("Consulting DB for SessionID = "+ sessionID);
+                            String oldtemp = util.getOldMessage(sessionID);
+                            if (!(oldtemp == null || oldtemp.equals(""))) {
+                                    System.out.println("[DEBUG] OLD_MSG =  "+ oldtemp);
+                                    this.old_message = jText_AreaMessage.getText() + "\n" + oldtemp;
+                                    jText_AreaMessage.setText(this.old_message + "\n");
                             }    
                        }
                        catch (Exception e) {
@@ -497,6 +498,7 @@ public class SessionGui extends javax.swing.JFrame {
     private void jButton_ResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_ResetActionPerformed
 
         jText_AreaMessage.setText("");
+                
     }//GEN-LAST:event_jButton_ResetActionPerformed
 
     /**
