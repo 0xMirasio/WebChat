@@ -227,7 +227,6 @@ public class SessionGui extends javax.swing.JFrame {
                System.out.println("[DEBUG] : DestNAme : " + this.destName);
                try {
                    filework.saveChatSession(this.destName, this.sender, this.sessionId);
-                   filework.saveChatSession(this.sender, this.destName, this.sessionId);
 
                }
                catch (Exception e) {

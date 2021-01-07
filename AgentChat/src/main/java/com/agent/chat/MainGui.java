@@ -428,7 +428,6 @@ public class MainGui extends javax.swing.JFrame {
             int sessionId = (int) (Math.random() * 30000); // on genere une sessionId aléatoire
             try {
                 filework.saveChatSession(this.username, destName, sessionId);
-                filework.saveChatSession(destName, this.username, sessionId);
 
             }
             catch (Exception e) {
