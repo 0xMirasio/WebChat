@@ -45,7 +45,7 @@ public class SessionGui extends javax.swing.JFrame {
     private List<String> sessions = new ArrayList<String>();
     private final SimpleDateFormat s = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     private int sessionId;
-    private String old_message = null;
+    private String old_message;
     
 
     
@@ -203,6 +203,12 @@ public class SessionGui extends javax.swing.JFrame {
                for (String session : this.sessions) {
                    String temp2[] = session.split(":",3);
                    int sessionID = Integer.parseInt(temp2[2]);
+                   try {
+                       this.destName = this.destName.split(" ")[0];
+                   }
+                   catch (Exception e) {
+                       System.out.println(this.destName);
+                   }
                    
                    String couple = this.sender + ":" + this.destName;
                    System.out.println("[DEBUG] Couple = " + couple);
