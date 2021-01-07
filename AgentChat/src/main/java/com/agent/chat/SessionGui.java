@@ -137,11 +137,7 @@ public class SessionGui extends javax.swing.JFrame {
                            e.printStackTrace();
                        }
                    }
-        }
-        System.out.println(old_message);
-        jText_AreaMessage.setText(old_message + "\n");
-        
-        
+        }        
         
         // Toute les 0.01 secondes, on récupère les messages réçu qui sont stockées dans les fichiers buffers.
         timer = new Timer(10, new java.awt.event.ActionListener() 
@@ -181,7 +177,12 @@ public class SessionGui extends javax.swing.JFrame {
                for (String session : this.sessions) {
                    String temp2[] = session.split(":",3);
                    int sessionID = Integer.parseInt(temp2[2]);
-                   
+                   try {
+                       this.destName = this.destName.split(" ")[0];
+                   }
+                   catch (Exception e) {
+                       System.out.println(this.destName);
+                   }
                    String couple = this.destName + ":" + this.sender;
                    System.out.println("[DEBUG] Couple = " + couple);
                    if (session.contains(couple)) {
