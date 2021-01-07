@@ -89,7 +89,12 @@ public class SessionGui extends javax.swing.JFrame {
         for (String session : this.sessions) {
                    String temp2[] = session.split(":",3);
                    int sessionID = Integer.parseInt(temp2[2]);
-                   this.destName = this.destName.split(" ")[0];
+                   try {
+                       this.destName = this.destName.split(" ")[1];
+                   }
+                   catch (Exception e) {
+                       this.destName = this.destName.split(" ")[0];
+                   }                   
                    String couple = this.sender + ":" + this.destName;
                    System.out.println("[DEBUG] Couple = " + couple);
                    if (session.contains(couple)) {
@@ -151,7 +156,7 @@ public class SessionGui extends javax.swing.JFrame {
                    String temp2[] = session.split(":",3);
                    int sessionID = Integer.parseInt(temp2[2]);
                    
-                   String couple = this.sender + ":" + this.destName;
+                   String couple = this.destName + ":" + this.sender;
                    System.out.println("[DEBUG] Couple = " + couple);
                    if (session.contains(couple)) {
                        try {
@@ -174,7 +179,7 @@ public class SessionGui extends javax.swing.JFrame {
                jLabel2.setText("Session chat : " + this.destName);
                System.out.println("[DEBUG] : DestNAme : " + this.destName);
                try {
-                   filework.saveChatSession(this.sender, destName, this.sessionId);
+                   filework.saveChatSession(this.destName, this.sender, this.sessionId);
 
                }
                catch (Exception e) {
