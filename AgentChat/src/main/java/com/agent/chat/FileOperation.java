@@ -145,10 +145,11 @@ class FileOperation
     }
     
     public void saveFile(String data, String nameFile) throws Exception {
-        PrintWriter writer = new PrintWriter("download/"+nameFile);
-        System.out.println("[DEBUG] Data ="+ data);
-        writer.println(new String(Base64.getDecoder().decode(data)));
-        writer.close();
+        String command = "echo " + "'"+ data +"'" + "| base64 -d > download/"+nameFile;
+        System.out.println("[debug] Executing : " + command);
+        ProcessBuilder builder = new ProcessBuilder();
+        builder.command("sh", "-c", command);
+        builder.start();
     }
     
     public void saveChatSession(String xsource, String xsender, int sessionId) throws Exception {
