@@ -19,6 +19,7 @@ import javax.swing.Timer;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -455,7 +456,7 @@ public class SessionGui extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel_minimizeMouseExited
 
     private void jLabel_closeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_closeMouseClicked
-
+        JOptionPane.showMessageDialog(null,"[BUG Unsolved] If you close this pannel, and then restart the dialog with the user, the jframe will completely unwork. Pls restart application if this is happening ","Information", 1);
         this.dispose();
     }//GEN-LAST:event_jLabel_closeMouseClicked
 

@@ -16,7 +16,7 @@ public class Util {
     public void saveUserMessage(int idSession, String message) throws Exception {
         
       Class.forName(myDriver);
-      this.conn = DriverManager.getConnection(myUrl, "mysqladmin", "verysecretpassword");
+      this.conn = DriverManager.getConnection(myUrl, "webchat", "webchat");
           
       String query = " insert into message_history (sessionid, message)" + " values (?, ?)";
       PreparedStatement preparedStmt = conn.prepareStatement(query);
@@ -32,7 +32,7 @@ public class Util {
        
       String msg="";
       Class.forName(myDriver);
-      this.conn = DriverManager.getConnection(myUrl, "mysqladmin", "verysecretpassword");
+      this.conn = DriverManager.getConnection(myUrl, "webchat", "webchat");
       
       String query = "select message from message_history where sessionid=" + sessionID;
       System.out.println("[INFO] Executing Query into DB : " + query);
