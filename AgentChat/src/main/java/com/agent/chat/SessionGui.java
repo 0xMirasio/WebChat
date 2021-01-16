@@ -502,7 +502,6 @@ public class SessionGui extends javax.swing.JFrame {
             e.printStackTrace();
         }
         System.out.println("Uploading : " + name_file);
-        System.out.println("[DEBUG] DataSending : "+ file_data);
         SessionGui.setSendMessage("file_24541x:"+name_file + ":" +file_data);
         
         

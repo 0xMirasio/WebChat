@@ -47,19 +47,24 @@ class FileOperation
     }
      
      public String getFileFormatedData(String path) throws Exception {
-         String data= "";
-         try {
-                File myObj = new File(path);
+         
+       
+        String command = "base64 " + "'"+ path + "'" + " > download/temp";
+        System.out.println("[debug] Executing : " + command);
+        ProcessBuilder builder = new ProcessBuilder();
+        builder.command("sh", "-c", command);
+        builder.start();
+        String data= "";
+        try {
+                File myObj = new File("download/temp");
                 Scanner myReader = new Scanner(myObj);
                 while (myReader.hasNextLine()) {
-                  data += myReader.nextLine();
+                    data += myReader.nextLine();
                 }
                 myReader.close();
         } catch (FileNotFoundException e) {
                     e.printStackTrace();
         }
-
-         data = Base64.getEncoder().encodeToString(data.getBytes());
          return data;
      }
      
