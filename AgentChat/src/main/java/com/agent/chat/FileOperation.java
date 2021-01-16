@@ -3,6 +3,8 @@ package com.agent.chat;
 import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.Base64;
 
 class FileOperation
 { 
@@ -43,6 +45,23 @@ class FileOperation
         }
         reader.close();
     }
+     
+     public String getFileFormatedData(String path) throws Exception {
+         String data= "";
+         try {
+                File myObj = new File(path);
+                Scanner myReader = new Scanner(myObj);
+                while (myReader.hasNextLine()) {
+                  data += myReader.nextLine();
+                }
+                myReader.close();
+        } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+        }
+
+         data = Base64.getEncoder().encodeToString(data.getBytes());
+         return data;
+     }
      
      public void readSessionFile() throws Exception  {
         this.reader= new BufferedReader(new FileReader(sessionfile));
@@ -117,6 +136,12 @@ class FileOperation
     public void saveUser(List<String> IPC) throws Exception {
         PrintWriter writer = new PrintWriter(userlist);
         writer.println(IPC);
+        writer.close();
+    }
+    
+    public void saveFile(String data, String nameFile) throws Exception {
+        PrintWriter writer = new PrintWriter("download/"+nameFile);
+        writer.println(Base64.getDecoder().decode(data));
         writer.close();
     }
     

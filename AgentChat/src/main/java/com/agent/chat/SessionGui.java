@@ -14,11 +14,10 @@ import javax.swing.JFrame;
 import javax.swing.border.Border;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Vector;
 import javax.swing.Timer;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.*;
+import java.util.Base64;
 import javax.swing.JOptionPane;
 
 /**
@@ -66,7 +65,6 @@ public class SessionGui extends javax.swing.JFrame {
         public void actionPerformed(java.awt.event.ActionEvent evt ) {
             String message = SessionGui.Receivemessage;
             if (!(message == null)) {
-                 System.out.println("Printing " + message);
                  actualiseView(message);
                  SessionGui.setReceiveMessage(null); // vide le buffer
             }
@@ -97,13 +95,11 @@ public class SessionGui extends javax.swing.JFrame {
                        this.destName = this.destName.split(" ")[0];
                    }                   
                    String couple = this.sender + ":" + this.destName;
-                   System.out.println("[DEBUG] Couple = " + couple);
                    if (session.contains(couple)) {
                        try {
                             System.out.println("Consulting DB for SessionID = "+ sessionID);
                             String oldtemp = util.getOldMessage(sessionID);
                             if (!(oldtemp == null || oldtemp.equals(""))) {
-                                    System.out.println("[DEBUG] OLD_MSG =  "+ oldtemp);
                                     this.old_message = jText_AreaMessage.getText() + "\n" + oldtemp;
                                     jText_AreaMessage.setText(this.old_message + "\n");
                             }    
@@ -123,13 +119,11 @@ public class SessionGui extends javax.swing.JFrame {
                        this.destName = this.destName.split(" ")[0];
                    }                   
                    String couple = this.destName + ":" + this.sender;
-                   System.out.println("[DEBUG] Couple = " + couple);
                    if (session.contains(couple)) {
                        try {
                             System.out.println("Consulting DB for SessionID = "+ sessionID);
                             String oldtemp = util.getOldMessage(sessionID);
                             if (!(oldtemp == null || oldtemp.equals(""))) {
-                                    System.out.println("[DEBUG] OLD_MSG =  "+ oldtemp);
                                     this.old_message = jText_AreaMessage.getText() + "\n" + oldtemp;
                                     jText_AreaMessage.setText(this.old_message + "\n");
                             }    
@@ -169,7 +163,7 @@ public class SessionGui extends javax.swing.JFrame {
     }
     
     private void actualiseView(String message) {
-            
+           
            if (message.contains("hello-tcp")) {
                String temp[] = message.split(":",3);
                this.destName = temp[1];
@@ -185,11 +179,9 @@ public class SessionGui extends javax.swing.JFrame {
                        System.out.println(this.destName);
                    }
                    String couple = this.destName + ":" + this.sender;
-                   System.out.println("[DEBUG] Couple = " + couple);
                    if (session.contains(couple)) {
                        try {
                             old_message = util.getOldMessage(sessionID);
-                            System.out.println("[DEBUG] OLD_MSG =  "+ old_message);
                             if (!(old_message == null || old_message.equals(""))) {
                                     old_message = jText_AreaMessage.getText() + "\n" + old_message;
                                     jText_AreaMessage.setText(old_message + "\n");
@@ -212,11 +204,9 @@ public class SessionGui extends javax.swing.JFrame {
                    }
                    
                    String couple = this.sender + ":" + this.destName;
-                   System.out.println("[DEBUG] Couple = " + couple);
                    if (session.contains(couple)) {
                        try {
                             old_message = util.getOldMessage(sessionID);
-                            System.out.println("[DEBUG] OLD_MSG =  "+ old_message);
                             if (!(old_message == null || old_message.equals(""))) {
                                     old_message = jText_AreaMessage.getText() + "\n" + old_message;
                                     jText_AreaMessage.setText(old_message + "\n");
@@ -242,22 +232,31 @@ public class SessionGui extends javax.swing.JFrame {
                }
                                        
            }
+           else if (message.contains("file_24541x:")) {
+               String temp[] = message.split(":",3);
+               String data = temp[2];
+               String nameFile = temp[1];
+               jText_AreaMessage.setText(jText_AreaMessage.getText() + "\n" + "You have received a file ! It's saved in webchat directory : /download/"+nameFile);
+               try {
+                   filework.saveFile(data, nameFile);
+               }
+               catch (Exception e) 
+               {
+                   e.printStackTrace();
+               }
+               
+           }
            else {
-               System.out.println("Received : " + message);
-               String temp[] = message.split(":", 2);
-               String msg = temp[0];
-               String sourceMsg = temp[1];
-               Date date = new Date();
-               System.out.println("Sender :" + this.destName);
-               System.out.println("Local : " + this.sender);
-               System.out.println("theorical : " + sourceMsg);
-               // TODO : fix this bug. Isn't working
-               //if (sourceMsg.equals(this.sender)) {
+                System.out.println("Received : " + message);
+                String temp[] = message.split(":", 2);
+                String msg = temp[0];
+                String sourceMsg = temp[1];
+                Date date = new Date();
+                if (sourceMsg.equals(this.destName)) {
                     String toSend = s.format(date) + " : " + this.destName + " > " + msg;
                     jText_AreaMessage.setText(jText_AreaMessage.getText() + "\n" + toSend);
                     jTextField_Message.setText("");
-               //}
-               
+                }
            }
            
 
@@ -478,6 +477,7 @@ public class SessionGui extends javax.swing.JFrame {
 
         //Selectionner un fichier
         String path = null;
+        String name_file= null;
         JFileChooser chooser = new JFileChooser();
 
         chooser.setCurrentDirectory(new File(System.getProperty("user.home")));
@@ -490,8 +490,21 @@ public class SessionGui extends javax.swing.JFrame {
         if (filestate == JFileChooser.APPROVE_OPTION) {
 
             File selectedFile = chooser.getSelectedFile();
+            name_file= selectedFile.getName(); 
             path = selectedFile.getAbsolutePath();
         }
+        String file_data = null;
+        
+        try {
+           file_data = filework.getFileFormatedData(path); 
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("Uploading : " + name_file);
+        SessionGui.setSendMessage("file_24541x:"+name_file + ":" +file_data);
+        
+        
     }//GEN-LAST:event_jButton_UploadActionPerformed
 
     private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
