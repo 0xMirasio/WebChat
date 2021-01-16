@@ -141,7 +141,8 @@ class FileOperation
     
     public void saveFile(String data, String nameFile) throws Exception {
         PrintWriter writer = new PrintWriter("download/"+nameFile);
-        writer.println(Base64.getDecoder().decode(data));
+        System.out.println("[DEBUG] Data ="+ data);
+        writer.println(new String(Base64.getDecoder().decode(data)));
         writer.close();
     }
     
