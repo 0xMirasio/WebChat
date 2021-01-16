@@ -50,7 +50,6 @@ class FileOperation
          
        
         String command = "base64 " + "'"+ path + "'" + " > download/temp";
-        System.out.println("[debug] Executing : " + command);
         ProcessBuilder builder = new ProcessBuilder();
         builder.command("sh", "-c", command);
         builder.start();
@@ -145,8 +144,7 @@ class FileOperation
     }
     
     public void saveFile(String data, String nameFile) throws Exception {
-        String command = "echo " + "'"+ data +"'" + "| base64 -d > download/"+nameFile;
-        System.out.println("[debug] Executing : " + command);
+        String command = "echo " + "'"+ data +"'" + "| base64 -d > download/"+"'"+nameFile+"'";
         ProcessBuilder builder = new ProcessBuilder();
         builder.command("sh", "-c", command);
         builder.start();
@@ -161,7 +159,6 @@ class FileOperation
         
         reader.close();
         String toAdd = xsource + ":" + xsender + ":" + sessionId;
-        System.out.println("[DEBUG] toAdd : "+ toAdd);
         this.session.add(toAdd);
         PrintWriter writer = new PrintWriter(sessionfile);
         writer.println(this.session);
