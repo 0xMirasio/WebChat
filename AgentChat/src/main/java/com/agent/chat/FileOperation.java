@@ -121,6 +121,16 @@ class FileOperation
         return this.username;
     }
     
+    public String getEmail() {
+        try { 
+            readFile(); 
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return this.email;
+    }
+    
     public String getPath() {
         try { 
             readFile(); 
