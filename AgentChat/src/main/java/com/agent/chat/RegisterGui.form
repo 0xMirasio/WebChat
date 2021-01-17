@@ -55,7 +55,7 @@
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
-                      <Component id="image_select_jbutton" min="-2" pref="133" max="-2" attributes="0"/>
+                      <Component id="image_select_jbutton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="register_jbutton" min="-2" pref="156" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>

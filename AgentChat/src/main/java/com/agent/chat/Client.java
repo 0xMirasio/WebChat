@@ -8,13 +8,14 @@ public class Client extends Thread {
     
     private final String username;
     private boolean MODE;
-    private final int BASE_COM_PORT = 5000;
     private final Util util = new Util();
     private final FileOperation filework = new FileOperation();
+    private final int BASE_COM_PORT = Integer.parseInt(filework.Get_com_port());
     private final String sourceAddress = util.getSourceAddress();
     private String destAdress = null;
     private int sessionId;
     private ServerSocket sockS = null;
+    
 
 
     public Client(String username, ServerSocket sockS,  boolean MODE) {

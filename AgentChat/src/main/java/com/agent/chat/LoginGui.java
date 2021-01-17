@@ -21,7 +21,7 @@ public class LoginGui extends javax.swing.JFrame {
     
     private int xMouse;
     private int yMouse;
-    private String pathLogo = "assets/logo.png";
+    private final String pathLogo = "assets/logo.png";
     
     public LoginGui() {
         

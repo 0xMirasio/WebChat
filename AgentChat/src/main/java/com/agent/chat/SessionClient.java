@@ -6,11 +6,12 @@ import java.net.*;
 public class SessionClient {
 
     private String destination;
-    private final int BASE_COM_PORT = 5000;
     private final Util util = new Util();
     private BufferedReader in;
     private PrintWriter out;
     private final FileOperation filework = new FileOperation();
+    private final int BASE_COM_PORT = Integer.parseInt(filework.Get_com_port());
+
     
     public void startChatSession(String dest, int sessionId) { 
 

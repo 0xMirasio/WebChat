@@ -6,25 +6,21 @@ import javax.swing.JOptionPane;
 
 public class Network extends Thread {
 
-    //TODO :  FAIRE REGULIEREMENT UN BROADCAST POUR SAVOIR SI IL YA PAS DE DECONNEXION (broadcast)
-    // set UP UN HOST RESEAU (Premiere machine sur le réseau = HOST)
-    // ELLE SERVIRA DE RELAI ENTRE LE SERVEUR DECENTRALISE
-    // ELLE SERVIRA DE SERVEUR DINFORMATIONS (Qui est encore connecté ? X est déconnecté, retirer le de votre liste, etc...)
-    // variable isHost => 1 si HOST / 0 si user du réseau
-    
-    public String address;
-    public String broadcast;
-    public String username;
-    public List<String> IPC = new ArrayList<String>();
-    private int BASE_PORT = 6000;
+     
+    protected List<String> IPC = new ArrayList<String>();
     private int taille = 1024;
-    private int MAX_C = 20;
-    private long MAX_TIME_BROADCAST =  1000;
-    DatagramSocket socket = null;
-    DatagramPacket paquet = null;
+    private final int MAX_C = 20;
+    private final long MAX_TIME_BROADCAST =  1000;
+    private DatagramSocket socket = null;
+    private DatagramPacket paquet = null;
     private int INDEX = 0;
     private boolean isHost = false;
-    FileOperation filework = new FileOperation();
+    private final FileOperation filework = new FileOperation();
+    private final int BASE_PORT = Integer.parseInt(filework.Get_base_com_port());
+    private final String broadcast = filework.getBroadcast();
+    private String address = filework.getIp();
+    private String username;
+
 
     public Network (String username) {
         this.username = username;
@@ -51,11 +47,9 @@ public class Network extends Thread {
  
         try {
             Util util = new Util();
-            this.broadcast = util.getBroadcastAddress();
-            this.address  = util.getSourceAddress();
             String message = "hello-1c"+":"+this.username+":"+this.address+":[]"; // initialisation, IPC = []
             System.out.println("[DEBUG] - Broadcasting (10S MAX DELAY): "+ message);
-            JOptionPane.showMessageDialog(null, "Broadcasting With a Maximum Delay of " + MAX_TIME_BROADCAST +  "s on the network with IP addresss :  " + this.address + " and with broadcast " + this.broadcast,"Information", 1);
+            JOptionPane.showMessageDialog(null, "Broadcasting With a Maximum Delay of " + MAX_TIME_BROADCAST +  "ms on the network with IP addresss :  " + this.address + " and with broadcast " + this.broadcast,"Information", 1);
             broadcast(message, broadcast);
             // démarrage écoute des réponses
             long start = System.currentTimeMillis();
@@ -118,7 +112,6 @@ public class Network extends Thread {
     public void prepare(List <String> IPC) {
         try {
             Util util = new Util();
-            this.address  = util.getSourceAddress();
             Network main = new Network(this.username, this.address, this.IPC);     
             main.start();
         }

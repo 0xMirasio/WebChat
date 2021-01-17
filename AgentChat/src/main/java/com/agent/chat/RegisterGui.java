@@ -27,6 +27,7 @@ public class RegisterGui extends javax.swing.JFrame {
     private int xMouse;
     private int yMouse;
     private String pathLogo = "assets/logo.png";
+    private final FileOperation filework = new FileOperation();
 
     
     public RegisterGui() {
@@ -36,6 +37,17 @@ public class RegisterGui extends javax.swing.JFrame {
         if (picImage != null)
         {
             jLabel4.setIcon(new ImageIcon(picImage.getImage().getScaledInstance(180, 180, 1)));
+        }
+        
+        try {
+            
+            Util util = new Util();
+            String ip = util.getSourceAddress();
+            String broadcast = util.getBroadcastAddress();
+            filework.registerNetworkSetting(ip, broadcast, "6000","5000");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -171,7 +183,7 @@ public class RegisterGui extends javax.swing.JFrame {
                         .addGap(34, 34, 34))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(41, 41, 41)
-                        .addComponent(image_select_jbutton, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(image_select_jbutton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(register_jbutton, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(53, 53, 53))
