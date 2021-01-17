@@ -1,0 +1,6 @@
+
+//getinfo
+public class Publish {
+
+
+}

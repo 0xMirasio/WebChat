@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	id="WebApp_ID" version="3.1">
+	<display-name>Web Application from Archetype for Servlet 3.1</display-name>
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<servlet>
+		<servlet-name>Subscribe</servlet-name>
+		<servlet-class>Subscribe</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Subscribe</servlet-name>
+		<url-pattern>/subscribe</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>GetInfo</servlet-name>
+		<servlet-class>GetInfo</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>GetInfo</servlet-name>
+		<url-pattern>/getinfo</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>Publish</servlet-name>
+		<servlet-class>Publish</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Publish</servlet-name>
+		<url-pattern>/publish</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>Notify</servlet-name>
+		<servlet-class>Notify</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Notify</servlet-name>
+		<url-pattern>/notify</url-pattern>
+	</servlet-mapping>
+
+
+
+
+
+
+</web-app>
