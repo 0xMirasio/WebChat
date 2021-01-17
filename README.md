@@ -1,22 +1,44 @@
-# WebChat
+# Webchat
 
-to start project : </br>
+Webchat is a java project for communication in a private network or internet + public server relay. 
 
-cd AgentChat/ </br>
-chmod +x *.sh </br>
-./build.sh
-then </br>
-./start.sh
+### Installation
+Webchat is using [Java 11 JDK](https://www.oracle.com/fr/java/technologies/javase-jdk11-downloads.html), we recommend you using this version to prevent any bug in execution.
 
-If you want to clear your cache sessions (Every time you start a chat sessions with another person, a session is stored in .cache/sessions, it can lead to lag in application (DB parsing)) </br>
+Webchat is using [Maven](https://maven.apache.org/download.cgi) to generate java class and jar file.
 
-./clear.sh
+first clone the project : 
+```sh
+$ git clone https://github.com/0xMirasio/WebChat.git && cd WebChat/AgentChat
+$ chmod +x *.sh
+```
 
-KNOW-BUG : </br>
+If you want to start project (jar already ready in target/ dir).
 
-- if you close a chat session jframe (from server side), if you reopen the same chat session the jframe will completely bug and nothing will be printed, even is message is receved. </br>
-Solution : restart application </br>
+```sh
+$ ./start.sh
+```
 
-- Similar to the previous bug (jframe problem), if a person A contact B, then a person C contact B, the message from C will not pop up on the jframe created for the chat session (B-C) and will go on the chat session for (A-B). The first JFrame is taking all the content, the others jframes will not get any informations. </br>
+to build the project : 
 
-Solution : No solution found </br>
+```sh
+$ ./build.sh
+```
+If you want to clear your cache sessions (too much cache sessions can lead to lag with DB parsing)
+```sh
+$ ./clear.sh
+```
+
+### KNOW-BUG
+
+- if you close a chat session jframe (from server side), if you reopen the same chat session the jframe will completely bug and nothing will be printed, even is message is receved.
+Solution : restart application
+
+- Similar to the previous bug (jframe problem), if a person A contact B, then a person C contact B, the message from C will not pop up on the jframe created for the chat session (B-C) and will go on the chat session for (A-B). The first JFrame is taking all the content, the others jframes will not get any informations. 
+Solution : No solution found 
+
+### KNOW SECURITY-ISSUE
+- all message aren't encrypted, so a attacker could make a Man In The Middle attack.
+- .cache/profile.private isn't secure, the hash can be replaced by another hashed password,so an attacker could login with changing profile.private
+- [CRITICAL] : COMMAND INJECTION is possible in FileOperation.java, by making a specific path, it is possible to execute command when upload fonction is formating raw file data into base64 text. 
+
