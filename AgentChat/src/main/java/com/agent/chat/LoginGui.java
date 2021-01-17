@@ -8,7 +8,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.border.Border;
 import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
 
 
 
@@ -235,6 +234,7 @@ public class LoginGui extends javax.swing.JFrame {
         String password = String.valueOf(jPasswordField.getPassword());
         //On vérifie si le nom d'utilisateur et le mot de passe existent !
         Security sec = new Security();
+        
         boolean ret = sec.verifyPassword(password);
         if(ret){
                 this.setVisible(false);

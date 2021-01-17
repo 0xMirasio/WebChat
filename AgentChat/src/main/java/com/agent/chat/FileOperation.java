@@ -42,10 +42,10 @@ class FileOperation
 
     public void readFile() throws Exception  {
         this.reader= new BufferedReader(new FileReader(profile));
-        this.ip = reader.readLine();
-        this.broadcast = reader.readLine();
-        this.base_com_port = reader.readLine();
-        this.com_port = reader.readLine();
+        this.username = reader.readLine();
+        this.email = reader.readLine();
+        this.password = reader.readLine();
+        this.profileimagepath = reader.readLine();
         reader.close();
     }
     
