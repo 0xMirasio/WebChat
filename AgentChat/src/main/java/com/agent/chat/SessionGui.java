@@ -17,13 +17,14 @@ import java.util.Date;
 import javax.swing.Timer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Base64;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Youssef
- */
+/*
+Cette classe agit en tant que serveur TCP
+Elle se bind sur un socket serveur sur le port COM_PORT, et si un client se connecte, 
+un nouveau socket client est crée sur un port aléatoire.
+2 threads sont actifs, ce qui permet de recevoir et envoyer en même temps.
+*/
 public class SessionGui extends javax.swing.JFrame {
 
     /**
@@ -84,7 +85,7 @@ public class SessionGui extends javax.swing.JFrame {
               
         jLabel2.setText("SessionChat : " + this.destName);
         
-        this.sessions = filework.getSessions();
+        this.sessions = filework.getSessions(); // on recupère les sessions d'avant
         for (String session : this.sessions) {
                    String temp2[] = session.split(":",3);
                    int sessionID = Integer.parseInt(temp2[2]);
@@ -94,11 +95,11 @@ public class SessionGui extends javax.swing.JFrame {
                    catch (Exception e) {
                        this.destName = this.destName.split(" ")[0];
                    }                   
-                   String couple = this.sender + ":" + this.destName;
-                   if (session.contains(couple)) {
+                   String couple = this.sender + ":" + this.destName; 
+                   if (session.contains(couple)) { // si le couple source:destinataire fait parmi des couples sauvegardés dans les sessions
                        try {
-                            System.out.println("Consulting DB for SessionID = "+ sessionID);
-                            String oldtemp = util.getOldMessage(sessionID);
+                            System.out.println("[INFO] Consulting DB for SessionID = "+ sessionID);
+                            String oldtemp = util.getOldMessage(sessionID); // recupèration des anciens messages
                             if (!(oldtemp == null || oldtemp.equals(""))) {
                                     this.old_message = jText_AreaMessage.getText() + "\n" + oldtemp;
                                     jText_AreaMessage.setText(this.old_message + "\n");
@@ -109,6 +110,7 @@ public class SessionGui extends javax.swing.JFrame {
                        }
                    }
         }
+        // on fait de même mais on inverse le couple source:dest
         for (String session : this.sessions) {
                    String temp2[] = session.split(":",3);
                    int sessionID = Integer.parseInt(temp2[2]);
@@ -153,15 +155,24 @@ public class SessionGui extends javax.swing.JFrame {
         client.start();
     }
     
+    //setter
     public static void setSendMessage(String sendMsg) {
         SessionGui.Sendmessage = sendMsg;
     }
      
-    
+    //getter
     public static void setReceiveMessage(String RMsg) {
         SessionGui.Receivemessage = RMsg;
     }
     
+    /*
+    Cette méthode actualise la vue des messages dans sessionsGUi.java
+    Elle regarde l'en tête des fichiers, pour savoir quelle action à faire avec.
+    3 types de messages:
+    hello-tcp : [INFO] (message envoyé par le client au serveur, contenant des infos de bases)
+    file_24541x:[name_file]:[data] (message envoyé contenant le nom du fichier + les données base64)
+    [data] (message brut envoyé du client au serveur, a afficher sur le chat)
+    */
     private void actualiseView(String message) {
            
            if (message.contains("hello-tcp")) {
@@ -219,12 +230,10 @@ public class SessionGui extends javax.swing.JFrame {
                }
                
                
-               this.sessionId = Integer.parseInt(temp[2]);
-               System.out.println("[debug] SessionId : " + this.sessionId);
-               jLabel2.setText("Session chat : " + this.destName);
-               System.out.println("[DEBUG] : DestNAme : " + this.destName);
+               this.sessionId = Integer.parseInt(temp[2]); // l'id de session est sauvegardé dans le message envoyé par le client
+               jLabel2.setText("Session chat : " + this.destName); 
                try {
-                   filework.saveChatSession(this.destName, this.sender, this.sessionId);
+                   filework.saveChatSession(this.destName, this.sender, this.sessionId); // on sauvegarde le couple + id session en local
 
                }
                catch (Exception e) {
@@ -238,7 +247,7 @@ public class SessionGui extends javax.swing.JFrame {
                String nameFile = temp[1];
                jText_AreaMessage.setText(jText_AreaMessage.getText() + "\n" + "You have received a file ! It's saved in webchat directory : /download/"+nameFile);
                try {
-                   filework.saveFile(data, nameFile);
+                   filework.saveFile(data, nameFile); // on sauvegarde le fichier
                }
                catch (Exception e) 
                {
@@ -246,13 +255,14 @@ public class SessionGui extends javax.swing.JFrame {
                }
                
            }
-           else {
+           else { // sinon c'est un message basique
                 System.out.println("Received : " + message);
                 String temp[] = message.split(":", 2);
                 String msg = temp[0];
                 String sourceMsg = temp[1];
-                Date date = new Date();
-                if (sourceMsg.equals(this.destName)) {
+                Date date = new Date(); // on rajoute de l'horodatage
+                
+                if (sourceMsg.equals(this.destName)) { // on vérifie que c'est le bon destinataire
                     String toSend = s.format(date) + " : " + this.destName + " > " + msg;
                     jText_AreaMessage.setText(jText_AreaMessage.getText() + "\n" + toSend);
                     jTextField_Message.setText("");
@@ -532,7 +542,7 @@ public class SessionGui extends javax.swing.JFrame {
             SessionGui.setSendMessage(input_Sender+":"+this.sender);
             String message = s.format(date) + " : " + this.sender + " > " + input_Sender;
             try {
-                this.util.saveUserMessage(this.sessionId, message);
+                this.util.saveUserMessage(this.sessionId, message); // on sauvegarde chaque message envoyé dans la bdd
                 }
             catch (Exception e) {
                 e.printStackTrace();

@@ -13,21 +13,23 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.border.Border;
 
-/**
- *
- * @author titip
- */
+/*
+Classe utilisée pour créer un profil utilisateur quand celui çi est invalide ou inexistant
+Quand le profil est crée (toute les conditions sont valides) , LoginGui.java est lancé
+*/
 public class RegisterGui extends javax.swing.JFrame {
 
     /**
      * Creates new form RegisterGui
      */
     
-    String profileimagepath;
+    private String profileimagepath;
     private int xMouse;
     private int yMouse;
-    private String pathLogo = "assets/logo.png";
+    private final String pathLogo = "assets/logo.png";
     private final FileOperation filework = new FileOperation();
+    private final Util util = new Util();
+
 
     
     public RegisterGui() {
@@ -39,10 +41,9 @@ public class RegisterGui extends javax.swing.JFrame {
             jLabel4.setIcon(new ImageIcon(picImage.getImage().getScaledInstance(180, 180, 1)));
         }
         
+        // on initialise .cache/NetworkConfig , utilisé pour la suite
         try {
-            
-            Util util = new Util();
-            String ip = util.getSourceAddress();
+            String ip = util.getSourceAddress(); 
             String broadcast = util.getBroadcastAddress();
             filework.registerNetworkSetting(ip, broadcast, "6000","5000");
         }
@@ -237,6 +238,7 @@ public class RegisterGui extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_username_JtextFieldActionPerformed
 
+    /* séléction d'une image de profil */
     private void image_select_jbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_image_select_jbuttonActionPerformed
         int returnValue = jFileChooser1.showOpenDialog(null);
         if (returnValue == jFileChooser1.APPROVE_OPTION) {
@@ -246,6 +248,7 @@ public class RegisterGui extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_image_select_jbuttonActionPerformed
 
+    /* Confirmation de l'enrengistrement du profil utilisateur */
     private void register_jbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_register_jbuttonActionPerformed
        FileOperation filework = new FileOperation();
        String username = username_JtextField.getText();

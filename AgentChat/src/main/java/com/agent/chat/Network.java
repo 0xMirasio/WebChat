@@ -4,6 +4,9 @@ import java.io.*;
 import java.net.*;
 import javax.swing.JOptionPane;
 
+/*
+Cette classe est utilisée pour la partie réseau. (broadcast et authentification des utilisateurs)
+*/
 public class Network extends Thread {
 
      
@@ -14,13 +17,12 @@ public class Network extends Thread {
     private DatagramSocket socket = null;
     private DatagramPacket paquet = null;
     private int INDEX = 0;
-    private boolean isHost = false;
     private final FileOperation filework = new FileOperation();
     private final int BASE_PORT = Integer.parseInt(filework.Get_base_com_port());
     private final String broadcast = filework.getBroadcast();
     private String address = filework.getIp();
     private String username;
-
+    private final Util util = new Util();
 
     public Network (String username) {
         this.username = username;
@@ -46,24 +48,22 @@ public class Network extends Thread {
     public void getUserConnected() {
  
         try {
-            Util util = new Util();
             String message = "hello-1c"+":"+this.username+":"+this.address+":[]"; // initialisation, IPC = []
-            System.out.println("[DEBUG] - Broadcasting (10S MAX DELAY): "+ message);
             JOptionPane.showMessageDialog(null, "Broadcasting With a Maximum Delay of " + MAX_TIME_BROADCAST +  "ms on the network with IP addresss :  " + this.address + " and with broadcast " + this.broadcast,"Information", 1);
-            broadcast(message, broadcast);
+            broadcast(message, broadcast); // cette méthode broadcast le message sur le port BASE_COM_PORT
             // démarrage écoute des réponses
-            long start = System.currentTimeMillis();
+            long start = System.currentTimeMillis(); // début chrono
             Network main[] = new Network[MAX_C];
-            for (int i = 0 ; i< MAX_C ; i++) {
+            for (int i = 0 ; i< MAX_C ; i++) { // on lance MAX_C thread
                 main[i]= new Network(this.username, this.address, this.IPC, (this.INDEX+ i));        
                 main[i].start();    
             }
                       
             while(true){
 
-                long end = System.currentTimeMillis();
-                long duration = end - start;
-                if(duration > MAX_TIME_BROADCAST){
+                long end = System.currentTimeMillis(); // actualisation chrono
+                long duration = end - start; 
+                if(duration > MAX_TIME_BROADCAST){ // si la durée excede le temps de broadcast max, on annule 
                     this.IPC = main[0].IPC; 
                     /* il recupere l'ipc de chaque thread, or si on ne prend pas le plus gros (car certain thread 
                      n'ont rien recu et donc IPC.size() = 0
@@ -74,8 +74,8 @@ public class Network extends Thread {
                         if (main[i].IPC.size() > this.IPC.size()) {
                             this.IPC = main[i].IPC;
                         }
-                        main[i].socket.close();
-                        main[i].interrupt();
+                        main[i].socket.close(); // on ferme les sockets des threads
+                        main[i].interrupt(); // puis on les détruits
                     }
                     break;
                 }
@@ -87,10 +87,10 @@ public class Network extends Thread {
             System.exit(-2);
         }
 
-        if (this.IPC.size() == 0) {
-            this.IPC.add(this.username+"-"+this.address);
+        if (this.IPC.size() == 0) { // si personne a répondu au broadcast
+            this.IPC.add(this.username+"-"+this.address); // on s'ajoute alors
             try {
-                filework.saveUser(this.IPC);
+                filework.saveUser(this.IPC); // IPC.Size=1
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -98,7 +98,7 @@ public class Network extends Thread {
         }
         else {
              try {
-                filework.saveUser(this.IPC);
+                filework.saveUser(this.IPC); // sinon on a IPC.Size > 1
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -111,7 +111,6 @@ public class Network extends Thread {
     /* this Method is called when a client is authenticated and want to respond to new client on the network */
     public void prepare(List <String> IPC) {
         try {
-            Util util = new Util();
             Network main = new Network(this.username, this.address, this.IPC);     
             main.start();
         }
@@ -123,14 +122,12 @@ public class Network extends Thread {
 
     /* 
     Main method when a Network thread is started.
-    Test of p1broadcast/p2broadcast, which is the auth method (p1broadcast is when a new client connect to network and broadcast)
-    p2broadcast is the reply to this client
      */
     public void run() {
         String donnees;
         try {
-                donnees = receiveClient();
-                TraitementPaquet(donnees);
+                donnees = receiveClient(); // reveice one client connexion, based on BASE_COM_PORT+INDEX
+                TraitementPaquet(donnees); // analyse a received packet
             }
         catch (Exception e) {
                 //e.printStackTrace();
@@ -143,7 +140,6 @@ public class Network extends Thread {
      */
     public void sendMessage(String message, String Destination, int Port) throws Exception {
         
-        //TODO : chiffrer les données sur le réseau
         message = message + ":" + this.username + ":" + this.address + ":" + this.IPC;
         System.out.println("[INFO] Sending : " + message + " on port :" + Port);
         DatagramSocket socket = new DatagramSocket();
@@ -178,6 +174,9 @@ public class Network extends Thread {
         return donnees;
     }
 
+    /*
+    This method generate a random int value between [min,max]
+    */
     public int getRandomArbitrary(int min, int max) {
         return (int) (Math.random() * (max - min) + min);
     }
@@ -194,7 +193,6 @@ public class Network extends Thread {
         String senderUsername = donnees_s[1];
         String senderAddress = donnees_s[2];
         String SenderIPC = donnees_s[3];
-        Util util = new Util();
         // debut traitement des données paquet
         if (donnees.contains("hello-1c")) { // un nouveau utilisateur essaye de savoir qui est authentifié
             String message = "hello-1b"; // on lui répond avec notre nom + IP
@@ -251,7 +249,7 @@ public class Network extends Thread {
 
     /*
     this method is taking 3 argument : a message, an address and send it (address = broadcast) on port
-    BASE_PORT (6000)
+    BASE_PORT )
     */
     public void broadcast(String broadcastMessage, String address) throws IOException {
         DatagramSocket socket = new DatagramSocket();

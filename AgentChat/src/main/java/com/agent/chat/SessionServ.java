@@ -14,26 +14,28 @@ public class SessionServ extends Thread {
     private BufferedReader in;
     private PrintWriter out;
     private final FileOperation filework = new FileOperation();
-    private final Util util = new Util();
     private String username = null;
     
     public void prepare(Socket clientSocket) {
         
         try {
            
-            SessionGui.setSendMessage(null);
+            // on vide les buffers
+            SessionGui.setSendMessage(null); 
             SessionGui.setReceiveMessage(null);
             
             out = new PrintWriter(clientSocket.getOutputStream());
             in = new BufferedReader (new InputStreamReader (clientSocket.getInputStream()));
             
-            this.username = filework.getUsername();
+            this.username = filework.getUsername(); // on recupère l'username serv
             
+            // on a reçu une connexion, on ouvre une sessions de chat
             SessionGui session = new SessionGui(this.username);
             session.setVisible(true);
             session.pack();
             session.setLocationRelativeTo(null);
                      
+            // thread émission
             Thread envoi= new Thread(new Runnable() {
                 String msg = null;
                 @Override
@@ -58,6 +60,7 @@ public class SessionServ extends Thread {
             });
             envoi.start();
         
+            // thread réception
             Thread recevoir= new Thread(new Runnable() {
                 String msg ;
                 @Override

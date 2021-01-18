@@ -6,12 +6,15 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Base64;
 
+/*
+Cette classe possède des méthodes pour traiter avec les fichiers stockée dans .cache/
+*/
 class FileOperation
 { 
     
     public FileOperation() {
         try {
-            initNetworkComponents();
+            initNetworkComponents(); // on initialise les composants réseaux
  
         }
         catch (Exception e) {
@@ -19,7 +22,6 @@ class FileOperation
         }
     }
     
-    static FileOperation filework;
     BufferedReader reader = null;
     private final String profile = ".cache/profile.private";
     private final String userlist = ".cache/userlist";
@@ -38,8 +40,11 @@ class FileOperation
     private String base_com_port = "6000";
     private String com_port = "5000";
     private List<String> session = new ArrayList<String>();
-    private Util util = new Util();
+    private final Util util = new Util();
 
+    /*
+    Lis le fichier profile.private et sauvegarde les paramètres associés.
+    */
     public void readFile() throws Exception  {
         this.reader= new BufferedReader(new FileReader(profile));
         this.username = reader.readLine();
@@ -49,6 +54,9 @@ class FileOperation
         reader.close();
     }
     
+    /*
+    Lis le fichier networkConfig et sauvegarde les paramètres associés.
+    */
     public void initNetworkComponents() throws Exception  {
         this.reader= new BufferedReader(new FileReader(networkfile));
         this.ip = reader.readLine();
@@ -58,7 +66,10 @@ class FileOperation
         reader.close();
     }
     
-     public void readUserFile() throws Exception  {
+    /*
+    Lis le fichier userlist et sauvegarde les paramètres associés.
+    */
+    public void readUserFile() throws Exception  {
         this.reader= new BufferedReader(new FileReader(userlist));
         String temp = reader.readLine();
         if (temp != null) {
@@ -69,8 +80,15 @@ class FileOperation
         }
         reader.close();
     }
-     
-     public String getFileFormatedData(String path) throws Exception {
+    
+    /*
+    Une injection de commande critique est possible dans cette fonction,
+    elle doit être reformatée si utilisation pro. 
+    
+    Un chemin de fichier est envoyé en paramètre, puis la fonction sauvegarde la base64 du fichier dans download/temp
+    puis le contenu est lu et renvoyé sous forme de String.
+    */
+    public String getFileFormatedData(String path) throws Exception {
          
        
         String command = "base64 " + "'"+ path + "'" + " > download/temp";
@@ -91,6 +109,9 @@ class FileOperation
          return data;
      }
      
+    /*
+    Lis le fichier sessions et sauvegarde les paramètres associés.
+    */
      public void readSessionFile() throws Exception  {
         this.reader= new BufferedReader(new FileReader(sessionfile));
         String temp = reader.readLine();
@@ -98,7 +119,9 @@ class FileOperation
         reader.close();
     }
      
-
+     /*
+    Vérifie si le profil est okay. Si un des paramètres obligatoire est manquant , faux est renvoyé.
+    */
     public boolean checkIsProfileOkay() throws Exception {
         try { 
             readFile(); 
@@ -111,6 +134,9 @@ class FileOperation
 
     }
 
+    /*
+    Retourne le nom d'utilisateur
+    */
     public String getUsername() {
         try { 
             readFile(); 
@@ -120,7 +146,9 @@ class FileOperation
         }
         return this.username;
     }
-    
+    /*
+    Retourne l'email
+    */
     public String getEmail() {
         try { 
             readFile(); 
@@ -131,6 +159,9 @@ class FileOperation
         return this.email;
     }
     
+    /*
+    Retourne le chemin de l'image de profil
+    */
     public String getPath() {
         try { 
             readFile(); 
@@ -141,24 +172,37 @@ class FileOperation
         return this.profileimagepath;
     }
     
+    /*
+    Retourne l'adresse de la machine
+    */
     public String getIp() {
         return this.ip;
     }
+    
+    /*
+    Retourne l'adresse de broadcast
+    */
     public String getBroadcast() {
         return this.broadcast;
     }
     
+    /*
+    Retourne le port pour la communication pour l'authentication (BASE_COM_PORT)
+    */
     public String Get_base_com_port() {
         return this.base_com_port;
     }
     
+     /*
+    Retourne le port pour la communication des utilisateurs (COM_PORT)
+    */
     public String Get_com_port() {
         return this.com_port;
     }
     
-    
-    
-
+     /*
+    Retourne le mot de passe de l'utilisateur (hashé)
+    */
     public String getPassword() {
         try { 
             readFile(); 
@@ -168,6 +212,10 @@ class FileOperation
         }
         return this.password;
     }
+    
+    /*
+    Retourne la liste des sessions sauvegardées (couple source:destinataire:sessionid)
+    */
     
     public List<String> getSessions() {
         try { 
@@ -179,7 +227,9 @@ class FileOperation
         return this.session;
     }
 
-
+    /*
+    Crée un nouveau profil dans .cache/profile.private (username, mot de passe, email, chemin vers l'image de profil)
+    */
     public void createNewProfile(String username,String password,String email, String profileimagepath) throws Exception {
         PrintWriter writer = new PrintWriter(profile);
         writer.println(username);
@@ -189,12 +239,22 @@ class FileOperation
         writer.close();
     }
     
+    /*
+    Sauvegarde une liste d'utilisateur dans .cache/userlist
+    */
     public void saveUser(List<String> IPC) throws Exception {
         PrintWriter writer = new PrintWriter(userlist);
         writer.println(IPC);
         writer.close();
     }
     
+    /*
+    Cette méthode est vulnérable a une injection de commande critique, un attaquant peux faire une man in the middle, 
+    modifier le paquet et donc data, et ainsi faire une injection de code.
+    Cette fonction doit être reformatée. 
+    
+    Cette fonction attend en paramètre des données (base64) et les décode pour le sauvegarder dans le fichier (nom donné en paramètre)
+    */
     public void saveFile(String data, String nameFile) throws Exception {
         String command = "echo " + "'"+ data +"'" + "| base64 -d > download/"+"'"+nameFile+"'";
         ProcessBuilder builder = new ProcessBuilder();
@@ -206,6 +266,9 @@ class FileOperation
     Default setting for network COM: 
     BASE_COM_PORT = 6000
     COM_PORT =5000
+    
+    Cette fonction sauvegarde une config réseau dans .cache/NetworkConfig
+    (adresse source, adresse broadcast, base_com_port , com_port)
     */
     public void registerNetworkSetting(String ip, String broadcast, String bcp, String cp) throws Exception {
         
@@ -218,6 +281,11 @@ class FileOperation
        
     }
     
+    /*
+    Sauvegarde une liste de sessions dans .cache/sessions
+    Avant de sauvegarder les sessions envoyées en paramètres, la fonction recupère les anciennes sessions stockées 
+    dans le fichier et les ajoute à celle sauvegardées.
+    */
     public void saveChatSession(String xsource, String xsender, int sessionId) throws Exception {
         this.reader= new BufferedReader(new FileReader(sessionfile));
         String temp = reader.readLine();
@@ -233,6 +301,9 @@ class FileOperation
         writer.close();
     }
     
+    /*
+    Retourne la liste des utilisateurs authentifiés.
+    */
     public List<String> getuser() throws Exception {
         try { 
             readUserFile(); 

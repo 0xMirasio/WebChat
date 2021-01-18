@@ -1,8 +1,12 @@
 package com.agent.chat;
-import java.util.*;
 import java.io.*;
 import java.net.*;
 
+/*
+Cette classe agit en tant que client TCP
+Elle se connecte à un socket serveur (adresse,port) et génère un socket client. 
+2 threads sont actifs, ce qui permet de recevoir et envoyer en même temps.
+*/
 public class SessionClient {
 
     private String destination;
@@ -18,6 +22,7 @@ public class SessionClient {
         this.destination = dest;
     
         try {
+            // génération socket client
             System.out.println("Connecting on > " + (BASE_COM_PORT + util.getPort(this.destination)) + " and Dest > " + this.destination);
             Socket clientSocket = new Socket(this.destination, (BASE_COM_PORT + util.getPort(this.destination)));
             
@@ -30,6 +35,7 @@ public class SessionClient {
             SessionGui.setSendMessage(null);
             SessionGui.setReceiveMessage(null);
             
+            //thread d'envoi
             Thread envoyer = new Thread(new Runnable() {
                 String msg = null;
                 @Override
@@ -37,7 +43,7 @@ public class SessionClient {
                     
                     while(true){
                         
-                        msg = SessionGui.Sendmessage;
+                        msg = SessionGui.Sendmessage; // on recupère les message a envoyer dans le buffer de sessionGui
                         try {
                             Thread.sleep(50);
                         }
@@ -56,6 +62,7 @@ public class SessionClient {
             });
             envoyer.start();
     
+            // thread reception
             Thread recevoir = new Thread(new Runnable() {
                 String msg;
                 @Override
@@ -67,7 +74,7 @@ public class SessionClient {
                         SessionGui.setReceiveMessage(msg);
                         msg = in.readLine();
                     }
-                    SessionGui.setReceiveMessage(" ****DISCONNECTED****");
+                    SessionGui.setReceiveMessage(" ****DISCONNECTED****"); // si serveur deconnecté
                     out.close();
                     clientSocket.close();
                 } catch (IOException e) {

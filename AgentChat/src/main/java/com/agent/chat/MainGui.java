@@ -19,9 +19,15 @@ import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
 
-/**
- *
- * @author titip
+/*
+Fenêtre principale du projet. 
+Elle peux lancer :
+- la fênetre de configuration de profile (ModifyProfileGui.java)
+- la fênetre de configuration de réseaux (NetworkConfigGui.java)
+- la fênetre de chat (SessionGui.java)
+
+La liste des utilisateurs est affichées , le client peux alors choisir une personne et lancer une session
+de chat avec lui. 
  */
 public class MainGui extends javax.swing.JFrame {
 
@@ -350,6 +356,7 @@ public class MainGui extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    // fenêtre config profil
     private void jButton_ModifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_ModifyActionPerformed
 
         ModifyProfileGui mp = new ModifyProfileGui();
@@ -403,32 +410,33 @@ public class MainGui extends javax.swing.JFrame {
 
     private void jButton_StartSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_StartSessionActionPerformed
 
-        if (jLabel4.getText().equals("")) {
+        if (jLabel4.getText().equals("")) { // verifie que une personne est selectionée
             JOptionPane.showMessageDialog(null, "Please choose user", "Error Session", 2);
         } else {
             
             String destName;
             String destIP;
             
-            String[] temp = jLabel4.getText().split("-");
+            String[] temp = jLabel4.getText().split("-"); // on recupère le nom et l'ip
             destName = temp[0];
             destIP = temp[1];
             
             int sessionId = (int) (Math.random() * 30000); // on genere une sessionId aléatoire
             try {
-                destName = destName.split(" ")[1];
+                destName = destName.split(" ")[1]; // petit bug de format, je ne sais pas d'ou ça vient
             }
             catch (Exception e) {
                 destName = destName.split(" ")[0];
             }
                    
             try {
-                filework.saveChatSession(this.username, destName, sessionId);
+                filework.saveChatSession(this.username, destName, sessionId); // on sauvegarde le couple de session
 
             }
             catch (Exception e) {
                 e.printStackTrace();
             }
+            // on lance la session de chat
             SessionGui session = new SessionGui(this.username, destName, destIP, sessionId);
             session.setVisible(true);
             session.pack();
@@ -439,7 +447,7 @@ public class MainGui extends javax.swing.JFrame {
 
     private void jButton_SelectUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_SelectUserActionPerformed
 
-        jLabel4.setText(jList1.getSelectedValue());
+        jLabel4.setText(jList1.getSelectedValue()); // on recupère la personne séléctionnée
 
     }//GEN-LAST:event_jButton_SelectUserActionPerformed
 
@@ -457,6 +465,7 @@ public class MainGui extends javax.swing.JFrame {
         this.setLocation(x - xMouse, y - yMouse);
     }//GEN-LAST:event_formMouseDragged
 
+    // fenêtre config réseau
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
         NetworkConfigGui net = new NetworkConfigGui();

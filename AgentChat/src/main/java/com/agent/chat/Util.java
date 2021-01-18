@@ -4,6 +4,9 @@ import java.io.*;
 import java.net.*;
 import java.sql.*;
 
+/*
+classe utilitaire contenant des méthodes appelées par d'autres classes.
+ */
 public class Util {
    
     private String address;
@@ -13,6 +16,7 @@ public class Util {
     private Connection conn = null;
 
           
+    // sauvegarde un couple id_session/message dans la base de données distantes
     public void saveUserMessage(int idSession, String message) throws Exception {
         
       Class.forName(myDriver);
@@ -28,11 +32,12 @@ public class Util {
 
     }
     
+    // recupère des messages associées à un id de session.
     public String getOldMessage(int sessionID) throws Exception {
        
       String msg="";
       Class.forName(myDriver);
-      this.conn = DriverManager.getConnection(myUrl, "webchat", "webchat");
+      this.conn = DriverManager.getConnection(myUrl, "webchat", "webchat"); // identifiant valide uniquement pour mySQL
       
       String query = "select message from message_history where sessionid=" + sessionID;
       System.out.println("[INFO] Executing Query into DB : " + query);
@@ -46,14 +51,15 @@ public class Util {
       return msg;
     }
             
+    // retourne une liste, paramètre: un string  qui sera transformé en liste (liste transformé en String avec toString())
+    // format : ['Mirasio:192.168.54.2','Youssef:192.168.54.3','...']
     public List<String> transform2IPC(String listIPC) {
         List<String> IPC = new ArrayList<String>();
         String[] IPC_s = null;
-        // listIPC = "['user-IP','user2-ip',...]"
-        IPC_s = listIPC.split("\\[", 2); // " 'user-ip', 'user2-ip']"
+        IPC_s = listIPC.split("\\[", 2); // " 'user', 'user2']"
         String IPC_temp = IPC_s[1];
-        IPC_temp = IPC_temp.split("]",2)[0]; // " 'user-ip', 'user2-ip'"
-        IPC_s = IPC_temp.split(",", 999); // [user-ip, user2-ip]
+        IPC_temp = IPC_temp.split("]",2)[0]; // " 'user', 'user2'"
+        IPC_s = IPC_temp.split(",", 999); // [user, user2]
         for (String value : IPC_s) {
             IPC.add(value);
         }
@@ -61,7 +67,8 @@ public class Util {
     }
     
     
-    
+    // pareil, mais avec des sessions
+    // format : ['Mirasio:Youssef:5454', '...']
     public List<String> transform2Session(String listSession) {
         List<String> sessions = new ArrayList<String>();
         String[] sec_s = null;
@@ -76,6 +83,8 @@ public class Util {
         return sessions;
     }
 
+    // retourne un INDEX
+    //paramètre : une adresse. (en fonction de l'adresse, un index est renvoyé, cela permet en fonction de l'ip de se connecter a certains sockets)
     public int getPort(String address) {
         int INDEX=0;
         // address = X.Y.Z.VAL
@@ -102,6 +111,7 @@ public class Util {
         return 0;
     }
 
+    // retourne l'adresse Ip local
     public String getSourceAddress() {
         try {
             enumerationInterface();
@@ -112,6 +122,7 @@ public class Util {
         return this.address;
     }
 
+    // retourne le broadcast local
     public String getBroadcastAddress() {
         try {
             enumerationInterface();
@@ -133,23 +144,22 @@ public class Util {
                 if (inetAddress == null || inetAddress.toString().contains(":") || inetAddress.toString().contains("127")) {
                     continue;
                 }
-                if (inetAddress.isLinkLocalAddress()) { // rseau local windows
+                if (inetAddress.isLinkLocalAddress()) { // reseau local windows
                     this.broadcast = "169.254.255.255";
                     this.address = inetAddress.getHostAddress();
                 }
                 
-                if (inetAddress.toString().contains("172.17.0.")) { // rezo type docker
+                if (inetAddress.toString().contains("172.17.0.")) { // reseau type docker
                      this.broadcast = "172.17.255.255";
                      this.address = inetAddress.getHostAddress();
                 }
                 
-                if (inetAddress.toString().contains("192.168.56.")) { // rezo local Vbox
+                if (inetAddress.toString().contains("192.168.56.")) { // reseau local Vbox
                      this.broadcast = "192.168.56.255";
                      this.address = inetAddress.getHostAddress();
                 }
                 
             }
         }
-        // TODO : améliorer le calcul du broadcast, detection du reseau IP
     }
 }

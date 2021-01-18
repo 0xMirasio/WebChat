@@ -11,9 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.border.Border;
 
-/**
- *
- * @author Youssef
+/*
+ cette fenêtre est utilisée pour la configuration du réseau
  */
 public class NetworkConfigGui extends javax.swing.JFrame {
 

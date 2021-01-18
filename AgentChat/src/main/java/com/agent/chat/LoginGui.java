@@ -10,7 +10,11 @@ import javax.swing.border.Border;
 import javax.swing.ImageIcon;
 
 
-
+/*
+    Cette classe permet d'authentifier (localement) l'utilisateur en vérifiant son mot de passe
+    Si le mot de passe est OK -> la classe Network.java est appelée.
+    Sinon, le mot de passe est requis en boucle.
+*/
 public class LoginGui extends javax.swing.JFrame {
 
     /**
@@ -25,7 +29,7 @@ public class LoginGui extends javax.swing.JFrame {
     public LoginGui() {
         
         initComponents();
-        jPasswordField.setText("insa"); // pour le debug, a enlever
+        jPasswordField.setText("insa"); // Les comptes utilisés pour le debug ont pour mot de passe insa, donc ca évite de retaper à chaque fois
         FileOperation filework = new FileOperation();
         this.username = filework.getUsername();
         String path = filework.getPath();
@@ -43,8 +47,6 @@ public class LoginGui extends javax.swing.JFrame {
 
     }
     
-    
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -224,37 +226,31 @@ public class LoginGui extends javax.swing.JFrame {
     }//GEN-LAST:event_jPasswordFieldActionPerformed
 
     private void jButton_LoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_LoginActionPerformed
-        
-        //PreparedStatement
-        //ResultSet rs;
-        
-        //Récupérer le mot de passe
-   
-        
-        String password = String.valueOf(jPasswordField.getPassword());
-        //On vérifie si le nom d'utilisateur et le mot de passe existent !
+            
+        String password = String.valueOf(jPasswordField.getPassword()); //Récupérer le mot de passe
         Security sec = new Security();
         
-        boolean ret = sec.verifyPassword(password);
-        if(ret){
+        boolean ret = sec.verifyPassword(password); // on vérifie le mot de passe input avec le hash sauvegardé en local
+        if(ret){ // SI OK
+            
                 this.setVisible(false);
                 Network net = new Network(this.username);
                 net.getUserConnected(); 
-                if (net.IPC.size() == 1) {
+                if (net.IPC.size() == 1) { // si IPC=1, on est tout seul
                     JOptionPane.showMessageDialog(null,"Authenticated - Welcome on the network - You are the only one connected","Information",1);
-                    net.prepare(net.IPC);
+                    net.prepare(net.IPC); 
                 }
-                else {
+                else { // IPC > 1 , il y'a plusieurs utilisateurs
                     String message = "Authenticated - Welcome on the network (Number of user: "+net.IPC.size() + ") !";
                     JOptionPane.showMessageDialog(null,message,"Information", 1);
                     net.prepare(net.IPC);    
                 }
+                // on lance la fenêtre principale
                 MainGui main = new MainGui();
                 main.setVisible(true);
                 main.pack();
                 main.setLocationRelativeTo(null);
-            //Fermer la fenêtre après l'appui sur le bouton Log in
-            this.dispose();
+                this.dispose();  // cette jframe est inutile a présent, on libère des ressources.
         }
         
         else{
@@ -337,10 +333,11 @@ public class LoginGui extends javax.swing.JFrame {
 
     private void jPasswordFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordFieldKeyPressed
         
+        
+        // idem qu'en haut, mais ici c'est si la touche entrée est préssée.
         if(evt.getKeyCode()== KeyEvent.VK_ENTER){
             
             String password = String.valueOf(jPasswordField.getPassword());
-            //On vérifie si le nom d'utilisateur et le mot de passe existent !
             Security sec = new Security();
             boolean ret = sec.verifyPassword(password);
             if(ret){
@@ -361,8 +358,6 @@ public class LoginGui extends javax.swing.JFrame {
                 main.setVisible(true);
                 main.pack();
                 main.setLocationRelativeTo(null);
-
-                //Fermer la fenêtre après l'appui sur le bouton Log in
                 this.dispose();
             }
 
