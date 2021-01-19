@@ -262,7 +262,7 @@ public class ModifyProfileGui extends javax.swing.JFrame {
         this.password=  String.valueOf(password_jField.getPassword());
         this.email = email_jTextField.getText();
         try {
-            filework.createNewProfile(this.username, this.password, this.email, this.imageprofilepath);
+            filework.createNewProfile(this.username, this.password, this.email, this.imageprofilepath, filework.getStateNetwork());
         }
         catch (Exception e) {
             e.printStackTrace();

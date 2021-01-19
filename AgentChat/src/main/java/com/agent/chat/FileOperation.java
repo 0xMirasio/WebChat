@@ -27,11 +27,8 @@ class FileOperation
     private final String userlist = ".cache/userlist";
     private final String sessionfile = ".cache/sessions";
     private final String networkfile = ".cache/networkConfig";
-    
     private String email;
     private String username;
-    private String receivemessage;
-    private String sendmessage;
     private List<String> IPC;
     private String password;
     private String profileimagepath;
@@ -39,6 +36,7 @@ class FileOperation
     private String broadcast;
     private String base_com_port = "6000";
     private String com_port = "5000";
+    private String isRemote;
     private List<String> session = new ArrayList<String>();
     private final Util util = new Util();
 
@@ -51,6 +49,7 @@ class FileOperation
         this.email = reader.readLine();
         this.password = reader.readLine();
         this.profileimagepath = reader.readLine();
+        this.isRemote = reader.readLine();
         reader.close();
     }
     
@@ -171,6 +170,19 @@ class FileOperation
         }
         return this.profileimagepath;
     }
+    /*
+    Retourne l'état de la machine (reseau local ou internet)
+    */
+    public String getStateNetwork() {
+        try { 
+            readFile(); 
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return this.isRemote;
+    }
+    
     
     /*
     Retourne l'adresse de la machine
@@ -230,12 +242,13 @@ class FileOperation
     /*
     Crée un nouveau profil dans .cache/profile.private (username, mot de passe, email, chemin vers l'image de profil)
     */
-    public void createNewProfile(String username,String password,String email, String profileimagepath) throws Exception {
+    public void createNewProfile(String username,String password,String email, String profileimagepath, String isRemote) throws Exception {
         PrintWriter writer = new PrintWriter(profile);
         writer.println(username);
         writer.println(email);
         writer.println(password.hashCode());
         writer.println(profileimagepath);
+        writer.println(isRemote);
         writer.close();
     }
     

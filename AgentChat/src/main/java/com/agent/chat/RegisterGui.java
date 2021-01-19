@@ -252,6 +252,7 @@ public class RegisterGui extends javax.swing.JFrame {
     private void register_jbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_register_jbuttonActionPerformed
        FileOperation filework = new FileOperation();
        String username = username_JtextField.getText();
+       String isRemote = Boolean.toString(!(util.getSourceAddress().contains("192.168.56.")));
        if (username.equals("")) {
            JOptionPane.showMessageDialog(null,"Username not specified","Register Error",2);
        }
@@ -268,7 +269,7 @@ public class RegisterGui extends javax.swing.JFrame {
        }
        if (!email.equals("") && !password.equals("") && !username.equals("") && email.contains("@")) {
            try {
-                filework.createNewProfile(username, password, email, this.profileimagepath); 
+                filework.createNewProfile(username, password, email, this.profileimagepath, isRemote); 
                 JOptionPane.showMessageDialog(null,"Profile Created","Information",1);
                 LoginGui lgui = new LoginGui();
                 String[] args = null;

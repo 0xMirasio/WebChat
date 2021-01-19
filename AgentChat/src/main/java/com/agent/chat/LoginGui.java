@@ -25,12 +25,14 @@ public class LoginGui extends javax.swing.JFrame {
     private int xMouse;
     private int yMouse;
     private final String pathLogo = "assets/logo.png";
+    private final FileOperation filework = new FileOperation();
+    private final Security sec = new Security();
+
     
     public LoginGui() {
         
         initComponents();
         jPasswordField.setText("insa"); // Les comptes utilisés pour le debug ont pour mot de passe insa, donc ca évite de retaper à chaque fois
-        FileOperation filework = new FileOperation();
         this.username = filework.getUsername();
         String path = filework.getPath();
         ImageIcon picImage = new ImageIcon(path);
@@ -227,36 +229,42 @@ public class LoginGui extends javax.swing.JFrame {
 
     private void jButton_LoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_LoginActionPerformed
             
-        String password = String.valueOf(jPasswordField.getPassword()); //Récupérer le mot de passe
-        Security sec = new Security();
-        
-        boolean ret = sec.verifyPassword(password); // on vérifie le mot de passe input avec le hash sauvegardé en local
-        if(ret){ // SI OK
+       String password = String.valueOf(jPasswordField.getPassword());
             
+            boolean ret = sec.verifyPassword(password);
+            if(ret){
                 this.setVisible(false);
-                Network net = new Network(this.username);
-                net.getUserConnected(); 
-                if (net.IPC.size() == 1) { // si IPC=1, on est tout seul
-                    JOptionPane.showMessageDialog(null,"Authenticated - Welcome on the network - You are the only one connected","Information",1);
-                    net.prepare(net.IPC); 
+                
+                Boolean isRemote = Boolean.valueOf(filework.getStateNetwork());
+                if (isRemote) {
+                    RemoteAuth remote = new RemoteAuth(this.username);
+                    remote.getUserConnected();
                 }
-                else { // IPC > 1 , il y'a plusieurs utilisateurs
-                    String message = "Authenticated - Welcome on the network (Number of user: "+net.IPC.size() + ") !";
-                    JOptionPane.showMessageDialog(null,message,"Information", 1);
-                    net.prepare(net.IPC);    
+                else {
+                   Network net = new Network(this.username);
+                   net.getUserConnected(); 
+                   if (net.IPC.size() == 1) {
+                       JOptionPane.showMessageDialog(null,"Authenticated - Welcome on the network - You are the only one connected","Information",1);
+                       net.prepare(net.IPC);
+                   }
+                   else {
+                       String message = "Authenticated - Welcome on the network (Number of user: "+net.IPC.size() + ") !";
+                       JOptionPane.showMessageDialog(null,message,"Information", 1);
+                       net.prepare(net.IPC);    
+                   }
+                   MainGui main = new MainGui();
+                   main.setVisible(true);
+                   main.pack();
+                   main.setLocationRelativeTo(null); 
                 }
-                // on lance la fenêtre principale
-                MainGui main = new MainGui();
-                main.setVisible(true);
-                main.pack();
-                main.setLocationRelativeTo(null);
-                this.dispose();  // cette jframe est inutile a présent, on libère des ressources.
-        }
-        
-        else{
-            //Message d'erreur affiché
-            JOptionPane.showMessageDialog(null,"Invalid Password","Login Error",2);
-        }
+                
+                this.dispose();
+            }
+
+            else{
+                //Message d'erreur affiché
+                JOptionPane.showMessageDialog(null,"Invalid Password","Login Error",2);
+            }
         
         
         
@@ -338,26 +346,34 @@ public class LoginGui extends javax.swing.JFrame {
         if(evt.getKeyCode()== KeyEvent.VK_ENTER){
             
             String password = String.valueOf(jPasswordField.getPassword());
-            Security sec = new Security();
+            
             boolean ret = sec.verifyPassword(password);
             if(ret){
                 this.setVisible(false);
                 
-                Network net = new Network(this.username);
-                net.getUserConnected(); 
-                if (net.IPC.size() == 1) {
-                    JOptionPane.showMessageDialog(null,"Authenticated - Welcome on the network - You are the only one connected","Information",1);
-                    net.prepare(net.IPC);
+                Boolean isRemote = Boolean.valueOf(filework.getStateNetwork());
+                if (isRemote) {
+                     RemoteAuth remote = new RemoteAuth(this.username);
+                     remote.getUserConnected();
                 }
                 else {
-                    String message = "Authenticated - Welcome on the network (Number of user: "+net.IPC.size() + ") !";
-                    JOptionPane.showMessageDialog(null,message,"Information", 1);
-                    net.prepare(net.IPC);    
+                   Network net = new Network(this.username);
+                   net.getUserConnected(); 
+                   if (net.IPC.size() == 1) {
+                       JOptionPane.showMessageDialog(null,"Authenticated - Welcome on the network - You are the only one connected","Information",1);
+                       net.prepare(net.IPC);
+                   }
+                   else {
+                       String message = "Authenticated - Welcome on the network (Number of user: "+net.IPC.size() + ") !";
+                       JOptionPane.showMessageDialog(null,message,"Information", 1);
+                       net.prepare(net.IPC);    
+                   }
+                   MainGui main = new MainGui();
+                   main.setVisible(true);
+                   main.pack();
+                   main.setLocationRelativeTo(null); 
                 }
-                MainGui main = new MainGui();
-                main.setVisible(true);
-                main.pack();
-                main.setLocationRelativeTo(null);
+                
                 this.dispose();
             }
 
