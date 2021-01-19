@@ -8,7 +8,7 @@ public class App
 {
     static FileOperation filework;
     private String username;
-    Util address = new Util();
+    Util util = new Util();
     
     HttpURLConnectionSubscribe sub = new HttpURLConnectionSubscribe();
     HttpURLConnectionGetInfo get = new HttpURLConnectionGetInfo();
@@ -41,7 +41,23 @@ public class App
         
         else {
             
-            if(!(address.getSourceAddress().contains("192.168.56"))){
+            
+            
+           /* else{
+                try {
+                    //Beaucoup trop tôt !!!
+                get.receivePOST("http://localhost:8080/agentchatext/getinfo");
+                
+            } catch (IOException ex) {
+                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            }*/
+          
+            LoginGui lgui = new LoginGui();
+            String[] args = null;
+            lgui.main(args);
+            
+            if(!(util.getSourceAddress().contains("192.168.56"))){
                 
             this.username = filework.getUsername();
             //requête post
@@ -49,27 +65,11 @@ public class App
             try {
                 sub.sendPOST("http://localhost:8080/agentchatext/subscribe",this.username);
                 
-            } catch (IOException ex) {
-                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            }
-            
-            else{
-                try {
-                get.receivePOST("http://localhost:8080/agentchatext/getinfo");
                 
             } catch (IOException ex) {
                 Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
             }
             }
-            
-            
-            
-            
-          
-            LoginGui lgui = new LoginGui();
-            String[] args = null;
-            lgui.main(args);
         }
     }
 
