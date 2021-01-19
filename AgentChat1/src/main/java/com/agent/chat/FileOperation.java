@@ -22,6 +22,7 @@ class FileOperation
     private String profileimagepath;
     private List<String> session = new ArrayList<String>();
     private Util util = new Util();
+    private String iparea;
 
     public void readFile() throws Exception  {
         this.reader= new BufferedReader(new FileReader(profile));
@@ -29,6 +30,7 @@ class FileOperation
         this.email = reader.readLine();
         this.password = reader.readLine();
         this.profileimagepath = reader.readLine();
+        this.iparea = reader.readLine();
         reader.close();
     }
     
@@ -103,14 +105,26 @@ class FileOperation
         }
         return this.session;
     }
+    
+    public String getIpArea() {
+        try { 
+            readFile(); 
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return this.iparea;
+    }
+    
 
 
-    public void createNewProfile(String username,String password,String email, String profileimagepath) throws Exception {
+    public void createNewProfile(String username,String password,String email, String profileimagepath, String iparea) throws Exception {
         PrintWriter writer = new PrintWriter(profile);
         writer.println(username);
         writer.println(email);
         writer.println(password.hashCode());
         writer.println(profileimagepath);
+        writer.println(iparea);
         writer.close();
     }
     

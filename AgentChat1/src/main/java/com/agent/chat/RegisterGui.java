@@ -31,6 +31,10 @@ public class RegisterGui extends javax.swing.JFrame {
     private int yMouse;
     private String pathLogo = "assets/logo.png";
     Util address = new Util();
+    String iparea;
+    
+    HttpURLConnectionSubscribe sub = new HttpURLConnectionSubscribe();
+    HttpURLConnectionGetInfo get = new HttpURLConnectionGetInfo();
 
     
     public RegisterGui() {
@@ -255,16 +259,34 @@ public class RegisterGui extends javax.swing.JFrame {
        if (!email.contains("@")) {
            JOptionPane.showMessageDialog(null,"Invalid Email ! ","Register Error",2);
        }
+       
+       if (!(address.getSourceAddress().contains("192.168.56"))){
+           
+           iparea = "true";
+       }
+       else{
+           iparea = "false";
+       }
+       
        if (!email.equals("") && !password.equals("") && !username.equals("") && email.contains("@")) {
            try {
-                filework.createNewProfile(username, password, email, this.profileimagepath); 
+                filework.createNewProfile(username, password, email, this.profileimagepath, iparea); 
                 JOptionPane.showMessageDialog(null,"Profile Created","Information",1);
               
             //requête post
             if(!(address.getSourceAddress().contains("192.168.56"))){
-            HttpURLConnectionSubscribe sub = new HttpURLConnectionSubscribe();
+            
             try {
                 sub.sendPOST("http://localhost:8080/agentchatext/subscribe",username);
+            } catch (IOException ex) {
+                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            }
+            
+            else{
+                try {
+                get.receivePOST("http://localhost:8080/agentchatext/getinfo");
+                
             } catch (IOException ex) {
                 Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
             }

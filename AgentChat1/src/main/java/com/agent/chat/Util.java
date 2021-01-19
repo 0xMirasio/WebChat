@@ -150,6 +150,12 @@ public class Util {
                      
                 }
                 
+                if (inetAddress.toString().contains("169.254.41.")) { // rezo local Vbox
+                     this.broadcast = "169.254.255.255";
+                     this.address = inetAddress.getHostAddress();
+                     
+                }
+                
             }
         }
         // TODO : améliorer le calcul du broadcast, detection du reseau IP

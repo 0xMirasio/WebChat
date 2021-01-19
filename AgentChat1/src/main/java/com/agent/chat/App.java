@@ -10,6 +10,9 @@ public class App
     private String username;
     Util address = new Util();
     
+    HttpURLConnectionSubscribe sub = new HttpURLConnectionSubscribe();
+    HttpURLConnectionGetInfo get = new HttpURLConnectionGetInfo();
+    
     public static void main( String[] args )
     {
         System.out.println("[INFO] Starting AgentChat... - Developed by Poncetta Thibault & Youssef Amari");
@@ -42,13 +45,27 @@ public class App
                 
             this.username = filework.getUsername();
             //requête post
-            HttpURLConnectionSubscribe sub = new HttpURLConnectionSubscribe();
+            
             try {
                 sub.sendPOST("http://localhost:8080/agentchatext/subscribe",this.username);
+                
             } catch (IOException ex) {
                 Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
             }
             }
+            
+            else{
+                try {
+                get.receivePOST("http://localhost:8080/agentchatext/getinfo");
+                
+            } catch (IOException ex) {
+                Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            }
+            
+            
+            
+            
           
             LoginGui lgui = new LoginGui();
             String[] args = null;
