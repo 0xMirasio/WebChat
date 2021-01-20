@@ -158,6 +158,9 @@ public class Util {
                      this.broadcast = "192.168.56.255";
                      this.address = inetAddress.getHostAddress();
                 }
+                else {
+                    this.address = inetAddress.getHostAddress(); // not from know network, so it's a adress for internet purpose
+                }
                 
             }
         }

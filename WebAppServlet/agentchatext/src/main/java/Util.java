@@ -16,20 +16,7 @@ import java.io.PrintWriter;
  * @author titip
  */
 public class Util {
-    
-    public String returnParameter(HttpServletRequest request) throws Exception {
-        DataInputStream inputStream = new DataInputStream(request.getInputStream());
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-            
-        while (inputStream.available() > 0) {
-            byte b = inputStream.readByte();
-            output.write(b);
-        }
-        byte[] out = output.toByteArray();
-        String name = new String(out);
-        return name;
-    }
-    
+     
     public void setResponse(HttpServletResponse response, String message) throws Exception {
         response.setContentType("text/html");//setting the content type  
         PrintWriter pw=response.getWriter();//get the stream to write the data  
@@ -40,4 +27,6 @@ public class Util {
         
         pw.close();
     }
+    
+ 
 }

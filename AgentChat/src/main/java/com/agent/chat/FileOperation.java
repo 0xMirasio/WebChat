@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Base64;
 
 /*
 Cette classe possède des méthodes pour traiter avec les fichiers stockée dans .cache/

@@ -16,7 +16,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.border.Border;
 import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
 
 
 /*
@@ -39,22 +38,19 @@ public class MainGui extends javax.swing.JFrame {
     private int xMouse;
     private int yMouse;
     private final String pathLogo = "assets/logo.png";
-    private String username;
     private Timer timer;
     public List<String> IPC = new ArrayList<String>();
     private final FileOperation filework = new FileOperation();
+    private String username = filework.getUsername();
+    private final RemoteAuth remote = new RemoteAuth(this.username);
     private Vector old = null;
     private Vector items = null;
     private final int BASE_COM_PORT = 5000;
     private final Util util = new Util();
     private ServerSocket serveurSocket = null;
-
-
+    
     public MainGui() {
         initComponents();
-        FileOperation filework = new FileOperation();
-        this.username = filework.getUsername();
-        
         // on lance un client en mode SERVEUR (il écoute sur le port 5000)
         try {
             serveurSocket = new ServerSocket((BASE_COM_PORT + util.getPort(util.getSourceAddress())));
@@ -99,9 +95,15 @@ public class MainGui extends javax.swing.JFrame {
                        jList1.setListData(items);
                     }
                 }
+                
+                remote.getUserWaiting();
+                
+                
             }
             catch (Exception e) {
             }
+            
+            
             
         }});
                 
