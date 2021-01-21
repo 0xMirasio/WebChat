@@ -138,30 +138,37 @@ public class Util {
     */
     public void enumerationInterface() throws IOException{
         Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
+        int skip=0;
         for (NetworkInterface netint : Collections.list(nets)) {
             Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
             for (InetAddress inetAddress : Collections.list(inetAddresses)) {
-                if (inetAddress == null || inetAddress.toString().contains(":") || inetAddress.toString().contains("127")) {
+                if (skip == 1) {
                     continue;
                 }
-                if (inetAddress.isLinkLocalAddress()) { // reseau local windows
-                    this.broadcast = "169.254.255.255";
-                    this.address = inetAddress.getHostAddress();
-                }
-                
-                if (inetAddress.toString().contains("172.17.0.")) { // reseau type docker
-                     this.broadcast = "172.17.255.255";
-                     this.address = inetAddress.getHostAddress();
-                }
-                
-                if (inetAddress.toString().contains("192.168.56.")) { // reseau local Vbox
-                     this.broadcast = "192.168.56.255";
-                     this.address = inetAddress.getHostAddress();
-                     break;
-                }
                 else {
-                    this.address = inetAddress.getHostAddress(); // not from know network, so it's a adress for internet purpose
+                    if (inetAddress == null || inetAddress.toString().contains(":") || inetAddress.toString().contains("127")) {
+                        continue;
+                    }
+                    if (inetAddress.isLinkLocalAddress()) { // reseau local windows
+                        this.broadcast = "169.254.255.255";
+                        this.address = inetAddress.getHostAddress();
+                    }
+
+                    if (inetAddress.toString().contains("172.17.0.")) { // reseau type docker
+                         this.broadcast = "172.17.255.255";
+                         this.address = inetAddress.getHostAddress();
+                    }
+
+                    if (inetAddress.toString().contains("192.168.56.")) { // reseau local Vbox
+                         this.broadcast = "192.168.56.255";
+                         this.address = inetAddress.getHostAddress();
+                         skip=1;
+                    }
+                    else {
+                        this.address = inetAddress.getHostAddress(); // not from know network, so it's a adress for internet purpose
+                    }
                 }
+                
                 
             }
         }
