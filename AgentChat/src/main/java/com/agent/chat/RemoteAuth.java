@@ -85,6 +85,10 @@ public class RemoteAuth extends Thread {
              {
                 System.out.println("[INFO] /getInfo GET :" + name);
                 sendPOST("http://82.165.59.142:8080/agentchatext/subscribe", "null", "name"); // on vide le buffer distant
+                System.out.println(this.username+":" +name);
+                System.out.println(this.username.equals(name));
+                System.out.println(this.username.contains(name));
+                System.out.println(name.contains(this.username));
                 if (this.username.equals(name)) {
                     System.out.println("oh no");
                     System.exit(0);
