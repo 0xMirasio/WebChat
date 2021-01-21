@@ -11,16 +11,18 @@ import java.net.URL;
 public class RemoteAuth extends Thread {
     private String username;
     private final int MAX_TIME = 5000;
+    private final String OS = System.getProperty("os.name").toLowerCase();
     
     public RemoteAuth(String username) {
         this.username = username;
     }
     
     public void getUserConnected() {
-        String message = "hello-remote:"+this.username;
+        String value = this.username;
+        String parameter = "name";
         try {
-            int resp = sendPOST("http://82.165.59.142:8080/agentchatext/subscribe", message);
-            System.out.println("[DEBUG] POST Response Code : " + resp);
+            System.out.println ("[INFO] Sending POST Request : " + value);
+            sendPOST("http://82.165.59.142:8080/agentchatext/subscribe", this.username, parameter);
             System.out.println("[INFO] Waiting " + MAX_TIME + "ms before asking server response");
             Thread.sleep(5000); // wait for 5s
             System.exit(0);
@@ -31,19 +33,20 @@ public class RemoteAuth extends Thread {
         }
     }
     
-    public int sendPOST(String url, String param) throws IOException {
+    public void sendPOST(String url, String value, String parameter) throws IOException {
         
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        con.setRequestMethod("POST");
-        con.setDoOutput(true);
-        DataOutputStream out = new DataOutputStream(con.getOutputStream());
-        out.writeBytes(param);
-        out.flush();
-        out.close();
-
-        int responseCode = con.getResponseCode();
-        return responseCode;
+        String command = "curl -X POST " + url + " -d \"" + parameter + "=" + value + "\"";
+        System.out.println("[INFO] Executing command : " + command);
+        ProcessBuilder builder = new ProcessBuilder();
+        
+        if (OS.contains("win")) {
+            builder.command("cmd.exe", "/c", command);
+        }
+        else {
+            builder.command("sh", "-c", command);
+        }
+       
+        builder.start();
             
     }
     
@@ -61,11 +64,12 @@ public class RemoteAuth extends Thread {
 			while ((inputLine = in.readLine()) != null) {
 				response += inputLine;
 			}            
-                        System.out.println("[INFO] GET request SUCESS");                        
 			in.close();
         } else {
             System.out.println("[INFO] GET request FAIL");
         }
+        
+        response = response.split("<h3>")[1].split("</h3>")[0];       
         return response;
         
             
@@ -76,7 +80,11 @@ public class RemoteAuth extends Thread {
         
         try {
              String output = sendGET("http://82.165.59.142:8080/agentchatext/getinfo");
-             System.out.println(output);
+             if (!output.equals("null"))
+             {
+                System.out.println("[INFO] /getInfo GET :" + output);
+                sendPOST("http://82.165.59.142:8080/agentchatext/subscribe", "null", "name"); // on vide le buffer distant
+             }             
         }
         catch (Exception e) {
             e.printStackTrace();
