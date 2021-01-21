@@ -7,6 +7,7 @@ package com.agent.chat;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import javax.swing.JOptionPane;
 
 public class RemoteAuth extends Thread {
     private String username;
@@ -33,7 +34,7 @@ public class RemoteAuth extends Thread {
         }
     }
     
-    public void sendPOST(String url, String value, String parameter) throws IOException {
+    public void sendPOST(String url, String value, String parameter) throws Exception {
         
         String command = "curl -X POST " + url + " -d \"" + parameter + "=" + value + "\"";
         System.out.println("[INFO] Executing command : " + command);
@@ -79,11 +80,15 @@ public class RemoteAuth extends Thread {
     public void getUserWaiting() {
         
         try {
-             String output = sendGET("http://82.165.59.142:8080/agentchatext/getinfo");
-             if (!(output.contains("null")))
+             String name = sendGET("http://82.165.59.142:8080/agentchatext/getinfo");
+             if (!(name.contains("null")))
              {
-                System.out.println("[INFO] /getInfo GET :" + output);
+                System.out.println("[INFO] /getInfo GET :" + name);
                 sendPOST("http://82.165.59.142:8080/agentchatext/subscribe", "null", "name"); // on vide le buffer distant
+                if (this.username.equals(name)) {
+                    System.out.println("oh no");
+                    System.exit(0);
+                }
              }             
         }
         catch (Exception e) {
