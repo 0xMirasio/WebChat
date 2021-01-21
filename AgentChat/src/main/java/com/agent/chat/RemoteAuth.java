@@ -19,7 +19,7 @@ public class RemoteAuth extends Thread {
     public void getUserConnected() {
         String message = "hello-remote:"+this.username;
         try {
-            int resp = sendPOST("http://localhost:8080/agentchatext/subscribe", message);
+            int resp = sendPOST("http://82.165.59.142:8080/agentchatext/subscribe", message);
             System.out.println("[DEBUG] POST Response Code : " + resp);
             System.out.println("[INFO] Waiting " + MAX_TIME + "ms before asking server response");
             Thread.sleep(5000); // wait for 5s
@@ -64,7 +64,7 @@ public class RemoteAuth extends Thread {
     public void getUserWaiting() {
         
         try {
-             String output = sendGET("http://localhost:8080/agentchatext/getinfo");
+             String output = sendGET("http://82.165.59.142:8080/agentchatext/getinfo");
              System.out.println(output);
         }
         catch (Exception e) {
