@@ -81,6 +81,12 @@ public class RemoteAuth extends Thread {
         
         try {
              String name = sendGET("http://82.165.59.142:8080/agentchatext/getinfo");
+             try {
+                 name = name.split("\\n")[0];
+             }
+             catch (Exception e) {
+                System.out.println("No good");
+             }
              if (!(name.contains("null")))
              {
                 System.out.println("[INFO] /getInfo GET :" + name);
