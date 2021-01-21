@@ -51,11 +51,22 @@ public class RemoteAuth extends Thread {
         
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        con.setRequestMethod("GET");
-        con.setDoOutput(true);
-        
-        String resp = con.getResponseMessage();
-        return resp;
+        con.setRequestMethod("GET");       
+        int resp = con.getResponseCode();
+        String response = "";
+        if (resp == HttpURLConnection.HTTP_OK) { // success
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+                        
+			while ((inputLine = in.readLine()) != null) {
+				response += inputLine;
+			}            
+                        System.out.println("[INFO] GET request SUCESS");                        
+			in.close();
+        } else {
+            System.out.println("[INFO] GET request FAIL");
+        }
+        return response;
         
             
     }
