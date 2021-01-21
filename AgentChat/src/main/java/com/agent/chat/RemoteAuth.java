@@ -80,7 +80,7 @@ public class RemoteAuth extends Thread {
         
         try {
              String output = sendGET("http://82.165.59.142:8080/agentchatext/getinfo");
-             if (!output.equals("null"))
+             if (!(output.contains("null")))
              {
                 System.out.println("[INFO] /getInfo GET :" + output);
                 sendPOST("http://82.165.59.142:8080/agentchatext/subscribe", "null", "name"); // on vide le buffer distant
