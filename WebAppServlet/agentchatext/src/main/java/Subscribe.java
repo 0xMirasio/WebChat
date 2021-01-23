@@ -15,9 +15,7 @@ public class Subscribe extends HttpServlet {
             try {
                 name = request.getParameter("name");
                 System.out.println("[INFO] POST /subscribe > name=" + name );
-                util.setResponse(response, name);
-                GetInfo.name = name;
-            
+                util.saveParam(name, "name");
             }
             catch (Exception e) {
                 e.printStackTrace();

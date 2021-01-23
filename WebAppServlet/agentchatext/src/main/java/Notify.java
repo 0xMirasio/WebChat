@@ -11,11 +11,10 @@ public class Notify extends HttpServlet {
        
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
                 
-            System.out.println("[INFO] POST /subscribe");
             try {
                 response_local = request.getParameter("response");
-                util.setResponse(response, response_local);
-                GetInfo.response_local = response_local;
+                System.out.println("[INFO] POST /notify >" + response_local);
+                util.saveParam(response_local, "response_local");
             
             }
             catch (Exception e) {

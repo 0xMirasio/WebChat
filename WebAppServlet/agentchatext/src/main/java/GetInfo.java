@@ -12,15 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 public class GetInfo extends HttpServlet {
 
         private static final long serialVersionUID = 1L;
-        protected static String name;
-        protected static String response_local;
+        private String name=null;
+        private String response_local  =null;
         
-        private String all = "name="+name+"&response_local="+ response_local; 
+        private String all;
         private final Util util = new Util();
 
         
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
               try {
+                  all = util.getAllParams(); 
                   System.out.println("GET / ; all =" + all);
                   util.setResponse(response, all);
               }

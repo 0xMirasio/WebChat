@@ -15,6 +15,7 @@ public class RemoteAuth extends Thread {
     private final int MAX_TIME = 5000;
     private final String OS = System.getProperty("os.name").toLowerCase();
     protected List<String> IPC = new ArrayList<String>();
+    
     private final Util util = new Util();
     //private final String SERVER = "http://82.165.59.142/";
     private final String SERVER = "localhost";
@@ -111,7 +112,11 @@ public class RemoteAuth extends Thread {
                         sendPOST("http://"+ SERVER + ":8080/agentchatext/notify", "REJECT", "response");
                     }
                     else {
-                        sendPOST("http://"+ SERVER + ":8080/agentchatext/notify", "OK>"+filework.getuser(), "response");
+                        this.IPC = filework.getuser();
+                        this.IPC.add(name+"-[REMOTE USER]");
+                        filework.saveUser(this.IPC);
+                        sendPOST("http://"+ SERVER + ":8080/agentchatext/notify", "OK>"+this.IPC, "response");
+                        
                     }
                 } 
              }
