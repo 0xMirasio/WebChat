@@ -1,9 +1,7 @@
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.io.*;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -16,7 +14,9 @@ import java.io.PrintWriter;
  * @author titip
  */
 public class Util {
-     
+    
+    private final String logfile = "/opt/tomcat/log";
+
     public void setResponse(HttpServletResponse response, String message) throws Exception {
         response.setContentType("text/html");//setting the content type  
         PrintWriter pw=response.getWriter();//get the stream to write the data  
@@ -27,6 +27,7 @@ public class Util {
         
         pw.close();
     }
+    
     
  
 }

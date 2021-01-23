@@ -7,14 +7,14 @@ package com.agent.chat;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import javax.swing.JOptionPane;
 
 public class RemoteAuth extends Thread {
     private String username;
     private final int MAX_TIME = 5000;
     private final String OS = System.getProperty("os.name").toLowerCase();
     private final Util util = new Util();
-    
+    //private final String SERVER = "http://82.165.59.142/";
+    private final String SERVER = "localhost";
     public RemoteAuth(String username) {
         this.username = username;
     }
@@ -24,7 +24,7 @@ public class RemoteAuth extends Thread {
         String parameter = "name";
         try {
             System.out.println ("[INFO] Sending POST Request : " + value);
-            sendPOST("http://82.165.59.142:8080/agentchatext/subscribe", this.username, parameter);
+            sendPOST("http://"+ SERVER + ":8080/agentchatext/subscribe", this.username, parameter);
             System.out.println("[INFO] Waiting " + MAX_TIME + "ms before asking server response");
             Thread.sleep(5000); // wait for 5s
             System.exit(0);
@@ -81,14 +81,13 @@ public class RemoteAuth extends Thread {
     public void getUserWaiting() {
         
         try {
-             String all = sendGET("http://82.165.59.142:8080/agentchatext/getinfo");
+             String all = sendGET("http://"+ SERVER + ":8080/agentchatext/getinfo");
              String name = util.getParameter(all, "name");
-             System.out.println(name);
              if (!(name == null)) {
                  if (!(name.contains("null")))
                  {
                     System.out.println("[INFO] /getInfo GET :" + name);
-                    sendPOST("http://82.165.59.142:8080/agentchatext/subscribe", "null", "name"); // on vide le buffer distant
+                    sendPOST("http://"+ SERVER + ":8080/agentchatext/subscribe", "null", "name"); // on vide le buffer distant
                     if (name.contains(this.username)) {
                         System.exit(0);
                     }
