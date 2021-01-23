@@ -13,7 +13,6 @@
 AgentChat/.cache/
 AgentChat/target/
 # Package Files #
-*.war
 *.nar
 *.ear
 *.rar
