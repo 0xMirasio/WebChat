@@ -135,15 +135,15 @@ public class Util {
     
     // retourne la valeur du paramètre demandé (format : param1=value1&param2=value2&...
     public String getParameter(String data, String param) {
+        System.out.println(param);
+        String out=null;
         String[] temp = data.split("&");
         for (String params : temp) {
-            System.out.println(params+":"+param);
-            System.out.println(params.equals(param));
-            System.out.println(params.contains(param));
-            System.out.println(param.contains(params));
-            
+            if (params.contains(param)) {
+                out = params.split("=")[1];
+            } 
         }
-        String out=null;
+       
         return out;
     }
 

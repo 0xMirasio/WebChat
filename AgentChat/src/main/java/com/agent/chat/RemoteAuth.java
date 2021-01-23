@@ -83,15 +83,18 @@ public class RemoteAuth extends Thread {
         try {
              String all = sendGET("http://82.165.59.142:8080/agentchatext/getinfo");
              String name = util.getParameter(all, "name");
-             if (!(name.contains("null")))
-             {
-                System.out.println("[INFO] /getInfo GET :" + name);
-                sendPOST("http://82.165.59.142:8080/agentchatext/subscribe", "null", "name"); // on vide le buffer distant
-
-                if (name.contains(this.username)) {
-                    
-                }
-             }             
+             System.out.println(name);
+             if (!(name == null)) {
+                 if (!(name.contains("null")))
+                 {
+                    System.out.println("[INFO] /getInfo GET :" + name);
+                    sendPOST("http://82.165.59.142:8080/agentchatext/subscribe", "null", "name"); // on vide le buffer distant
+                    if (name.contains(this.username)) {
+                        System.exit(0);
+                    }
+                } 
+             }
+                         
         }
         catch (Exception e) {
             e.printStackTrace();
