@@ -46,6 +46,7 @@ public class RemoteAuth extends Thread {
                     System.out.println("[INFO] Authentification OK ");
                     this.IPC = util.transform2IPC(response.split(">")[1]);
                     System.out.println("[INFO] IPC : " + this.IPC);
+                    filework.saveUser(this.IPC);
                 }
             }
 
@@ -113,7 +114,7 @@ public class RemoteAuth extends Thread {
                     }
                     else {
                         this.IPC = filework.getuser();
-                        this.IPC.add(name+"-[REMOTE USER]");
+                        this.IPC.add(name+"-REMOTE USER");
                         filework.saveUser(this.IPC);
                         sendPOST("http://"+ SERVER + ":8080/agentchatext/notify", "OK>"+this.IPC, "response");
                         

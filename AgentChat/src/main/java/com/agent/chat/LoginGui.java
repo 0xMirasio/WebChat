@@ -239,6 +239,10 @@ public class LoginGui extends javax.swing.JFrame {
                 if (isRemote) {
                     RemoteAuth remote = new RemoteAuth(this.username);
                     remote.getUserConnected();
+                    MainGui main = new MainGui();
+                     main.setVisible(true);
+                     main.pack();
+                     main.setLocationRelativeTo(null);
                 }
                 else {
                    Network net = new Network(this.username);
@@ -356,6 +360,10 @@ public class LoginGui extends javax.swing.JFrame {
                      JOptionPane.showMessageDialog(null,"Asking for others users in the networks (6seconds to wait)","Information",1);
                      RemoteAuth remote = new RemoteAuth(this.username);
                      remote.getUserConnected();
+                     MainGui main = new MainGui();
+                     main.setVisible(true);
+                     main.pack();
+                     main.setLocationRelativeTo(null); 
                 }
                 else {
                    Network net = new Network(this.username);
