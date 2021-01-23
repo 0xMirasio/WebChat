@@ -353,6 +353,7 @@ public class LoginGui extends javax.swing.JFrame {
                 
                 Boolean isRemote = Boolean.valueOf(filework.getStateNetwork());
                 if (isRemote) {
+                     JOptionPane.showMessageDialog(null,"Asking for others users in the networks (6seconds to wait)","Information",1);
                      RemoteAuth remote = new RemoteAuth(this.username);
                      remote.getUserConnected();
                 }

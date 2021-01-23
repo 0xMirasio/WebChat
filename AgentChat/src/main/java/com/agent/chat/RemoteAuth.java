@@ -7,14 +7,19 @@ package com.agent.chat;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RemoteAuth extends Thread {
     private String username;
     private final int MAX_TIME = 5000;
     private final String OS = System.getProperty("os.name").toLowerCase();
+    protected List<String> IPC = new ArrayList<String>();
     private final Util util = new Util();
     //private final String SERVER = "http://82.165.59.142/";
     private final String SERVER = "localhost";
+    private final FileOperation filework = new FileOperation();
+    
     public RemoteAuth(String username) {
         this.username = username;
     }
@@ -27,16 +32,21 @@ public class RemoteAuth extends Thread {
             sendPOST("http://"+ SERVER + ":8080/agentchatext/subscribe", this.username, parameter);
             System.out.println("[INFO] Waiting " + MAX_TIME + "ms before asking server response");
             Thread.sleep(5000); // wait for 5s
-            System.out.println ("[INFO] 1)");
-            
             String all = sendGET("http://"+ SERVER + ":8080/agentchatext/getinfo");
-            System.out.println ("[INFO] 2 : "+ all);
+            sendPOST("http://"+ SERVER + ":8080/agentchatext/notify", "null", "response"); // vide le buffer distant
+ 
             String response = util.getParameter(all, "response_local");
-            System.out.println ("[INFO] 3 : " + response);
             if (!(response == null)) {
-                System.out.println(response);
+                if (response.contains("REJECT")) {
+                    System.out.println("[CRITICAL] Your username is already choosen by another user ! Pls change your username in .cache/profile.private");
+                    System.exit(0);
+                }
+                else {
+                    System.out.println("[INFO] Authentification OK ");
+                    this.IPC = util.transform2IPC(response.split(">")[1]);
+                    System.out.println("[INFO] IPC : " + this.IPC);
+                }
             }
-            System.exit(0);
 
         }
         catch (Exception e) {
@@ -101,7 +111,7 @@ public class RemoteAuth extends Thread {
                         sendPOST("http://"+ SERVER + ":8080/agentchatext/notify", "REJECT", "response");
                     }
                     else {
-                        sendPOST("http://"+ SERVER + ":8080/agentchatext/notify", "OK", "response");
+                        sendPOST("http://"+ SERVER + ":8080/agentchatext/notify", "OK>"+filework.getuser(), "response");
                     }
                 } 
              }

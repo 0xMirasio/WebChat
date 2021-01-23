@@ -136,14 +136,12 @@ public class Util {
     // retourne la valeur du paramètre demandé (format : param1=value1&param2=value2&...
     public String getParameter(String data, String param) {
         String out=null;
-        System.out.println("DEBUG DAT="+data);
         String[] temp = data.split("&");
         for (String params : temp) {
             if (params.contains(param)) {
                 out = params.split("=")[1];
             } 
         }
-        System.out.println("DEBUG out="+out);
         return out;
     }
 
