@@ -111,8 +111,60 @@ public class MainGui extends javax.swing.JFrame {
         
     }
     
+    public MainGui(boolean isRemote) {
+        initComponents();
+        // on lance un client en mode SERVEUR (il écoute sur le port 5000)
+        
+        String path = filework.getPath();
+        ImageIcon picImage = new ImageIcon(path);
+        if (picImage != null)
+        {
+            jLabel_image.setIcon(new ImageIcon(picImage.getImage().getScaledInstance(150, 150, 1)));
+        }
+        jLabel2.setText(this.username);
+        picImage = new ImageIcon(pathLogo);
+        if (picImage != null)
+        {
+            jLabel3.setIcon(new ImageIcon(picImage.getImage().getScaledInstance(200, 200, 1)));
+        }
+        jLabel2.setText(this.username);
+        
+        // Toute les 1 secondes, on regarde si il y'a de nouveau utilisateurs pour les ajouter à la liste
+        timer = new Timer(1000, new java.awt.event.ActionListener() 
+        {
+        @Override
+         public void actionPerformed(java.awt.event.ActionEvent evt ) {
+            FileOperation filework = new FileOperation();
+            try {
+                IPC  = filework.getuser();
+                if (!IPC.isEmpty()) {
+                    items = new Vector(IPC);
+                    if (items != null && old == null) {
+                        old = new Vector(IPC);
+                        jList1.setListData(items);
+                    }
+                    if (!(old.equals(items))) {
+                       old = new Vector(IPC);
+                       jList1.setListData(items);
+                    }
+                }
+                
+                remote.getUserWaiting();
+                
+                
+            }
+            catch (Exception e) {
+            }
+            
+            
+            
+        }});
+                
+        timer.start();       
+        
+    }
+    
   
-
 
     /**
      * This method is called from within the constructor to initialize the form.
