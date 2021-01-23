@@ -27,6 +27,15 @@ public class RemoteAuth extends Thread {
             sendPOST("http://"+ SERVER + ":8080/agentchatext/subscribe", this.username, parameter);
             System.out.println("[INFO] Waiting " + MAX_TIME + "ms before asking server response");
             Thread.sleep(5000); // wait for 5s
+            System.out.println ("[INFO] 1)");
+            
+            String all = sendGET("http://"+ SERVER + ":8080/agentchatext/getinfo");
+            System.out.println ("[INFO] 2 : "+ all);
+            String response = util.getParameter(all, "response_local");
+            System.out.println ("[INFO] 3 : " + response);
+            if (!(response == null)) {
+                System.out.println(response);
+            }
             System.exit(0);
 
         }
@@ -88,8 +97,11 @@ public class RemoteAuth extends Thread {
                  {
                     System.out.println("[INFO] /getInfo GET :" + name);
                     sendPOST("http://"+ SERVER + ":8080/agentchatext/subscribe", "null", "name"); // on vide le buffer distant
-                    if (name.contains(this.username)) {
-                        System.exit(0);
+                    if (name.contains(this.username)) { //si le username est déja prit par la machine du réseau local
+                        sendPOST("http://"+ SERVER + ":8080/agentchatext/notify", "REJECT", "response");
+                    }
+                    else {
+                        sendPOST("http://"+ SERVER + ":8080/agentchatext/notify", "OK", "response");
                     }
                 } 
              }
