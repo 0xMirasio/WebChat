@@ -13,6 +13,7 @@ public class RemoteAuth extends Thread {
     private String username;
     private final int MAX_TIME = 5000;
     private final String OS = System.getProperty("os.name").toLowerCase();
+    private final Util util = new Util();
     
     public RemoteAuth(String username) {
         this.username = username;
@@ -80,24 +81,15 @@ public class RemoteAuth extends Thread {
     public void getUserWaiting() {
         
         try {
-             String name = sendGET("http://82.165.59.142:8080/agentchatext/getinfo");
-             try {
-                 name = name.split("\\n")[0];
-             }
-             catch (Exception e) {
-                System.out.println("No good");
-             }
+             String all = sendGET("http://82.165.59.142:8080/agentchatext/getinfo");
+             String name = util.getParameter(all, "name");
              if (!(name.contains("null")))
              {
                 System.out.println("[INFO] /getInfo GET :" + name);
                 sendPOST("http://82.165.59.142:8080/agentchatext/subscribe", "null", "name"); // on vide le buffer distant
-                System.out.println(this.username+":" +name);
-                System.out.println(this.username.equals(name));
-                System.out.println(this.username.contains(name));
-                System.out.println(name.contains(this.username));
-                if (this.username.equals(name)) {
-                    System.out.println("oh no");
-                    System.exit(0);
+
+                if (name.contains(this.username)) {
+                    
                 }
              }             
         }

@@ -132,6 +132,20 @@ public class Util {
         }
         return this.broadcast;
     }
+    
+    // retourne la valeur du paramètre demandé (format : param1=value1&param2=value2&...
+    public String getParameter(String data, String param) {
+        String[] temp = data.split("&");
+        for (String params : temp) {
+            System.out.println(params+":"+param);
+            System.out.println(params.equals(param));
+            System.out.println(params.contains(param));
+            System.out.println(param.contains(params));
+            
+        }
+        String out=null;
+        return out;
+    }
 
     /*
     this method is gathering all network interface and set up the global variable this.broadcast & this.address 

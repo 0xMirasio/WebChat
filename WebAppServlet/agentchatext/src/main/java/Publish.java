@@ -1,6 +1,0 @@
-
-//getinfo
-public class Publish {
-
-
-}
