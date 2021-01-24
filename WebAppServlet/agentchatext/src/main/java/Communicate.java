@@ -9,6 +9,7 @@ public class Communicate extends HttpServlet {
         public static String asker;
         public static String asked;
         private String names = null; 
+        private String askSession;
 
         
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
@@ -22,6 +23,9 @@ public class Communicate extends HttpServlet {
 
             System.out.println("[INFO] POST /communicate > asker=" + asker );
             System.out.println("[INFO] POST /communicate > asked=" + asked );
+
+
+            new Util().saveParam(names, askSession);
         }
         catch (Exception e) {
             e.printStackTrace();

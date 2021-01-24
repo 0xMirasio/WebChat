@@ -8,19 +8,36 @@ package com.agent.chat;
 import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.border.Border;
 
-/**
- *
- * @author Youssef
+/*
+ cette fenêtre est utilisée pour la configuration du réseau
  */
 public class NetworkConfigGui extends javax.swing.JFrame {
 
     /**
      * Creates new form NetworkConfigGui
      */
+    private final FileOperation filework = new FileOperation();
+    private String ip;
+    private String broadcast;
+    private String base_com_port;
+    private String com_port;
+    
     public NetworkConfigGui() {
         initComponents();
+        
+        this.ip = filework.getIp();
+        this.broadcast = filework.getBroadcast();
+        this.base_com_port = filework.Get_base_com_port();
+        this.com_port = filework.Get_com_port();
+        
+        jfield_ip.setText(this.ip);
+        jfield_cp.setText(this.com_port);
+        jfield_bcp.setText(this.base_com_port);
+        jfield_broadcast.setText(this.broadcast);
+        
     }
 
     /**
@@ -32,23 +49,21 @@ public class NetworkConfigGui extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
         jLabel_minimize = new javax.swing.JLabel();
         jLabel_close = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        email_jTextField = new javax.swing.JTextField();
-        username_JtextField = new javax.swing.JTextField();
-        password_jField = new javax.swing.JPasswordField();
+        jfield_cp = new javax.swing.JTextField();
+        jfield_ip = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        password_jField1 = new javax.swing.JPasswordField();
+        jButton1 = new javax.swing.JButton();
+        jfield_broadcast = new javax.swing.JTextField();
+        jfield_bcp = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
-
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\youssf\\Desktop\\ChatSystem\\WebChat\\AgentChat\\src\\main\\java\\Images\\logo.png")); // NOI18N
 
         jLabel_minimize.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel_minimize.setText(" -");
@@ -82,21 +97,15 @@ public class NetworkConfigGui extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Network Configuration");
 
-        email_jTextField.addActionListener(new java.awt.event.ActionListener() {
+        jfield_cp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                email_jTextFieldActionPerformed(evt);
+                jfield_cpActionPerformed(evt);
             }
         });
 
-        username_JtextField.addActionListener(new java.awt.event.ActionListener() {
+        jfield_ip.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                username_JtextFieldActionPerformed(evt);
-            }
-        });
-
-        password_jField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                password_jFieldActionPerformed(evt);
+                jfield_ipActionPerformed(evt);
             }
         });
 
@@ -104,13 +113,26 @@ public class NetworkConfigGui extends javax.swing.JFrame {
 
         jLabel4.setText("Boadcast");
 
-        jLabel5.setText("Out Port");
+        jLabel5.setText("COM_PORT");
 
-        jLabel6.setText("Enter Port");
+        jLabel6.setText("BASE_COM_PORT");
 
-        password_jField1.addActionListener(new java.awt.event.ActionListener() {
+        jButton1.setText("Confirm Change");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                password_jField1ActionPerformed(evt);
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jfield_broadcast.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jfield_broadcastActionPerformed(evt);
+            }
+        });
+
+        jfield_bcp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jfield_bcpActionPerformed(evt);
             }
         });
 
@@ -119,77 +141,67 @@ public class NetworkConfigGui extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(46, 46, 46)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel_minimize, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel_close, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(60, 60, 60)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(128, Short.MAX_VALUE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(password_jField1, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(22, 22, 22))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(jLabel6)
-                                        .addGap(22, 22, 22))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(jLabel3)
-                                                .addComponent(jLabel4))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(2, 2, 2)
-                                                .addComponent(jLabel5)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(email_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(username_JtextField, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(password_jField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(47, 47, 47))))
+                                        .addComponent(jLabel3)
+                                        .addComponent(jLabel4))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(2, 2, 2)
+                                        .addComponent(jLabel5)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jfield_cp, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jfield_ip, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jfield_bcp, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jfield_broadcast, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                .addComponent(jLabel_minimize, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel_close, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(235, 235, 235))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel_close)
+                        .addComponent(jLabel_minimize))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel_close)
-                            .addComponent(jLabel_minimize))
-                        .addGap(150, 150, 150)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(username_JtextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jfield_ip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(password_jField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel4)
+                    .addComponent(jfield_broadcast, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jfield_bcp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(password_jField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(email_jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jfield_cp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addGap(70, 70, 70))
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         pack();
@@ -238,21 +250,37 @@ public class NetworkConfigGui extends javax.swing.JFrame {
         jLabel_close.setForeground(Color.BLACK);
     }//GEN-LAST:event_jLabel_closeMouseExited
 
-    private void email_jTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_email_jTextFieldActionPerformed
+    private void jfield_cpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jfield_cpActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_email_jTextFieldActionPerformed
+    }//GEN-LAST:event_jfield_cpActionPerformed
 
-    private void username_JtextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_username_JtextFieldActionPerformed
+    private void jfield_ipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jfield_ipActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_username_JtextFieldActionPerformed
+    }//GEN-LAST:event_jfield_ipActionPerformed
 
-    private void password_jFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_password_jFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_password_jFieldActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        JOptionPane.showMessageDialog(null,"Network configuration saved. Restart application for change to apply","Information",1);
+        this.ip = jfield_ip.getText();
+        this.broadcast = jfield_broadcast.getText();
+        this.base_com_port= jfield_bcp.getText();
+        this.com_port = jfield_cp.getText();
+        
+        try {
+            filework.registerNetworkSetting(this.ip, this.broadcast, this.base_com_port, this.com_port);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.exit(0);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void password_jField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_password_jField1ActionPerformed
+    private void jfield_broadcastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jfield_broadcastActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_password_jField1ActionPerformed
+    }//GEN-LAST:event_jfield_broadcastActionPerformed
+
+    private void jfield_bcpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jfield_bcpActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jfield_bcpActionPerformed
 
     /**
      * @param args the command line arguments
@@ -290,8 +318,7 @@ public class NetworkConfigGui extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField email_jTextField;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -299,8 +326,9 @@ public class NetworkConfigGui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel_close;
     private javax.swing.JLabel jLabel_minimize;
-    private javax.swing.JPasswordField password_jField;
-    private javax.swing.JPasswordField password_jField1;
-    private javax.swing.JTextField username_JtextField;
+    private javax.swing.JTextField jfield_bcp;
+    private javax.swing.JTextField jfield_broadcast;
+    private javax.swing.JTextField jfield_cp;
+    private javax.swing.JTextField jfield_ip;
     // End of variables declaration//GEN-END:variables
 }

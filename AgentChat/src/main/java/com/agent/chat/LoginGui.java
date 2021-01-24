@@ -8,10 +8,13 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.border.Border;
 import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
 
 
-
+/*
+    Cette classe permet d'authentifier (localement) l'utilisateur en vérifiant son mot de passe
+    Si le mot de passe est OK -> la classe Network.java est appelée.
+    Sinon, le mot de passe est requis en boucle.
+*/
 public class LoginGui extends javax.swing.JFrame {
 
     /**
@@ -19,26 +22,33 @@ public class LoginGui extends javax.swing.JFrame {
      */
     private String username;
     
-    int xMouse;
-    int yMouse;
+    private int xMouse;
+    private int yMouse;
+    private final String pathLogo = "assets/logo.png";
+    private final FileOperation filework = new FileOperation();
+    private final Security sec = new Security();
+
     
     public LoginGui() {
+        
         initComponents();
-        FileOperation filework = new FileOperation();
+        jPasswordField.setText("insa"); // Les comptes utilisés pour le debug ont pour mot de passe insa, donc ca évite de retaper à chaque fois
         this.username = filework.getUsername();
         String path = filework.getPath();
         ImageIcon picImage = new ImageIcon(path);
         if (picImage != null)
         {
-            jLabel3.setIcon(new ImageIcon(picImage.getImage().getScaledInstance(50, 50, 1)));
+            jLabel3.setIcon(new ImageIcon(picImage.getImage().getScaledInstance(100, 100, 1)));
         }
-     
-        //Affichage de l'username
-        jLabel2.setText("Hello, " + this.username );
+        picImage = new ImageIcon(pathLogo);
+        if (picImage != null)
+        {
+            jLabel4.setIcon(new ImageIcon(picImage.getImage().getScaledInstance(180, 180, 1)));
+        }
+        jLabel2.setText(this.username);
+
     }
     
-    
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -55,6 +65,7 @@ public class LoginGui extends javax.swing.JFrame {
         jLabel_close = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -138,56 +149,65 @@ public class LoginGui extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setIcon(new javax.swing.ImageIcon("C:\\Users\\youssf\\Desktop\\ChatSystem\\WebChat\\AgentChat\\src\\main\\java\\Images\\logo.png")); // NOI18N
+        jLabel3.setIcon(new javax.swing.ImageIcon("/home/thibault/Images/ghidra.png")); // NOI18N
+
+        jLabel5.setFont(new java.awt.Font("Quicksand Light", 0, 24)); // NOI18N
+        jLabel5.setText("Hello : ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(142, Short.MAX_VALUE)
+                .addGap(81, 81, 81)
+                .addComponent(jPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 74, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(289, 289, 289))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(66, 66, 66)))
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(264, 264, 264)
-                                .addComponent(jLabel_minimize, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel_close, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                        .addComponent(jLabel_minimize, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel_close, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(1, 1, 1))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jButton_Login, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(149, 149, 149))))
+                        .addGap(109, 109, 109))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel_minimize)
-                    .addComponent(jLabel_close))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel_minimize)
+                        .addComponent(jLabel_close))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(25, 25, 25)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2)
+                        .addGap(31, 31, 31)))
                 .addComponent(jPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton_Login, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(43, 43, 43))
+                .addGap(50, 50, 50))
         );
 
         pack();
@@ -208,35 +228,47 @@ public class LoginGui extends javax.swing.JFrame {
     }//GEN-LAST:event_jPasswordFieldActionPerformed
 
     private void jButton_LoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_LoginActionPerformed
-        
-        //PreparedStatement
-        //ResultSet rs;
-        
-        //Récupérer le mot de passe
-   
-        
-        String password = String.valueOf(jPasswordField.getPassword());
-        //On vérifie si le nom d'utilisateur et le mot de passe existent !
-        Security sec = new Security();
-        boolean ret = sec.verifyPassword(password);
-        if(ret){
-            Client client = new Client(this.username);
-            this.setVisible(false);
-            client.start();
             
-            MainGui main = new MainGui();
-            main.setVisible(true);
-            main.pack();
-            main.setLocationRelativeTo(null);
+       String password = String.valueOf(jPasswordField.getPassword());
             
-            //Fermer la fenêtre après l'appui sur le bouton Log in
-            this.dispose();
-        }
-        
-        else{
-            //Message d'erreur affiché
-            JOptionPane.showMessageDialog(null,"Invalid Password","Login Error",2);
-        }
+            boolean ret = sec.verifyPassword(password);
+            if(ret){
+                this.setVisible(false);
+                
+                Boolean isRemote = Boolean.valueOf(filework.getStateNetwork());
+                if (isRemote) {
+                    RemoteAuth remote = new RemoteAuth(this.username);
+                    remote.getUserConnected();
+                    MainGui main = new MainGui(true);
+                     main.setVisible(true);
+                     main.pack();
+                     main.setLocationRelativeTo(null);
+                }
+                else {
+                   Network net = new Network(this.username);
+                   net.getUserConnected(); 
+                   if (net.IPC.size() == 1) {
+                       JOptionPane.showMessageDialog(null,"Authenticated - Welcome on the network - You are the only one connected","Information",1);
+                       net.prepare(net.IPC);
+                   }
+                   else {
+                       String message = "Authenticated - Welcome on the network (Number of user: "+net.IPC.size() + ") !";
+                       JOptionPane.showMessageDialog(null,message,"Information", 1);
+                       net.prepare(net.IPC);    
+                   }
+                   MainGui main = new MainGui();
+                   main.setVisible(true);
+                   main.pack();
+                   main.setLocationRelativeTo(null); 
+                }
+                
+                this.dispose();
+            }
+
+            else{
+                //Message d'erreur affiché
+                JOptionPane.showMessageDialog(null,"Invalid Password","Login Error",2);
+            }
         
         
         
@@ -313,23 +345,44 @@ public class LoginGui extends javax.swing.JFrame {
 
     private void jPasswordFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordFieldKeyPressed
         
+        
+        // idem qu'en haut, mais ici c'est si la touche entrée est préssée.
         if(evt.getKeyCode()== KeyEvent.VK_ENTER){
             
             String password = String.valueOf(jPasswordField.getPassword());
-            //On vérifie si le nom d'utilisateur et le mot de passe existent !
-            Security sec = new Security();
+            
             boolean ret = sec.verifyPassword(password);
             if(ret){
-                Client client = new Client(this.username);
                 this.setVisible(false);
-                client.start();
-
-                MainGui main = new MainGui();
-                main.setVisible(true);
-                main.pack();
-                main.setLocationRelativeTo(null);
-
-                //Fermer la fenêtre après l'appui sur le bouton Log in
+                
+                Boolean isRemote = Boolean.valueOf(filework.getStateNetwork());
+                if (isRemote) {
+                     JOptionPane.showMessageDialog(null,"Asking for others users in the networks (6seconds to wait)","Information",1);
+                     RemoteAuth remote = new RemoteAuth(this.username);
+                     remote.getUserConnected();
+                     MainGui main = new MainGui(true);
+                     main.setVisible(true);
+                     main.pack();
+                     main.setLocationRelativeTo(null); 
+                }
+                else {
+                   Network net = new Network(this.username);
+                   net.getUserConnected(); 
+                   if (net.IPC.size() == 1) {
+                       JOptionPane.showMessageDialog(null,"Authenticated - Welcome on the network - You are the only one connected","Information",1);
+                       net.prepare(net.IPC);
+                   }
+                   else {
+                       String message = "Authenticated - Welcome on the network (Number of user: "+net.IPC.size() + ") !";
+                       JOptionPane.showMessageDialog(null,message,"Information", 1);
+                       net.prepare(net.IPC);    
+                   }
+                   MainGui main = new MainGui();
+                   main.setVisible(true);
+                   main.pack();
+                   main.setLocationRelativeTo(null); 
+                }
+                
                 this.dispose();
             }
 
@@ -386,6 +439,7 @@ public class LoginGui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel_close;
     private javax.swing.JLabel jLabel_minimize;
     private javax.swing.JPasswordField jPasswordField;

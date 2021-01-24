@@ -48,6 +48,16 @@
 		<url-pattern>/notify</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>Communicate</servlet-name>
+		<servlet-class>Communicate</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Communicate</servlet-name>
+		<url-pattern>/commnicate</url-pattern>
+	</servlet-mapping>
+
 
 
 

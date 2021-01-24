@@ -29,10 +29,11 @@ public class AskCommunication extends Thread {
 
     String sourceName;
     String destName;
+    RemoteAuth remoteauth = new RemoteAuth();
     
-        public AskCommunication(){
+    public AskCommunication(){
         
-        }
+    }
 
     public AskCommunication(String sourceName, String destName) {
         this.sourceName = sourceName;
@@ -47,7 +48,7 @@ public class AskCommunication extends Thread {
 
         try {
             System.out.println("[INFO] Sending POST Request : " + dName + ":" + sName);
-            sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", dName + ":" + sName, "askSession");
+            remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", dName + ":" + sName, "askSession");
             System.out.println("[INFO] Waiting " + MAX_TIME + "ms before asking server response");
             Thread.sleep(MAX_TIME); // wait for 5s
             //sendPOST("http://"+ SERVER + ":8080/agentchatext/notify", "null", "response"); // buffer become empty 
@@ -55,50 +56,6 @@ public class AskCommunication extends Thread {
             e.printStackTrace();
         }
 
-    }
-
-    public void sendPOST(String url, String value, String parameter) throws Exception {
-
-        String command = "curl -X POST " + url + " -d \"" + parameter + "=" + value + "\"";
-        System.out.println("[INFO] Executing command : " + command);
-        ProcessBuilder builder = new ProcessBuilder();
-
-        if (OS.contains("win")) {
-            builder.command("cmd.exe", "/c", command);
-        } else {
-            builder.command("sh", "-c", command);
-        }
-
-        builder.start();
-
-    }
-    
-    
-    
-    
-     public String sendGET(String url) throws IOException {
-        
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-        con.setRequestMethod("GET");       
-        int resp = con.getResponseCode();
-        String response = "";
-        if (resp == HttpURLConnection.HTTP_OK) { // success
-			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			String inputLine;
-                        
-			while ((inputLine = in.readLine()) != null) {
-				response += inputLine;
-			}            
-			in.close();
-        } else {
-            System.out.println("[INFO] GET request FAIL");
-        }
-        
-        response = response.split("<h3>")[1].split("</h3>")[0];       
-        return response;
-        
-            
     }
 
 }
