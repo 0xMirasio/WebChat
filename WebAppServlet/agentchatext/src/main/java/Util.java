@@ -29,6 +29,15 @@ public class Util {
     }
     
     public String getAllParams() throws Exception {
+        try {
+             BufferedReader reader=  new BufferedReader(new FileReader(paramfile));
+             reader.close();
+        }
+        catch (Exception e) {
+            PrintWriter writer = new PrintWriter(paramfile);
+            writer.println("testparam=2");
+            writer.close();
+        }
         BufferedReader reader=  new BufferedReader(new FileReader(paramfile));
         String params = reader.readLine();
         reader.close();

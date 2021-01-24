@@ -20,7 +20,9 @@ public class GetInfo extends HttpServlet {
 
         
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+              System.out.println("hello");
               try {
+                  util.setResponse(response,"hi");
                   all = util.getAllParams(); 
                   System.out.println("GET / ; all =" + all);
                   util.setResponse(response, all);
