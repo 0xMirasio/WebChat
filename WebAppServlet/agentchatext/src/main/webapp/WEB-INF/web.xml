@@ -55,7 +55,7 @@
 
 	<servlet-mapping>
 		<servlet-name>Communicate</servlet-name>
-		<url-pattern>/commnicate</url-pattern>
+		<url-pattern>/communicate</url-pattern>
 	</servlet-mapping>
 
 

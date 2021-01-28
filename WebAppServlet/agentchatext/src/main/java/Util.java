@@ -36,7 +36,7 @@ public class Util {
     }
     
     public void saveParam(String value, String param) throws Exception {
-        
+
         String newparam = "";
         try {
              BufferedReader reader=  new BufferedReader(new FileReader(paramfile));
@@ -47,20 +47,26 @@ public class Util {
             writer.println("&");
             writer.close();
         }
+
+
         
         newparam = "";
         BufferedReader reader=  new BufferedReader(new FileReader(paramfile));
         String old = reader.readLine();
         reader.close();
+
               
         String[] temp = old.split("&");
         boolean isInside = false;
+
         for (String params : temp) {
+
                 if (params.contains(param)) 
                 {
                     isInside = true;
                 }
         }
+
         if ((!isInside) && (temp.length == 1)) { 
             newparam += param+"=" + value + "&";
         }
@@ -99,6 +105,7 @@ public class Util {
         
         PrintWriter writer = new PrintWriter(paramfile);
         writer.println(newparam);
+        System.out.println(newparam);
         writer.close();
     }
     

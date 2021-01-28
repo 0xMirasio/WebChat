@@ -8,24 +8,24 @@ public class Communicate extends HttpServlet {
     private final long serialVersionUID = 1L;
         public static String asker;
         public static String asked;
-        private String names = null; 
-        private String askSession;
+        public String names; 
+        Util util = new Util();
 
         
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
                 
         try {
             names = request.getParameter("askSession");
-            System.out.println("[INFO] POST /communicate > askSession=" + names );
+            /*System.out.println("[INFO] POST /communicate > askSession=" + names );
 
             asker = names.split(":")[1];
             asked = names.split(":")[0];
 
             System.out.println("[INFO] POST /communicate > asker=" + asker );
-            System.out.println("[INFO] POST /communicate > asked=" + asked );
+            System.out.println("[INFO] POST /communicate > asked=" + asked );*/
 
 
-            new Util().saveParam(names, askSession);
+            util.saveParam(names, "askSession");
         }
         catch (Exception e) {
             e.printStackTrace();
