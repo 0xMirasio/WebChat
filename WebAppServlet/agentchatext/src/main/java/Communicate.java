@@ -16,13 +16,13 @@ public class Communicate extends HttpServlet {
                 
         try {
             names = request.getParameter("askSession");
-            /*System.out.println("[INFO] POST /communicate > askSession=" + names );
+            System.out.println("[INFO] POST /communicate > askSession=" + names );
 
             asker = names.split(":")[1];
             asked = names.split(":")[0];
 
             System.out.println("[INFO] POST /communicate > asker=" + asker );
-            System.out.println("[INFO] POST /communicate > asked=" + asked );*/
+            System.out.println("[INFO] POST /communicate > asked=" + asked );
 
 
             util.saveParam(names, "askSession");
