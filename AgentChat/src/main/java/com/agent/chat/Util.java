@@ -161,6 +161,12 @@ public class Util {
                     if (inetAddress == null || inetAddress.toString().contains(":") || inetAddress.toString().contains("127")) {
                         continue;
                     }
+                    
+                    if (inetAddress.toString().contains("10.")) { // test debug
+                         this.broadcast = "10.0.255.255";
+                         this.address = inetAddress.getHostAddress();
+                    }
+                    
                     if (inetAddress.isLinkLocalAddress()) { // reseau local windows
                         this.broadcast = "169.254.255.255";
                         this.address = inetAddress.getHostAddress();

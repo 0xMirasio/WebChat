@@ -17,7 +17,7 @@ public class RemoteAuth extends Thread {
     protected List<String> IPC = new ArrayList<String>();
     
     private final Util util = new Util();
-    //private final String SERVER = "http://82.165.59.142/";
+    //private final String SERVER = "82.165.59.142";
     private final String SERVER = "192.168.56.1";
     private final FileOperation filework = new FileOperation();
     
