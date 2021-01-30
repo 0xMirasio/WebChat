@@ -27,18 +27,8 @@
 		<servlet-name>GetInfo</servlet-name>
 		<url-pattern>/getinfo</url-pattern>
 	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>Publish</servlet-name>
-		<servlet-class>Publish</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>Publish</servlet-name>
-		<url-pattern>/publish</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
+        
+  	<servlet>
 		<servlet-name>Notify</servlet-name>
 		<servlet-class>Notify</servlet-class>
 	</servlet>
@@ -47,10 +37,7 @@
 		<servlet-name>Notify</servlet-name>
 		<url-pattern>/notify</url-pattern>
 	</servlet-mapping>
-
-
-
-
-
+        
+   
 
 </web-app>

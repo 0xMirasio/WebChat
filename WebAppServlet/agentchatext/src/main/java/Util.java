@@ -15,8 +15,15 @@ import java.io.*;
  */
 public class Util {
     
-    private final String paramfile = "param";
+    private final String paramfile = "/tmp/param";
 
+     public String getCustomStackTrace(Throwable aThrowable) {
+                final Writer result = new StringWriter();
+                final PrintWriter printWriter = new PrintWriter(result);
+                aThrowable.printStackTrace(printWriter);
+                return result.toString();
+    }
+     
     public void setResponse(HttpServletResponse response, String message) throws Exception {
         response.setContentType("text/html");//setting the content type  
         PrintWriter pw=response.getWriter();//get the stream to write the data  
@@ -28,7 +35,7 @@ public class Util {
         pw.close();
     }
     
-    public String getAllParams() throws Exception {
+    public String getAllParams(HttpServletResponse response) throws Exception {
         try {
              BufferedReader reader=  new BufferedReader(new FileReader(paramfile));
              reader.close();
