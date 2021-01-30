@@ -51,7 +51,6 @@ public class AskCommunication extends Thread {
             remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", dName + ":" + sName, "askSession");
             System.out.println("[INFO] Waiting " + MAX_TIME + "ms before asking server response");
             Thread.sleep(MAX_TIME); // wait for 5s
-            //sendPOST("http://"+ SERVER + ":8080/agentchatext/notify", "null", "response"); // buffer become empty 
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -14,12 +14,16 @@ public class Subscribe extends HttpServlet {
            
             try {
                 name = request.getParameter("name");
-                System.out.println("[INFO] POST /subscribe > name=" + name );
                 util.saveParam(name, "name");
+                util.logInfo("POST /subscribe " + name);
             }
-            catch (Exception e) {
-                e.printStackTrace();
-            }            
+           catch (Exception e) {
+                  try {
+                      String s = util.getCustomStackTrace(e);
+                      util.logError(s);
+                  }
+                  catch (Exception a) {}
+                }        
             
         }
 	 
