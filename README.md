@@ -9,40 +9,7 @@ Webchat is using [Maven](https://maven.apache.org/download.cgi) to generate java
 
 Tested and developed under Linux Ubuntu 16. We highly recommend to use Linux to prevent unknow bugs.
 
-first clone the project : 
-```sh
-$ git clone https://github.com/0xMirasio/WebChat.git && cd WebChat/AgentChat
-$ chmod +x *.sh
-```
-
-If you want to start project (jar already ready in target/ dir).
-
-on Linux
-```sh
-$ ./start.sh
-```
-on Windows
-```cmd
-start.bat
-```
-
-to build the project : 
-
-On Linux
-```sh
-$ ./build.sh
-```
-
-On Windows
-```cmd
-build.bat
-```
-
-If you want to clear your cache sessions (too much cache sessions can lead to lag with DB parsing)
-Linux
-```sh
-$ ./clear.sh
-```
+You can see installation procedure on ##Manual.pdf
 
 ### KNOW-BUG
 
