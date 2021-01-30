@@ -16,8 +16,10 @@ import java.io.*;
 public class Util {
     
     private final String paramfile = "/tmp/param";
+    private final String errorfile = "/tmp/error";
+    private final String logfile = "/tmp/info";
 
-     public String getCustomStackTrace(Throwable aThrowable) {
+    public String getCustomStackTrace(Throwable aThrowable) {
                 final Writer result = new StringWriter();
                 final PrintWriter printWriter = new PrintWriter(result);
                 aThrowable.printStackTrace(printWriter);
@@ -42,7 +44,7 @@ public class Util {
         }
         catch (Exception e) {
             PrintWriter writer = new PrintWriter(paramfile);
-            writer.println("testparam=2");
+            writer.println("name=null");
             writer.close();
         }
         BufferedReader reader=  new BufferedReader(new FileReader(paramfile));
@@ -115,6 +117,62 @@ public class Util {
         
         PrintWriter writer = new PrintWriter(paramfile);
         writer.println(newparam);
+        writer.close();
+    }
+    
+    public void logError(String exception) throws Exception {   
+        
+        try {
+             BufferedReader reader=  new BufferedReader(new FileReader(errorfile));
+             reader.close();
+        }
+        catch (Exception e) {
+            PrintWriter writer = new PrintWriter(errorfile);
+            writer.println("");
+            writer.close();
+        } 
+         
+        BufferedReader reader=  new BufferedReader(new FileReader(errorfile));
+        String error ="";
+        
+        for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+             error += line;
+        }
+        reader.close();
+ 
+           
+        error += "\n" + exception;
+        
+        PrintWriter writer = new PrintWriter(errorfile);
+        writer.println(error);
+        writer.close();
+    }
+    
+    public void logInfo(String info) throws Exception {
+        
+        try {
+             BufferedReader reader=  new BufferedReader(new FileReader(logfile));
+             reader.close();
+        }
+        catch (Exception e) {
+            PrintWriter writer = new PrintWriter(logfile);
+            writer.println("");
+            writer.close();
+        }        
+        
+        BufferedReader reader=  new BufferedReader(new FileReader(logfile));
+        String error ="";
+        
+        for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+             error += line;
+        }
+        reader.close();
+ 
+           
+        error += "\n" + info;
+        
+        PrintWriter writer = new PrintWriter(logfile);
+        writer.println(error);
         writer.close();
     }
     

@@ -14,11 +14,9 @@ public class GetInfo extends HttpServlet {
         
         private String all;
         private final Util util = new Util();
-        
-       
+               
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-             
               try {
                   all = util.getAllParams(response); 
                   util.setResponse(response, all);
@@ -26,7 +24,7 @@ public class GetInfo extends HttpServlet {
               catch (Exception e) {
                   try {
                       String s = util.getCustomStackTrace(e);
-                      util.setResponse(response, s);
+                      util.logError(s);
                   }
                   catch (Exception a) {}
                 }

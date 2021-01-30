@@ -13,13 +13,17 @@ public class Notify extends HttpServlet {
                 
             try {
                 response_local = request.getParameter("response");
-                System.out.println("[INFO] POST /notify >" + response_local);
                 util.saveParam(response_local, "response_local");
+                util.logInfo("POST /notify " + response_local);
             
             }
             catch (Exception e) {
-                e.printStackTrace();
-            }            
+                  try {
+                      String s = util.getCustomStackTrace(e);
+                      util.logError(s);
+                  }
+                  catch (Exception a) {}
+                }        
             
         }
 	 
