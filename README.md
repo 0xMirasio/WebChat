@@ -52,8 +52,5 @@ Solution : restart application
 - Similar to the previous bug (jframe problem), if a person A contact B, then a person C contact B, the message from C will not pop up on the jframe created for the chat session (B-C) and will go on the chat session for (A-B). The first JFrame is taking all the content, the others jframes will not get any informations. 
 Solution : No solution found 
 
-### KNOW SECURITY-ISSUE
-- all message aren't encrypted, so a attacker could make a Man In The Middle attack.
-- .cache/profile.private isn't secure, the hash can be replaced by another hashed password,so an attacker could login with changing profile.private
-- [CRITICAL] : COMMAND INJECTION is possible in FileOperation.java, by making a specific path, it is possible to execute command when upload fonction is formating raw file data into base64 text. 
-
+### Security Warning
+This project is unsecure, do not use it in critical environnement. Many attacks is possible (Man in the middle message modification, command injection via upload functionality, password modification via hash replace , etc...)
