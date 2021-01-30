@@ -113,12 +113,13 @@ public class MainGui extends javax.swing.JFrame {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     String all = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
-                    remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/notify", "null", "response");
+                    
                     String response = util.getParameter(all, "askSession");
 
                     if (response.contains(username)) {
                         
-                        System.out.println("Prepare Connection with");
+                        System.out.println("Prepare Connection with" + response);
+                        remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
 
                     }
                 } catch (Exception e) {
@@ -180,12 +181,13 @@ public class MainGui extends javax.swing.JFrame {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     String all = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
-                    remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/notify", "null", "response");
+                     
                     String response = util.getParameter(all, "askSession");
 
                     if (response.contains(username)) {
                         
-                        System.out.println("Prepare Connection with");
+                        System.out.println("Prepare Connection with" + response);
+                        remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
 
                     }
                 } catch (Exception e) {
