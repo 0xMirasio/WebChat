@@ -74,7 +74,7 @@ public class SessionClient {
                         SessionGui.setReceiveMessage(msg);
                         msg = in.readLine();
                     }
-                    SessionGui.setReceiveMessage(" ****DISCONNECTED****:" + "XXXX"); // si serveur deconnecté
+                    SessionGui.setReceiveMessage("****DISCONNECTED****"); // si serveur deconnecté
                     out.close();
                     clientSocket.close();
                 } catch (IOException e) {

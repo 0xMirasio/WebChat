@@ -255,6 +255,11 @@ public class SessionGui extends javax.swing.JFrame {
                }
                
            }
+           else if (message.contains("****DISCONNECTED****")) {
+               
+               jText_AreaMessage.setText(jText_AreaMessage.getText() + "\n" + "*****Client Disconnected*****");
+               
+           }
            else { // sinon c'est un message basique
                 System.out.println("Received : " + message);
                 String temp[] = message.split(":", 2);
