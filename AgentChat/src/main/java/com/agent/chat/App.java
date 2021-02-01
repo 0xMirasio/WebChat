@@ -12,6 +12,10 @@ public class App
     private String username;
     private final Util util = new Util();
     
+    /**
+     * 
+     * @param args 
+     */
     public static void main( String[] args )
     {
         System.out.println("[INFO] Starting AgentChat... - Developed by Poncetta Thibault & Youssef Amari");
@@ -19,6 +23,7 @@ public class App
         app.start();
     }
 
+    
     public void start() {        
         boolean res = false;
         try {

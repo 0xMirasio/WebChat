@@ -77,7 +77,7 @@ public class MainGui extends javax.swing.JFrame {
         jLabel2.setText(this.username);
         
         // Toute les 1 secondes, on regarde si il y'a de nouveau utilisateurs pour les ajouter à la liste
-        timer = new Timer(1000, new java.awt.event.ActionListener() 
+        timer = new Timer(3000, new java.awt.event.ActionListener() 
         {
         @Override
          public void actionPerformed(java.awt.event.ActionEvent evt ) {
@@ -130,7 +130,7 @@ public class MainGui extends javax.swing.JFrame {
         jLabel2.setText(this.username);
         
         // Toute les 1 secondes, on regarde si il y'a de nouveau utilisateurs pour les ajouter à la liste
-        timer = new Timer(1000, new java.awt.event.ActionListener() 
+        timer = new Timer(3000, new java.awt.event.ActionListener() 
         {
         @Override
          public void actionPerformed(java.awt.event.ActionEvent evt ) {

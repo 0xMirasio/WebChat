@@ -21,7 +21,7 @@ class FileOperation
         }
     }
     
-    BufferedReader reader = null;
+    private BufferedReader reader = null;
     private final String profile = ".cache/profile.private";
     private final String userlist = ".cache/userlist";
     private final String sessionfile = ".cache/sessions";
@@ -42,6 +42,10 @@ class FileOperation
     /*
     Lis le fichier profile.private et sauvegarde les paramètres associés.
     */
+    /**
+     * 
+     * @throws Exception 
+     */
     public void readFile() throws Exception  {
         this.reader= new BufferedReader(new FileReader(profile));
         this.username = reader.readLine();
@@ -55,6 +59,10 @@ class FileOperation
     /*
     Lis le fichier networkConfig et sauvegarde les paramètres associés.
     */
+    /**
+     * 
+     * @throws Exception 
+     */
     public void initNetworkComponents() throws Exception  {
         this.reader= new BufferedReader(new FileReader(networkfile));
         this.ip = reader.readLine();
@@ -67,6 +75,10 @@ class FileOperation
     /*
     Lis le fichier userlist et sauvegarde les paramètres associés.
     */
+    /**
+     * 
+     * @throws Exception 
+     */
     public void readUserFile() throws Exception  {
         this.reader= new BufferedReader(new FileReader(userlist));
         String temp = reader.readLine();
@@ -86,6 +98,12 @@ class FileOperation
     Un chemin de fichier est envoyé en paramètre, puis la fonction sauvegarde la base64 du fichier dans download/temp
     puis le contenu est lu et renvoyé sous forme de String.
     */
+    /**
+     * 
+     * @param path
+     * @return data
+     * @throws Exception 
+     */
     public String getFileFormatedData(String path) throws Exception {
          
        
@@ -110,6 +128,10 @@ class FileOperation
     /*
     Lis le fichier sessions et sauvegarde les paramètres associés.
     */
+    /**
+     * 
+     * @throws Exception 
+     */
      public void readSessionFile() throws Exception  {
         this.reader= new BufferedReader(new FileReader(sessionfile));
         String temp = reader.readLine();
@@ -120,6 +142,11 @@ class FileOperation
      /*
     Vérifie si le profil est okay. Si un des paramètres obligatoire est manquant , faux est renvoyé.
     */
+    /**
+     * 
+     * @return boolean
+     * @throws Exception 
+     */
     public boolean checkIsProfileOkay() throws Exception {
         try { 
             readFile(); 
@@ -135,6 +162,10 @@ class FileOperation
     /*
     Retourne le nom d'utilisateur
     */
+    /**
+     * 
+     * @return username
+     */
     public String getUsername() {
         try { 
             readFile(); 
