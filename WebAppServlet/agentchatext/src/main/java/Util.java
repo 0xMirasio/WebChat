@@ -15,7 +15,7 @@ import java.io.*;
  */
 public class Util {
     
-    private final String paramfile = "/tmp/param";
+    private final String paramfile = "param";
     private final String errorfile = "/tmp/error";
     private final String logfile = "/tmp/info";
 

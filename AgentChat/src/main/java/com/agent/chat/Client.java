@@ -12,10 +12,9 @@ import java.net.Socket;
     
     Lorsque A -> B, B génère un thread et libère le port 5000 en prenant un port plus haut aléatoire (gestion automatique système)
     Comme ça, si C-> B, alors B peut aussi répondre à C, sans être occupé.
-*/
+ */
 public class Client extends Thread {
 
-    
     private final String username;
     private boolean MODE;
     private final Util util = new Util();
@@ -25,22 +24,24 @@ public class Client extends Thread {
     private String destAdress = null;
     private int sessionId;
     private ServerSocket sockS = null;
+
+    private String destIPServlet = "192.168.56.1";
+    private final int BASE_COM_PORT_REMOTE = Integer.parseInt(filework.Get_base_com_port_remote());
     
 
-
-    public Client(String username, ServerSocket sockS,  boolean MODE) {
+    public Client(String username, ServerSocket sockS, boolean MODE) {
         this.sockS = sockS;
         this.username = username;
         this.MODE = MODE;
     }
-    
-     public Client(String username, String destAdress ,int sessionId,  boolean MODE) {
+
+    public Client(String username, String destAdress, int sessionId, boolean MODE) {
         this.username = username;
         this.MODE = MODE;
         this.sessionId = sessionId;
         this.destAdress = destAdress;
     }
-    
+
     public void run() {
         if (MODE) {
             System.out.println("[INFO] Starting SessionServ session on port : " + (BASE_COM_PORT + util.getPort(this.sourceAddress)));
@@ -48,25 +49,31 @@ public class Client extends Thread {
             System.out.println("[INFO] Binding on : >" + (BASE_COM_PORT + util.getPort(util.getSourceAddress())));
             try {
                 Socket clientSocket = this.sockS.accept();
-                Client client = new Client(this.username,this.sockS, true); 
+                Client client = new Client(this.username, this.sockS, true);
                 client.start();
                 session.prepare(clientSocket);
-                
-            }
-            catch (Exception e) {
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            
-        }
-        else {
-            System.out.println("[INFO] Starting SessionClient session on port : " + (BASE_COM_PORT + util.getPort(this.destAdress)) +  " and Destination adress > " + destAdress);
-            SessionClient sessionClient = new SessionClient();
-            sessionClient.startChatSession(destAdress, sessionId);
+
+        } else {
+
+            if (!this.destAdress.contains(destIPServlet)) {
+
+                System.out.println("[INFO] Starting SessionClient session on port : " + (BASE_COM_PORT + util.getPort(this.destAdress)) + " and Destination adress > " + destAdress);
+                SessionClient sessionClient = new SessionClient();
+                sessionClient.startChatSession(destAdress, sessionId);
+                
+            } else {
+
+                System.out.println("[INFO] Starting SessionClient session on port : " + (BASE_COM_PORT_REMOTE + util.getPort(this.destAdress)) + " and Destination adress > " + destAdress);
+                SessionClient sessionClient = new SessionClient();
+                sessionClient.startChatSession(destAdress, sessionId);
+
+            }
+
         }
     }
 
-    
-
-
 }
-

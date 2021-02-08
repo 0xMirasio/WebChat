@@ -19,6 +19,7 @@ public class RemoteAuth extends Thread {
     private final Util util = new Util();
     //private final String SERVER = "82.165.59.142";
     private final String SERVER = "192.168.56.1";
+    //private final String SERVER = "localhost";
     private final FileOperation filework = new FileOperation();
     
     public RemoteAuth(String username) {
@@ -41,6 +42,7 @@ public class RemoteAuth extends Thread {
             sendPOST("http://"+ SERVER + ":8080/agentchatext/notify", "null", "response"); // vide le buffer distant
  
             String response = util.getParameter(all, "response_local");
+            
             if (!(response == null)) {
                 if (response.contains("REJECT")) {
                     System.out.println("[CRITICAL] Your username is already choosen by another user ! Pls change your username in .cache/profile.private");

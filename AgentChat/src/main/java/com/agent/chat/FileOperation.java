@@ -38,6 +38,8 @@ class FileOperation
     private String isRemote;
     private List<String> session = new ArrayList<String>();
     private final Util util = new Util();
+    
+    private String base_com_port_remote = "7000";
 
     /*
     Lis le fichier profile.private et sauvegarde les paramètres associés.
@@ -324,6 +326,13 @@ class FileOperation
             e.printStackTrace();
         }
         return this.IPC;
+    }
+    
+         /*
+    Retourne le port pour la communication en TCP, via la servlet, des utilisateurs (BASE_COM_PORT_REMOTE)
+    */
+    public String Get_base_com_port_remote() {
+        return this.base_com_port_remote;
     }
         
    

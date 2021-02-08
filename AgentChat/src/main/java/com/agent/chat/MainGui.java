@@ -50,9 +50,13 @@ public class MainGui extends javax.swing.JFrame {
     private ServerSocket serveurSocket = null;
 
     private String sourceIP = util.getSourceAddress();
-    private Timer timer1;    //private final String SERVER = "http://82.165.59.142/";
+    private Timer timer1;
+    //private final String SERVER = "http://82.165.59.142/";
     private final String SERVER = "192.168.56.1";
+    //private final String SERVER = "localhost";
     RemoteAuth remoteauth = new RemoteAuth();
+    private String state = filework.getStateNetwork();
+    //String responseData = "";
 
     public MainGui() {
         initComponents();
@@ -109,17 +113,34 @@ public class MainGui extends javax.swing.JFrame {
 
         // Toute les 1 secondes, on regarde si il y'a de utilsateurs qui veulent nous contacter en passant par le serveur distant.
         timer1 = new Timer(1000, new java.awt.event.ActionListener() {
+            private String responseData;
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
+                    //FileOperation filework = new FileOperation();
+                    //String username = filework.getUsername();
+                    int sessionId = (int) (Math.random() * 30000); // on genere une sessionId aléatoire
+                    String destIPServlet = "192.168.56.1"; 
+
                     String all = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
-                    
+
                     String response = util.getParameter(all, "askSession");
 
-                    if (response.contains(username)) {
-                        
-                        System.out.println("Prepare Connection with" + response);
+                    String[] temp = response.split(":");
+
+                    String futurDest = temp[1];
+                    String futurSender = temp[0];
+
+                    if (username.equals(futurSender)) {
+
+                        System.out.println("Prepare Connection with the couple: " + futurDest);
                         remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
+
+                        SessionGui session = new SessionGui(futurSender, futurDest, destIPServlet, sessionId);
+                        session.setVisible(true);
+                        session.pack();
+                        session.setLocationRelativeTo(null);
 
                     }
                 } catch (Exception e) {
@@ -175,18 +196,19 @@ public class MainGui extends javax.swing.JFrame {
 
         timer.start();
 
-        // Toute les 1 secondes, on regarde si il y'a de utilsateurs qui veulent nous contacter en passant par le serveur distant.
+        //Toute les 1 secondes, on regarde si il y'a de utilsateurs qui veulent nous contacter en passant par le serveur distant.
         timer1 = new Timer(1000, new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
+
                     String all = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
-                     
+
                     String response = util.getParameter(all, "askSession");
 
                     if (response.contains(username)) {
-                        
-                        System.out.println("Prepare Connection with" + response);
+
+                        System.out.println("Prepare Connection with the couple: " + response);
                         remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
 
                     }
@@ -196,7 +218,6 @@ public class MainGui extends javax.swing.JFrame {
         });
 
         timer1.start();
-
     }
 
     /**
@@ -522,17 +543,19 @@ public class MainGui extends javax.swing.JFrame {
                 e.printStackTrace();
             }
 
-            if (!destIP.contains("192.168.56.") || !sourceIP.contains("192.168.56.")) {
+            if (!(destIP.contains("192.168.56.")) || this.state.equals("true")) {
 
-                new AskCommunication(username, destName).askSession();
+                AskCommunication ask = new AskCommunication(username, destName);
 
+                ask.askSession();
+                ask.askSession();
+            } else {
+                // on lance la session de chat
+                SessionGui session = new SessionGui(this.username, destName, destIP, sessionId);
+                session.setVisible(true);
+                session.pack();
+                session.setLocationRelativeTo(null);
             }
-
-            // on lance la session de chat
-            SessionGui session = new SessionGui(this.username, destName, destIP, sessionId);
-            session.setVisible(true);
-            session.pack();
-            session.setLocationRelativeTo(null);
         }
 
     }//GEN-LAST:event_jButton_StartSessionActionPerformed

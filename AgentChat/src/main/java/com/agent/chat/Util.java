@@ -14,6 +14,8 @@ public class Util {
     private final String myDriver = "com.mysql.cj.jdbc.Driver";
     private final String myUrl = "jdbc:mysql://82.165.59.142:3306/webchat";
     private Connection conn = null;
+    
+    private String destIPServlet = "192.168.56.1";
 
           
     // sauvegarde un couple id_session/message dans la base de données distantes
@@ -104,6 +106,13 @@ public class Util {
         if (address.contains("168.192.56.")) { // adresse reseau local virtualboxPrivate
             String[] temp = address.split("\\.", 4);
             INDEX = -102 + Integer.parseInt(temp[3]); // 168.192.56.102 = 1ere adresse vbox distribué DHCP
+            System.out.println(INDEX);
+            return INDEX;
+        }
+        
+        if (address.contains(destIPServlet)) { // adresse reseau local virtualboxPrivate2_Servlet
+            String[] temp = address.split("\\.", 4);
+            INDEX = -1 + Integer.parseInt(temp[3]); // 192.168.56.1 = 1ere adresse vbox distribué DHCP
             System.out.println(INDEX);
             return INDEX;
         }

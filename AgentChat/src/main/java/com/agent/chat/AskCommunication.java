@@ -25,16 +25,14 @@ public class AskCommunication extends Thread {
     private final Util util = new Util();
     //private final String SERVER = "82.165.59.142";
     private final String SERVER = "192.168.56.1";
+    //private final String SERVER = "localhost";
     private final FileOperation filework = new FileOperation();
 
     String sourceName;
     String destName;
     RemoteAuth remoteauth = new RemoteAuth();
     
-    public AskCommunication(){
-        
-    }
-
+    
     public AskCommunication(String sourceName, String destName) {
         this.sourceName = sourceName;
         this.destName = destName;
@@ -51,6 +49,8 @@ public class AskCommunication extends Thread {
             remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", dName + ":" + sName, "askSession");
             System.out.println("[INFO] Waiting " + MAX_TIME + "ms before asking server response");
             Thread.sleep(MAX_TIME); // wait for 5s
+            //String all = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");        
+            //System.out.println(all);
         } catch (Exception e) {
             e.printStackTrace();
         }
