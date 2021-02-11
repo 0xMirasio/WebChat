@@ -26,7 +26,7 @@ public class Client extends Thread {
     private ServerSocket sockS = null;
 
     private String destIPServlet = "192.168.56.1";
-    private final int BASE_COM_PORT_REMOTE = Integer.parseInt(filework.Get_base_com_port_remote());
+    private final int BASE_COM_PORT_REMOTE = 7000;
     
 
     public Client(String username, ServerSocket sockS, boolean MODE) {
@@ -67,7 +67,7 @@ public class Client extends Thread {
                 
             } else {
 
-                System.out.println("[INFO] Starting SessionClient session on port : " + (BASE_COM_PORT_REMOTE + util.getPort(this.destAdress)) + " and Destination adress > " + destAdress);
+                System.out.println("[INFO] Starting SessionClient session on port : " + (BASE_COM_PORT_REMOTE) + " and Destination adress > " + destAdress);
                 SessionClient sessionClient = new SessionClient();
                 sessionClient.startChatSession(destAdress, sessionId);
 

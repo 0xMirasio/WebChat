@@ -28,14 +28,14 @@ public class SessionClient {
         try {
             if (!this.destination.contains(destIPServlet)) {
                 // génération socket client
-                this.PORT = BASE_COM_PORT;
-                System.out.println("Connecting on > " + (PORT + util.getPort(this.destination)) + " and Dest > " + this.destination);
+                this.PORT = BASE_COM_PORT + util.getPort(this.destination);
+                System.out.println("Connecting on > " + (PORT) + " and Dest > " + this.destination);
             } else {
                 this.PORT = BASE_COM_PORT_REMOTE;
-                System.out.println("Connecting on > " + (PORT + util.getPort(this.destination)) + " and Dest > " + this.destination);   
+                System.out.println("Connecting on > " + (PORT) + " and Dest > " + this.destination);   
             }
             
-            Socket clientSocket = new Socket(this.destination, (this.PORT + util.getPort(this.destination)));
+            Socket clientSocket = new Socket(this.destination, (this.PORT));
 
             out = new PrintWriter(clientSocket.getOutputStream());
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
