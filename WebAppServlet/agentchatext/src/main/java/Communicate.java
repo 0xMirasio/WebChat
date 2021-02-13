@@ -21,6 +21,7 @@ public class Communicate extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
                 
         try {
+
             names = request.getParameter("askSession");
             System.out.println("[INFO] POST /communicate > askSession=" + names );
 
@@ -47,7 +48,7 @@ public class Communicate extends HttpServlet {
 
             if(!val.equals("")){
 
-                validation = "TRUE";
+                this.validation = "TRUE";
             }
 
             util.saveParam(names+":"+ this.validation, "validateSession");
@@ -60,27 +61,6 @@ public class Communicate extends HttpServlet {
         } 
         
             
-    }
-
-
-
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        try{
-        this.state = server.ItIsOk();
-
-            if(state.equals("true")){
-                response.setContentType("OK");
-            }else{
-                response.setContentType("KO");
-            }
-
-        }
-        catch (Exception e) {
-            e.printStackTrace();        
-        }
-
     }
 
 
