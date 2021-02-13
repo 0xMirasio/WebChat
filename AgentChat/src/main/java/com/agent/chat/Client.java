@@ -26,7 +26,7 @@ public class Client extends Thread {
     private ServerSocket sockS = null;
 
     private String destIPServlet = "192.168.56.1";
-    private final int BASE_COM_PORT_REMOTE = 7000;
+    private final int BASE_COM_PORT_REMOTE = 6250;
     
 
     public Client(String username, ServerSocket sockS, boolean MODE) {

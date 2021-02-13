@@ -56,5 +56,24 @@ public class AskCommunication extends Thread {
         }
 
     }
+    
+        public void validateSession(String var) {
+
+        String sName = this.sourceName;
+        String dName = this.destName;
+
+        try {
+            
+            System.out.println("[INFO] Sending POST Request : " + dName + ":" + sName + ":" + var);
+            remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/validatecom", dName + ":" + sName + ":" + var, "validateSession");
+            System.out.println("[INFO] Waiting " + MAX_TIME + "ms before asking server response");
+            Thread.sleep(MAX_TIME); // wait for 5s
+            //String all = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");        
+            //System.out.println(all);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }

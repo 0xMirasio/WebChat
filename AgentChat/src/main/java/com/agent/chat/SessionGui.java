@@ -165,6 +165,14 @@ public class SessionGui extends javax.swing.JFrame {
         SessionGui.Receivemessage = RMsg;
     }
     
+    public String futurDest(){
+        return this.destName;    
+    }
+    
+    public String futurSender(){
+        return this.sender;
+    }
+    
     /*
     Cette méthode actualise la vue des messages dans sessionsGUi.java
     Elle regarde l'en tête des fichiers, pour savoir quelle action à faire avec.

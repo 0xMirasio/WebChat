@@ -2,14 +2,20 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;  
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileWriter;   // Import the FileWriter class
+import java.io.IOException;  // Import the IOException class to handle errors  
 
 public class Communicate extends HttpServlet {
-    private final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
         public static String asker;
         public static String asked;
         public String names; 
         Util util = new Util();
+        String state;
+        TCPServer server = new TCPServer();
+        String validation;
+ 
 
         
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
@@ -24,8 +30,30 @@ public class Communicate extends HttpServlet {
             System.out.println("[INFO] POST /communicate > asker=" + asker );
             System.out.println("[INFO] POST /communicate > asked=" + asked );
 
-
             util.saveParam(names, "askSession");
+
+            if(!asker.equals("null") && !asked.equals("null")){
+
+                server.active();
+            }
+
+
+
+            String val = server.validate();
+
+            while(val.equals("")){
+
+            }
+
+            if(!val.equals("")){
+
+                validation = "TRUE";
+            }
+
+            util.saveParam(names+":"+ this.validation, "validateSession");
+
+
+
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -33,6 +61,29 @@ public class Communicate extends HttpServlet {
         
             
     }
+
+
+
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        try{
+        this.state = server.ItIsOk();
+
+            if(state.equals("true")){
+                response.setContentType("OK");
+            }else{
+                response.setContentType("KO");
+            }
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();        
+        }
+
+    }
+
+
 
     public String getAsker() {
         return asker;

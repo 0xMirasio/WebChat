@@ -18,8 +18,13 @@ public class SessionClient {
     private final int BASE_COM_PORT = Integer.parseInt(filework.Get_com_port());
 
     private String destIPServlet = "192.168.56.1";
-    private final int BASE_COM_PORT_REMOTE = 7000;
-    private int PORT=0;
+    private final int BASE_COM_PORT_REMOTE = 6250;
+    private int PORT;
+    RemoteAuth remoteauth = new RemoteAuth();
+    //private final String SERVER = "http://82.165.59.142/";
+    private final String SERVER = "192.168.56.1";
+    //private final String SERVER = "localhost";
+
 
     public void startChatSession(String dest, int sessionId) {
 
@@ -32,11 +37,12 @@ public class SessionClient {
                 System.out.println("Connecting on > " + (PORT) + " and Dest > " + this.destination);
             } else {
                 this.PORT = BASE_COM_PORT_REMOTE;
-                System.out.println("Connecting on > " + (PORT) + " and Dest > " + this.destination);   
-            }
-            
-            Socket clientSocket = new Socket(this.destination, (this.PORT));
+                System.out.println("Connecting on > " + (PORT) + " and Dest > " + this.destination);
 
+            }
+
+            Socket clientSocket = new Socket(this.destination, (this.PORT));
+            
             out = new PrintWriter(clientSocket.getOutputStream());
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 

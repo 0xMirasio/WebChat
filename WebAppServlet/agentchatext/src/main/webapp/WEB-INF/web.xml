@@ -58,6 +58,16 @@
 		<url-pattern>/communicate</url-pattern>
 	</servlet-mapping>
 
+		<servlet>
+		<servlet-name>ValidateCom</servlet-name>
+		<servlet-class>ValidateCom</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ValidateCom</servlet-name>
+		<url-pattern>/validatecom</url-pattern>
+	</servlet-mapping>
+
 
 
 
