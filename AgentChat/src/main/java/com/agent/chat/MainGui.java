@@ -133,17 +133,31 @@ public class MainGui extends javax.swing.JFrame {
 
                     String futurDest = temp[1];
                     String futurSender = temp[0];
-                    
 
                     if (username.equals(futurSender)) {
 
                         System.out.println("Prepare Connection with the couple: " + futurDest);
-                        remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
 
                         SessionGui session = new SessionGui(futurSender, futurDest, destIPServlet, sessionid());
                         session.setVisible(true);
                         session.pack();
                         session.setLocationRelativeTo(null);
+                    }
+
+                    String all1 = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
+
+                    String responsep = util.getParameter(all, "validateSession");
+
+                    String[] temp1 = responsep.split(":");
+
+                    String value = temp1[2];
+                    String futurDest1 = temp1[1];
+                    String futurSender1 = temp1[0];
+
+                    if (value.equals("TRUE")) {
+
+                        remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
+
                     }
 
                 } catch (Exception e) {
@@ -224,14 +238,29 @@ public class MainGui extends javax.swing.JFrame {
                     if (username.equals(futurSender)) {
 
                         System.out.println("Prepare Connection with the couple: " + futurDest);
-                        remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
 
                         SessionGui session = new SessionGui(futurSender, futurDest, destIPServlet, sessionid());
                         session.setVisible(true);
                         session.pack();
                         session.setLocationRelativeTo(null);
                     }
-                    
+
+                    String all1 = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
+
+                    String responsep = util.getParameter(all, "validateSession");
+
+                    String[] temp1 = responsep.split(":");
+
+                    String value = temp1[2];
+                    String futurDest1 = temp1[1];
+                    String futurSender1 = temp1[0];
+
+                    if (value.equals("TRUE")) {
+
+                        remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
+
+                    }
+
                 } catch (Exception e) {
                 }
             }
@@ -239,8 +268,8 @@ public class MainGui extends javax.swing.JFrame {
 
         timer1.start();
     }
-    
-    public int sessionid(){
+
+    public int sessionid() {
         return this.sessionID1;
     }
 
@@ -573,8 +602,7 @@ public class MainGui extends javax.swing.JFrame {
 
                 ask.askSession();
                 ask.askSession();
-                
-                
+
             } else {
                 // on lance la session de chat
                 SessionGui session = new SessionGui(this.username, destName, destIP, sessionId);
