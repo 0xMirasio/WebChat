@@ -47,13 +47,7 @@ public class TCPServer extends Thread {
     try {
         String message = "";
         InetAddress client = this.socket.getInetAddress();
-        while(client==null){
-          //System.out.println("None");
-        }
-
-        if(client!=null){
-          this.value = "OK";
-        }
+        
         System.out.println("Connexion avec le client : " + client);
 
         BufferedReader in = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));

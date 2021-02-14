@@ -137,6 +137,7 @@ public class MainGui extends javax.swing.JFrame {
                     if (username.equals(futurSender)) {
 
                         System.out.println("Prepare Connection with the couple: " + futurDest);
+                        remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null" + ":" + null, "askSession");
 
                         SessionGui session = new SessionGui(futurSender, futurDest, destIPServlet, sessionid());
                         session.setVisible(true);
@@ -222,6 +223,7 @@ public class MainGui extends javax.swing.JFrame {
                     if (username.equals(futurSender)) {
 
                         System.out.println("Prepare Connection with the couple: " + futurDest);
+                        remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null" + ":" + "null", "askSession");
 
                         SessionGui session = new SessionGui(futurSender, futurDest, destIPServlet, sessionid());
                         session.setVisible(true);

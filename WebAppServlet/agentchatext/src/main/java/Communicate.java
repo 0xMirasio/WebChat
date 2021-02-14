@@ -14,7 +14,6 @@ public class Communicate extends HttpServlet {
         Util util = new Util();
         String state;
         TCPServer server = new TCPServer();
-        String validation="FALSE";
         String validateNames;
  
 
@@ -39,19 +38,10 @@ public class Communicate extends HttpServlet {
             
             if(!asker.equals("null") && !asked.equals("null")){
 
+                util.saveParam(validateNames+":"+ "TRUE", "validateSession");
+
                 server.active();
 
-                String val = server.validate();
-
-                while(val.equals("")){
-    
-                }
-    
-                if(!val.equals("")){
-    
-                    this.validation = "TRUE";
-                    util.saveParam(validateNames+":"+ this.validation, "validateSession");
-                }
             }
 
 
