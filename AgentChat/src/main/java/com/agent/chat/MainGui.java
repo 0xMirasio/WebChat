@@ -155,6 +155,7 @@ public class MainGui extends javax.swing.JFrame {
                     String futurSender1 = temp1[0];
 
                     while (!value.equals("TRUE")) {
+                        allp = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
                     }
                     remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
 
@@ -254,6 +255,7 @@ public class MainGui extends javax.swing.JFrame {
                     String futurSender1 = temp1[0];
 
                     while (!value.equals("TRUE")) {
+                        allp = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
                     }
                     remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
 
