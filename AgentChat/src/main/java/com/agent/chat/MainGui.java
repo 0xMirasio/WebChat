@@ -128,13 +128,12 @@ public class MainGui extends javax.swing.JFrame {
                     String all = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
 
                     String response = util.getParameter(all, "askSession");
-                    
-                    
 
                     String[] temp = response.split(":");
 
                     String futurDest = temp[1];
                     String futurSender = temp[0];
+                    
 
                     if (username.equals(futurSender)) {
 
