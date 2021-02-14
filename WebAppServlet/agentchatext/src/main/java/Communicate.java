@@ -14,7 +14,8 @@ public class Communicate extends HttpServlet {
         Util util = new Util();
         String state;
         TCPServer server = new TCPServer();
-        String validation;
+        String validation="FALSE";
+        String validateNames;
  
 
         
@@ -23,6 +24,9 @@ public class Communicate extends HttpServlet {
         try {
 
             names = request.getParameter("askSession");
+            if(!names.equals("null:null")){
+                validateNames = names;
+            }
             System.out.println("[INFO] POST /communicate > askSession=" + names );
 
             asker = names.split(":")[1];
@@ -46,7 +50,7 @@ public class Communicate extends HttpServlet {
                 if(!val.equals("")){
     
                     this.validation = "TRUE";
-                    util.saveParam(names+":"+ this.validation, "validateSession");
+                    util.saveParam(validateNames+":"+ this.validation, "validateSession");
                 }
             }
 

@@ -144,21 +144,6 @@ public class MainGui extends javax.swing.JFrame {
                         session.setLocationRelativeTo(null);
                     }
 
-                    String allp = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
-
-                    String responsep = util.getParameter(allp, "validateSession");
-
-                    String[] temp1 = responsep.split(":");
-
-                    String value = temp1[2];
-                    String futurDest1 = temp1[1];
-                    String futurSender1 = temp1[0];
-
-                    while (!value.equals("TRUE")) {
-                        allp = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
-                    }
-                    remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
-
                 } catch (Exception e) {
                 }
             }
@@ -243,21 +228,6 @@ public class MainGui extends javax.swing.JFrame {
                         session.pack();
                         session.setLocationRelativeTo(null);
                     }
-
-                    String allp = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
-
-                    String responsep = util.getParameter(all, "validateSession");
-
-                    String[] temp1 = responsep.split(":");
-
-                    String value = temp1[2];
-                    String futurDest1 = temp1[1];
-                    String futurSender1 = temp1[0];
-
-                    while (!value.equals("TRUE")) {
-                        allp = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
-                    }
-                    remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
 
                 } catch (Exception e) {
                 }
@@ -599,7 +569,7 @@ public class MainGui extends javax.swing.JFrame {
                 AskCommunication ask = new AskCommunication(username, destName);
 
                 ask.askSession();
-                ask.askSession();
+                //ask.askSession();
 
             } else {
                 // on lance la session de chat
