@@ -54,16 +54,17 @@ public class AskCommunication extends Thread {
             System.out.println("[INFO] Waiting " + MAX_TIME + "ms before asking server response");
             Thread.sleep(MAX_TIME); // wait for 5s
 
-            String all = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
-
-            String responsep = util.getParameter(all, "validateSession");
-
             // Toute les 1 secondes, on regarde si il y'a de nouveau utilisateurs pour les ajouter à la liste
             timer = new Timer(1000, new java.awt.event.ActionListener() {
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
 
                     try {
+
+                        String all = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
+
+                        String responsep = util.getParameter(all, "validateSession");
+                        
                         String[] temp1 = responsep.split(":");
 
                         String value = temp1[2];
@@ -73,8 +74,10 @@ public class AskCommunication extends Thread {
                         if (username.equals(futurDest1)) {
 
                             if (value.equals("TRUE")) {
+                                
+                                remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null" + ":" + "null", "askSession");
 
-                                SessionGui session = new SessionGui(futurSender1, futurDest1, destIPServlet, maingui.sessionid());
+                                SessionGui session = new SessionGui(futurDest1, futurSender1, destIPServlet, maingui.sessionid());
                                 session.setVisible(true);
                                 session.pack();
                                 session.setLocationRelativeTo(null);
