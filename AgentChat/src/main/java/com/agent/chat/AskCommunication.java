@@ -31,8 +31,9 @@ public class AskCommunication extends Thread {
     String sourceName;
     String destName;
     RemoteAuth remoteauth = new RemoteAuth();
-    
-    
+    String destIPServlet = "192.168.56.1";
+    MainGui maingui = new MainGui();
+
     public AskCommunication(String sourceName, String destName) {
         this.sourceName = sourceName;
         this.destName = destName;
@@ -49,21 +50,46 @@ public class AskCommunication extends Thread {
             remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", dName + ":" + sName, "askSession");
             System.out.println("[INFO] Waiting " + MAX_TIME + "ms before asking server response");
             Thread.sleep(MAX_TIME); // wait for 5s
-            //String all = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");        
-            //System.out.println(all);
-        } catch (Exception e) {
+
+
+            String all = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
+
+            String responsep = util.getParameter(all, "validateSession");
+
+            String[] temp1 = responsep.split(":");
+
+            String value = temp1[2];
+            String futurDest1 = temp1[1];
+            String futurSender1 = temp1[0];
+
+            if (username.equals(futurDest1)) {
+
+                if (value.equals("TRUE")) {
+
+                    remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
+
+                    SessionGui session = new SessionGui(futurSender1, futurDest1, destIPServlet,maingui.sessionid());
+                    session.setVisible(true);
+                    session.pack();
+                    session.setLocationRelativeTo(null);
+
+                }
+            }
+            }catch (Exception e) {
             e.printStackTrace();
         }
 
-    }
+        }
     
-        public void validateSession(String var) {
+        
+
+    public void validateSession(String var) {
 
         String sName = this.sourceName;
         String dName = this.destName;
 
         try {
-            
+
             System.out.println("[INFO] Sending POST Request : " + dName + ":" + sName + ":" + var);
             remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/validatecom", dName + ":" + sName + ":" + var, "validateSession");
             System.out.println("[INFO] Waiting " + MAX_TIME + "ms before asking server response");

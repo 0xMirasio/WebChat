@@ -58,7 +58,7 @@ public class MainGui extends javax.swing.JFrame {
     private String state = filework.getStateNetwork();
     //String responseData = "";
     private Timer timer2;
-    public int sessionId = (int) (Math.random() * 30000);
+    private int sessionID1 = (int) (Math.random() * 30000);
 
     public MainGui() {
         initComponents();
@@ -113,8 +113,8 @@ public class MainGui extends javax.swing.JFrame {
 
         timer.start();
 
-        // Toute les 3 secondes, on regarde si il y'a de utilsateurs qui veulent nous contacter en passant par le serveur distant.
-        timer1 = new Timer(3000, new java.awt.event.ActionListener() {
+        // Toute les 1 seconde, on regarde si il y'a de utilsateurs qui veulent nous contacter en passant par le serveur distant.
+        timer1 = new Timer(1000, new java.awt.event.ActionListener() {
             private String responseData;
 
             @Override
@@ -138,7 +138,7 @@ public class MainGui extends javax.swing.JFrame {
 
                         System.out.println("Prepare Connection with the couple: " + futurDest);
 
-                        SessionGui session = new SessionGui(futurSender, futurDest, destIPServlet, sessionId);
+                        SessionGui session = new SessionGui(futurSender, futurDest, destIPServlet, sessionid());
                         session.setVisible(true);
                         session.pack();
                         session.setLocationRelativeTo(null);
@@ -150,48 +150,6 @@ public class MainGui extends javax.swing.JFrame {
         });
 
         timer1.start();
-
-        // 
-        timer2 = new Timer(3000, new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-
-                    //int sessionId = (int) (Math.random() * 30000); // on genere une sessionId aléatoire
-                    String destIPServlet = "192.168.56.1";
-
-                    String all = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
-
-                    String responsep = util.getParameter(all, "validateSession");
-
-                    String[] temp1 = responsep.split(":");
-
-                    String value = temp1[2];
-                    String futurDest1 = temp1[1];
-                    String futurSender1 = temp1[0];
-
-                    if (username.equals(futurDest1)) {
-
-                        if (value.equals("TRUE")) {
-
-                            remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
-
-                            SessionGui session = new SessionGui(futurSender1, futurDest1, destIPServlet, sessionId);
-                            session.setVisible(true);
-                            session.pack();
-                            session.setLocationRelativeTo(null);
-
-                        }
-
-                    }
-
-                } catch (Exception e) {
-                }
-
-            }
-        });
-
-        timer2.start();
 
     }
 
@@ -240,8 +198,8 @@ public class MainGui extends javax.swing.JFrame {
 
         timer.start();
 
-        // Toute les 3 secondes, on regarde si il y'a de utilsateurs qui veulent nous contacter en passant par le serveur distant.
-        timer1 = new Timer(3000, new java.awt.event.ActionListener() {
+        // Toute les 1 seconde, on regarde si il y'a de utilsateurs qui veulent nous contacter en passant par le serveur distant.
+        timer1 = new Timer(1000, new java.awt.event.ActionListener() {
             private String responseData;
 
             @Override
@@ -249,7 +207,7 @@ public class MainGui extends javax.swing.JFrame {
                 try {
                     //FileOperation filework = new FileOperation();
                     //String username = filework.getUsername();
-                    int sessionId = (int) (Math.random() * 30000); // on genere une sessionId aléatoire
+                    //int sessionId = (int) (Math.random() * 30000); // on genere une sessionId aléatoire
                     String destIPServlet = "192.168.56.1";
 
                     String all = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
@@ -266,7 +224,7 @@ public class MainGui extends javax.swing.JFrame {
                         System.out.println("Prepare Connection with the couple: " + futurDest);
                         //remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
 
-                        SessionGui session = new SessionGui(futurSender, futurDest, destIPServlet, sessionId);
+                        SessionGui session = new SessionGui(futurSender, futurDest, destIPServlet, sessionid());
                         session.setVisible(true);
                         session.pack();
                         session.setLocationRelativeTo(null);
@@ -278,48 +236,10 @@ public class MainGui extends javax.swing.JFrame {
         });
 
         timer1.start();
-
-        // 
-        timer2 = new Timer(3000, new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-
-                    //int sessionId = (int) (Math.random() * 30000); // on genere une sessionId aléatoire
-                    String destIPServlet = "192.168.56.1";
-
-                    String all = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
-
-                    String responsep = util.getParameter(all, "validateSession");
-
-                    String[] temp1 = responsep.split(":");
-
-                    String value = temp1[2];
-                    String futurDest1 = temp1[1];
-                    String futurSender1 = temp1[0];
-
-                    if (username.equals(futurDest1)) {
-
-                        if (value.equals("TRUE")) {
-
-                            remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
-
-                            SessionGui session = new SessionGui(futurSender1, futurDest1, destIPServlet, sessionId);
-                            session.setVisible(true);
-                            session.pack();
-                            session.setLocationRelativeTo(null);
-
-                        }
-
-                    }
-
-                } catch (Exception e) {
-                }
-
-            }
-        });
-
-        timer2.start();
+    }
+    
+    public int sessionid(){
+        return this.sessionID1;
     }
 
     /**
@@ -651,6 +571,8 @@ public class MainGui extends javax.swing.JFrame {
 
                 ask.askSession();
                 ask.askSession();
+                
+                
             } else {
                 // on lance la session de chat
                 SessionGui session = new SessionGui(this.username, destName, destIP, sessionId);
