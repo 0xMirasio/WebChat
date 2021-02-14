@@ -144,9 +144,9 @@ public class MainGui extends javax.swing.JFrame {
                         session.setLocationRelativeTo(null);
                     }
 
-                    String all1 = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
+                    String allp = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
 
-                    String responsep = util.getParameter(all, "validateSession");
+                    String responsep = util.getParameter(allp, "validateSession");
 
                     String[] temp1 = responsep.split(":");
 
@@ -154,11 +154,9 @@ public class MainGui extends javax.swing.JFrame {
                     String futurDest1 = temp1[1];
                     String futurSender1 = temp1[0];
 
-                    if (value.equals("TRUE")) {
-
-                        remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
-
+                    while (!value.equals("TRUE")) {
                     }
+                    remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
 
                 } catch (Exception e) {
                 }
@@ -245,7 +243,7 @@ public class MainGui extends javax.swing.JFrame {
                         session.setLocationRelativeTo(null);
                     }
 
-                    String all1 = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
+                    String allp = remoteauth.sendGET("http://" + SERVER + ":8080/agentchatext/getinfo");
 
                     String responsep = util.getParameter(all, "validateSession");
 
@@ -255,11 +253,9 @@ public class MainGui extends javax.swing.JFrame {
                     String futurDest1 = temp1[1];
                     String futurSender1 = temp1[0];
 
-                    if (value.equals("TRUE")) {
-
-                        remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
-
+                    while (!value.equals("TRUE")) {
                     }
+                    remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
 
                 } catch (Exception e) {
                 }
