@@ -46,6 +46,7 @@ public class AskCommunication extends Thread {
         String dName = this.destName;
 
         try {
+            remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
             System.out.println("[INFO] Sending POST Request : " + dName + ":" + sName);
             remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", dName + ":" + sName, "askSession");
             System.out.println("[INFO] Waiting " + MAX_TIME + "ms before asking server response");
@@ -66,7 +67,7 @@ public class AskCommunication extends Thread {
 
                 if (value.equals("TRUE")) {
 
-                    remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
+                    //remoteauth.sendPOST("http://" + SERVER + ":8080/agentchatext/communicate", "null:null", "askSession");
 
                     SessionGui session = new SessionGui(futurSender1, futurDest1, destIPServlet,maingui.sessionid());
                     session.setVisible(true);

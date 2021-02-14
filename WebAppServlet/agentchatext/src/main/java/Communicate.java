@@ -31,27 +31,29 @@ public class Communicate extends HttpServlet {
             System.out.println("[INFO] POST /communicate > asker=" + asker );
             System.out.println("[INFO] POST /communicate > asked=" + asked );
 
-            util.saveParam(names, "askSession");
+
+            
 
             if(!asker.equals("null") && !asked.equals("null")){
 
+                util.saveParam(names, "askSession");
+
                 server.active();
+
+                String val = server.validate();
+
+                while(val.equals("")){
+    
+                }
+    
+                if(!val.equals("")){
+    
+                    this.validation = "TRUE";
+                }
+    
+                util.saveParam(names+":"+ this.validation, "validateSession");
             }
 
-
-
-            String val = server.validate();
-
-            while(val.equals("")){
-
-            }
-
-            if(!val.equals("")){
-
-                this.validation = "TRUE";
-            }
-
-            util.saveParam(names+":"+ this.validation, "validateSession");
 
 
 
