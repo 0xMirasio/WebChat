@@ -250,7 +250,6 @@ public class RegisterGui extends javax.swing.JFrame {
 
     /* Confirmation de l'enrengistrement du profil utilisateur */
     private void register_jbuttonActionPerformed(java.awt.event.ActionEvent evt) {                                                 
-       FileOperation filework = new FileOperation();
        String username = username_JtextField.getText();
        String adress = util.getSourceAddress();
        System.out.println("[DEBUG] adress = "+ adress);
