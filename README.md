@@ -7,7 +7,7 @@ Webchat is using [Java 11 JDK](https://www.oracle.com/fr/java/technologies/javas
 
 Webchat is using [Maven](https://maven.apache.org/download.cgi) to generate java class and jar file.
 
-Tested and developed under Linux Ubuntu 16. We highly recommend to use Linux to prevent unknow bugs.
+Tested and developed under Linux Ubuntu 18. We highly recommend to use Linux to prevent unknow bugs.
 
 You can see installation procedure and utilisation procedure on Manuel.pdf
 
