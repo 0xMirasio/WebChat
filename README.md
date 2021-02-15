@@ -21,3 +21,7 @@ Solution : No solution found
 
 ### Security Warning
 This project is unsecure, do not use it in critical environnement. Many attacks is possible (Man in the middle message modification, command injection via upload functionality, password modification via hash replace , etc...)
+
+### Unfinished Works 
+
+See test branch, Missing communication session with remote clients and local clients
