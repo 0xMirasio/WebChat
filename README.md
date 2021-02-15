@@ -9,7 +9,7 @@ Webchat is using [Maven](https://maven.apache.org/download.cgi) to generate java
 
 Tested and developed under Linux Ubuntu 16. We highly recommend to use Linux to prevent unknow bugs.
 
-You can see installation procedure on Manuel.pdf
+You can see installation procedure and utilisation procedure on Manuel.pdf
 
 ### KNOW-BUG
 
